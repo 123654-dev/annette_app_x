@@ -28,10 +28,10 @@ class Storage {
     +loadSubstitutionsData()$ Object
     +loadConfig()$ Config
 }
+
 class Config {
-    +constructor()
-    +fromSavedConfig()$
-    +save()
+    +set(String key, String value)$
+    +get(String key)$ String
 }
 
 class TimetablePage {
