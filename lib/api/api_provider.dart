@@ -10,12 +10,12 @@ class ApiProvider {
     //Workaround für einen Bug/eine Fehlkonfiguration auf der Seite von WebUntis,
     //durch den nur die Pläne für a-Klassen alle Diff-Optionen enthalten
     if (id.startsWith("9") || id.startsWith("10")) {
-      id = id.substring(0) + "A";
+      id = "${id.substring(0)}A";
     }
 
     //HTTP-Request
     var res = await http.get(Uri.http(ApiProviderSettings.baseURL,
-        'api/annette_app/dateien/stundenplan/optionen/' + id));
+        'api/annette_app/dateien/stundenplan/optionen/$id'));
 
     //Erfolgreich?
     if (res.statusCode != 200) {

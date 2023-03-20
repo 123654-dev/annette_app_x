@@ -13,7 +13,6 @@ class FilesProvider {
   /// Das File-Objekt kann dann z.B. mit dem PDFView-Widget angezeigt werden.
   static Future<File> loadExamPlansFromNetwork(ClassId id) async {
     var idString = id.name;
-    print(idString);
     final response = await http
         .get(Uri.http('annette-app-files.vercel.app', 'klausur_$idString.pdf'));
     final bytes = response.bodyBytes;

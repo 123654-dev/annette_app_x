@@ -40,7 +40,7 @@ class _ExamScreenState extends State<ExamScreen> {
     return Center(
         child: Column(children: [
       Padding(
-          padding: EdgeInsets.all(15),
+          padding: const EdgeInsets.all(15),
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             //SegmentedButton zur Auswahl der Stufe
             //Standardwert ist dabei die Stufe aus der User Config

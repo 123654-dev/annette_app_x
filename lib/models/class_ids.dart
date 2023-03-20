@@ -1,4 +1,6 @@
 ///Enthält alle Klassen und Stufen, die ausgewählt werden können.
+// ignore_for_file: constant_identifier_names
+
 enum ClassId {
   c5A(5),
   c5B(10),

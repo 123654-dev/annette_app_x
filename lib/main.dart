@@ -1,5 +1,4 @@
 import 'package:annette_app_x/consts/default_color_schemes.dart';
-import 'package:annette_app_x/models/class_ids.dart';
 import 'package:annette_app_x/models/theme_mode.dart';
 import 'package:annette_app_x/providers/user_config.dart';
 import 'package:annette_app_x/screens/exam_screen.dart';
@@ -139,8 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
         labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
         destinations: [
           const NavigationDestination(
-            icon: Badge(
-                label: const Text("4"), child: Icon(Icons.dashboard_rounded)),
+            icon: Badge(label: Text("4"), child: Icon(Icons.dashboard_rounded)),
             label: 'Vertretung',
           ),
           const NavigationDestination(
@@ -149,8 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           const NavigationDestination(
             icon: Badge(
-                label: const Text("20 (rip)"),
-                child: Icon(Icons.checklist_rounded)),
+                label: Text("20 (rip)"), child: Icon(Icons.checklist_rounded)),
             label: 'HAs',
           ),
 

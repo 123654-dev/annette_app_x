@@ -1,6 +1,5 @@
 import 'package:annette_app_x/models/class_ids.dart';
 import 'package:annette_app_x/models/theme_mode.dart';
-import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 ///Speichert User-Einstellungen, z.B. Klasse, Theme etc.
