@@ -1,16 +1,11 @@
 # annette_app_x
 
-A new Flutter project.
+[![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/certified-elijah-wood.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/compatibility-emacs.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/powered-by-black-magic.svg)](https://forthebadge.com)
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Ein brandneues, frisches Rewrite unserer Annette App in Flutter!
+Anders als die alte App wird sie zwar alle alten und beliebten Features beibehalten, allerdings ohne unübersichtlichen
+Code, verwirrende Dateistruktur und merkwürdige Bugs. Außerdem wird sie mit dem neuesten Stand der Technik (WebUntis-API) und einem
+freshen Design ausgestattet.

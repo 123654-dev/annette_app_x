@@ -1,26 +1,40 @@
 import 'package:annette_app_x/consts/default_color_schemes.dart';
+import 'package:annette_app_x/models/class_ids.dart';
 import 'package:annette_app_x/models/theme_mode.dart';
 import 'package:annette_app_x/providers/user_config.dart';
+import 'package:annette_app_x/screens/exam_screen.dart';
+import 'package:annette_app_x/screens/homework_screen.dart';
+import 'package:annette_app_x/screens/misc_screen.dart';
+import 'package:annette_app_x/screens/substitution_screen.dart';
+import 'package:annette_app_x/screens/timetable_screen.dart';
 import 'package:annette_app_x/utilities/on_init_app.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
-  //Initiate pre-app initialization
+  //Initialisierung der App in Gang setzen
   await AppInitializer.init();
 
-  //Then run the app
+  //ausführen
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  //application root widget
+  //Der Anker der App
   @override
   Widget build(BuildContext context) {
-    //pre-initialize home page
     var home = const MyHomePage(title: 'Annette App X');
+
+    /*
+
+    Wenn der User den Material3-Modus aktiviert hat, erzeugt der DynamicColorBuilder
+    ein auf der Systemfarbe basierendes Farbschema.
+
+    Ansonsten wird die App mit den Standardschemata konstruiert (definiert in default_color_schemes.dart!)
+
+    */
 
     return UserConfig.themeMode == AnnetteThemeMode.material3
         ? DynamicColorBuilder(
@@ -60,41 +74,126 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+///Enum für verschiedene Navigationsbuttons
+///Wird verwendet, um die richtige Seite anzuzeigen
+///!! Klausurplan nur für Oberstufe !!
+enum _Destination {
+  vertretung,
+  stundenplan,
+  has,
+  sonstiges,
+  klausurplan,
+}
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+class _MyHomePageState extends State<MyHomePage> {
+  _Destination _selectedDestination = _Destination.vertretung;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+      backgroundColor: Theme.of(context).colorScheme.background,
+      bottomNavigationBar: NavigationBar(
+        onDestinationSelected: (value) => setState(() {
+          //sehr komischer Code, um den Klausurplan nur für Oberstufe anzuzeigen
+          //NICHT ANFASSEN
+          //ES FUNKTIONIERT OK?
+          if (UserConfig.isOberstufe) {
+            switch (value) {
+              case 0:
+                _selectedDestination = _Destination.vertretung;
+                break;
+              case 1:
+                _selectedDestination = _Destination.stundenplan;
+                break;
+              case 2:
+                _selectedDestination = _Destination.has;
+                break;
+              case 3:
+                _selectedDestination = _Destination.sonstiges;
+                break;
+              case 4:
+                _selectedDestination = _Destination.klausurplan;
+                break;
+            }
+          } else {
+            switch (value) {
+              case 0:
+                _selectedDestination = _Destination.vertretung;
+                break;
+              case 1:
+                _selectedDestination = _Destination.stundenplan;
+                break;
+              case 2:
+                _selectedDestination = _Destination.has;
+                break;
+              case 3:
+                _selectedDestination = _Destination.sonstiges;
+                break;
+            }
+          }
+        }),
+        selectedIndex: _selectedDestination.index,
+        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+        destinations: [
+          const NavigationDestination(
+            icon: Badge(
+                label: const Text("4"), child: Icon(Icons.dashboard_rounded)),
+            label: 'Vertretung',
+          ),
+          const NavigationDestination(
+            icon: Icon(Icons.table_view_rounded),
+            label: 'Stundenplan',
+          ),
+          const NavigationDestination(
+            icon: Badge(
+                label: const Text("20 (rip)"),
+                child: Icon(Icons.checklist_rounded)),
+            label: 'HAs',
+          ),
+
+          /* Klausurplan nur für Oberstufe anzeigen */
+
+          if (UserConfig.isOberstufe)
+            const NavigationDestination(
+              icon: Icon(Icons.calendar_month_outlined),
+              label: 'Klausurplan',
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
+          const NavigationDestination(
+            icon: Icon(Icons.more_horiz_rounded),
+            label: 'Sonstiges',
+          ),
+        ],
       ),
+      body: <Widget>[
+        Container(
+          alignment: Alignment.center,
+          child: const SubstitutionScreen(),
+        ),
+        Container(
+          alignment: Alignment.center,
+          child: const TimetableScreen(),
+        ),
+        Container(
+          alignment: Alignment.center,
+          child: const HomeworkScreen(),
+        ),
+        if (UserConfig.isOberstufe)
+          Container(
+            alignment: Alignment.center,
+            child: const ExamScreen(),
+          ),
+        Container(
+          alignment: Alignment.center,
+          child: const MiscScreen(),
+        ),
+      ][_selectedDestination.index],
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: () {},
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }

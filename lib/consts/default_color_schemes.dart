@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+///Die Standardmäßigen Farbschemata der Annette-App
+///für iOS-Benutzer oder Android-User, die den Material3-Modus nicht aktiviert haben
 class AnnetteColorSchemes {
+  ///Helles Farbschema
   static const ColorScheme lightColorScheme = ColorScheme(
     brightness: Brightness.light,
     primary: Color(0xFF006878),
@@ -35,6 +38,7 @@ class AnnetteColorSchemes {
     //scrim: Color(0xFF000000),
   );
 
+  ///Dunkles Farbschema
   static const ColorScheme darkColorScheme = ColorScheme(
     brightness: Brightness.dark,
     primary: Color(0xFF53D7F2),

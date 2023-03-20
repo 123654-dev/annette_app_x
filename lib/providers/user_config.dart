@@ -3,18 +3,28 @@ import 'package:annette_app_x/models/theme_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+///Speichert User-Einstellungen, z.B. Klasse, Theme etc.
 class UserConfig {
+  ///Hive-Box, in der die Einstellungen gespeichert werden
   static final Box _box = Hive.box('user_config');
 
-  static ClassIds get classId {
-    return _box.get('class_id', defaultValue: ClassIds.kl_5A);
+  ///[ClassId] ist Klasse, die der User ausgewählt hat
+  static ClassId get classId {
+    return _box.get('class_id', defaultValue: ClassId.Q1);
   }
 
-  static set classId(ClassIds value) {
+  static set classId(ClassId value) {
     _box.put('class_id', value);
   }
 
+  ///[AnnetteThemeMode] ist das Theme, das der User ausgewählt hat (aus dem [AnnetteThemeMode] Enum)
   static AnnetteThemeMode get themeMode {
-    return _box.get('theme_mode', defaultValue: AnnetteThemeMode.system);
+    return _box.get('theme_mode', defaultValue: AnnetteThemeMode.material3);
+  }
+
+  ///Hilfsfunktion, die prüft, ob die Klasse Oberstufe ist.
+  ///Vereinfacht das Schreiben von Code (statt [ClassId.EF, ClassId.Q1, ClassId.Q2].contains(classId)) und so
+  static bool get isOberstufe {
+    return [ClassId.EF, ClassId.Q1, ClassId.Q2].contains(classId);
   }
 }
