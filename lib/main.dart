@@ -6,6 +6,7 @@ import 'package:annette_app_x/screens/homework_screen.dart';
 import 'package:annette_app_x/screens/misc_screen.dart';
 import 'package:annette_app_x/screens/substitution_screen.dart';
 import 'package:annette_app_x/screens/timetable_screen.dart';
+import 'package:annette_app_x/utilities/homework_manager.dart';
 import 'package:annette_app_x/utilities/on_init_app.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
@@ -188,7 +189,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ][_selectedDestination.index],
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        //neue HA hinzufügen, wenn der Button gedrückt wird
+        onPressed: () => HomeworkManager.showHomeworkDialog(),
         child: const Icon(Icons.add),
       ),
     );
