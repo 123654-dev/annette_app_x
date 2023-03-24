@@ -60,11 +60,10 @@ class _ExamScreenState extends State<ExamScreen> {
             //mit diesem Button sollen alle Klausurtermine vorgeschlagen werden,
             //der User kann nun alle ihn betreffenden Termine auswählen und automatisch
             //in den Kalender importieren.
-            FloatingActionButton.extended(
-              onPressed: () => {},
-              label: const Text("Importieren"),
-              icon: const Icon(Icons.help_rounded),
-            )
+            FilledButton.icon(
+                onPressed: () {},
+                icon: const Icon(Icons.arrow_drop_down_circle),
+                label: const Text("Importieren"))
           ])),
       Expanded(
         child: _catastrophicFailure
