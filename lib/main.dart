@@ -53,7 +53,6 @@ class MyApp extends StatelessWidget {
                 )),
           )
         : MaterialApp(
-            title: 'Annette App X',
             theme: ThemeData(
                 colorScheme: AnnetteColorSchemes.lightColorScheme,
                 useMaterial3: true),
@@ -92,7 +91,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        centerTitle: true,
+        title: Text("Annette App X"),
       ),
       backgroundColor: Theme.of(context).colorScheme.background,
       bottomNavigationBar: NavigationBar(
@@ -146,9 +146,13 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(Icons.table_view_rounded),
             label: 'Stundenplan',
           ),
-          const NavigationDestination(
-            icon: Badge(
-                label: Text("20 (rip)"), child: Icon(Icons.checklist_rounded)),
+          NavigationDestination(
+            icon: HomeworkManager.hasHomework()
+                ? Badge(
+                    label: Text(
+                        (HomeworkManager.howManyPendingEntries()).toString()),
+                    child: const Icon(Icons.checklist_rounded))
+                : const Icon(Icons.checklist_rounded),
             label: 'HAs',
           ),
 
@@ -176,7 +180,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         Container(
           alignment: Alignment.center,
-          child: const HomeworkScreen(),
+          child: HomeworkScreen(refresh: refresh),
         ),
         if (UserConfig.isOberstufe)
           Container(
@@ -190,9 +194,14 @@ class _MyHomePageState extends State<MyHomePage> {
       ][_selectedDestination.index],
       floatingActionButton: FloatingActionButton(
         //neue HA hinzufügen, wenn der Button gedrückt wird
-        onPressed: () => HomeworkManager.showHomeworkDialog(),
+        onPressed: () => HomeworkManager.showHomeworkDialog(refresh),
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  ///Callback-Funktion, die die Seite neulädt, etwa bei neuen Vertretungen oder Hausaufgaben, die hinzugefügt wurden (-> Badges)
+  void refresh() {
+    setState(() {});
   }
 }
