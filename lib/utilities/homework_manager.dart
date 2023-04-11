@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:annette_app_x/models/homework_entry.dart';
+import 'package:annette_app_x/screens/homework/homework_dialog.dart';
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 class HomeworkManager {
@@ -17,20 +19,23 @@ class HomeworkManager {
     return entries().where((element) => element.done).toList();
   }
 
-  static void showHomeworkDialog(Function() refresh) {
+  static void showHomeworkDialog(Function() refresh, BuildContext context) {
     //Wenn der Dialog bereits offen ist, wird kein weiterer geöffnet.
     if (_isHomeworkDialogOpen) return;
 
+    HomeworkDialog.show(context,
+        onClose: () => {_isHomeworkDialogOpen = false});
+
     //Der Dialog ist jetzt offen
     _isHomeworkDialogOpen = true;
-    HomeworkEntry e = HomeworkEntry(
+    /*HomeworkEntry e = HomeworkEntry(
         subject: "Mathe",
         //generate random string
         notes: Random().nextInt(1000000000).toString(),
         dueDate: DateTime.now(),
         lastUpdated: DateTime.now());
     Hive.box('homework').add(e);
-    refresh();
+    refresh();*/
     _isHomeworkDialogOpen = false;
   }
 

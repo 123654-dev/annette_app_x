@@ -194,7 +194,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ][_selectedDestination.index],
       floatingActionButton: FloatingActionButton(
         //neue HA hinzufügen, wenn der Button gedrückt wird
-        onPressed: () => HomeworkManager.showHomeworkDialog(refresh),
+        onPressed: () => HomeworkManager.showHomeworkDialog(refresh, context),
         child: const Icon(Icons.add),
       ),
     );
