@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:annette_app_x/models/class_ids.dart';
+import 'package:annette_app_x/providers/storage.dart';
 import 'package:annette_app_x/providers/user_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:annette_app_x/api/files_provider.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 ///Diese Seite zeigt Klausurpläne an.
 class ExamScreen extends StatefulWidget {
@@ -19,6 +21,8 @@ class _ExamScreenState extends State<ExamScreen> {
   //Falls der Download noch läuft, soll ein Ladebalken angezeigt werden
   bool _isLoading = true;
 
+  Key _pdfViewerKey = UniqueKey();
+
   //Bei Fehlschlagen des Downloads (_catastrophicFailure == true) wird ein Fehler angezeigt.
   bool _catastrophicFailure = false;
 
@@ -31,7 +35,7 @@ class _ExamScreenState extends State<ExamScreen> {
   @override
   void initState() {
     //Beim erstmaligen Laden der Seite wird versucht, den Klausurplan herunterzuladen
-    attemptDownload();
+    switchClass(ClassId.Q1);
     super.initState();
   }
 
@@ -55,15 +59,34 @@ class _ExamScreenState extends State<ExamScreen> {
               selected: <ClassId>{_classId},
               onSelectionChanged: (Set<ClassId> sel) => switchClass(sel.first),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(
+              width: 10,
+            ),
+            SizedBox(
+                height: 60,
+                width: 20,
+                child: VerticalDivider(
+                  width: 20,
+                  thickness: 1,
+                  indent: 15,
+                  endIndent: 15,
+                  color: Theme.of(context).colorScheme.onBackground,
+                )),
             //TODO: implementieren
             //mit diesem Button sollen alle Klausurtermine vorgeschlagen werden,
             //der User kann nun alle ihn betreffenden Termine auswählen und automatisch
             //in den Kalender importieren.
-            FilledButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.arrow_drop_down_circle),
-                label: const Text("Importieren"))
+            IconButton(
+              onPressed: () {},
+              icon: PhosphorIcon(PhosphorIcons.duotone.download,
+                  color: Theme.of(context).colorScheme.primary),
+            ),
+
+            IconButton(
+              onPressed: () {},
+              icon: PhosphorIcon(PhosphorIcons.duotone.shareFat,
+                  color: Theme.of(context).colorScheme.primary),
+            )
           ])),
       Expanded(
         child: _catastrophicFailure
@@ -75,6 +98,7 @@ class _ExamScreenState extends State<ExamScreen> {
                 ? const Center(child: CircularProgressIndicator())
                 : Center(
                     child: PDFView(
+                      key: _pdfViewerKey,
                       filePath: _file.path,
                     ),
                   )),
@@ -84,35 +108,16 @@ class _ExamScreenState extends State<ExamScreen> {
 
   ///kleine Callback-Funktion, die aufgerufen wird, wenn der User eine andere Stufe auswählt
   ///Setzt _isLoading auf true zurück und löst erneut attemptDownload() mit aktualisierter _classId aus
-  void switchClass(ClassId id) {
+  void switchClass(ClassId id) async {
     setState(() {
       _classId = id;
       _isLoading = true;
     });
-    attemptDownload();
-  }
-
-  ///Versucht, den Klausurplan herunterzuladen, wirft bei Fehlschlag mit einer Exception um sich.
-  void attemptDownload() async {
-    try {
-      File file = await FilesProvider.loadExamPlansFromNetwork(_classId)
-          .timeout(const Duration(seconds: 10), onTimeout: () {
-        setState(() {
-          _catastrophicFailure = true;
-        });
-        throw TimeoutException('Timeout');
-      });
-      setState(() {
-        //Datei geladen, _isLoading auf false setzen
-        _file = file;
-        _isLoading = false;
-      });
-    } catch (e) {
-      //Bei Fehlschlag _catastrophicFailure auf true setzen => Fehler wird angezeigt
-      setState(() {
-        _catastrophicFailure = true;
-      });
-      return;
-    }
+    File file = await FilesProvider.getExamPlanFile(id);
+    setState(() {
+      _file = file;
+      _isLoading = false;
+      _pdfViewerKey = UniqueKey();
+    });
   }
 }
