@@ -21,6 +21,27 @@ class UserConfig {
     return _box.get('theme_mode', defaultValue: AnnetteThemeMode.material3);
   }
 
+  static set themeMode(AnnetteThemeMode value) {
+    _box.put('theme_mode', value);
+  }
+
+  static bool get isMaterial3 {
+    return _box.get('is_material_three', defaultValue: false);
+  }
+
+  static set isMaterial3(bool value) {
+    _box.put('is_material_three', value);
+  }
+
+  ///[downloadViaMobileData] ist ein bool, der angibt, ob die App auch über mobile Daten die Stunden-, Klausur- und Vertretungspläne aktualisieren darf (oder nur über WLAN)
+  static bool get downloadViaMobileData {
+    return _box.get('download_via_mobile_data', defaultValue: false);
+  }
+
+  static set downloadViaMobileData(bool value) {
+    _box.put('download_via_mobile_data', value);
+  }
+
   ///Hilfsfunktion, die prüft, ob die Klasse Oberstufe ist.
   ///Vereinfacht das Schreiben von Code (statt [ClassId.EF, ClassId.Q1, ClassId.Q2].contains(classId)) und so
   static bool get isOberstufe {
