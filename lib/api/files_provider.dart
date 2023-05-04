@@ -46,6 +46,8 @@ class FilesProvider {
 
       //File laden und zurückgeben
       final file = File('${dir.path}/$filename');
+      print("Serving a locally-sourced exam plan for $id 🪴");
+
       return file;
     } else {
       //Der Stundenplan ist veraltet -> herunterladen

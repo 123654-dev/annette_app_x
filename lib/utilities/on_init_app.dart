@@ -7,6 +7,7 @@ class AppInitializer {
     //Config (Hive) initialisieren
     await Hive.initFlutter();
     await Hive.openBox('user_config');
+    await Hive.openBox('cache');
 
     //hier weiteren Code einfügen:
   }

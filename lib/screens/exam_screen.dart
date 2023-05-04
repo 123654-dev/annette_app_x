@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:annette_app_x/api/files_provider.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:cross_file/cross_file.dart';
 
 ///Diese Seite zeigt Klausurpläne an.
 class ExamScreen extends StatefulWidget {
@@ -76,14 +78,14 @@ class _ExamScreenState extends State<ExamScreen> {
             //mit diesem Button sollen alle Klausurtermine vorgeschlagen werden,
             //der User kann nun alle ihn betreffenden Termine auswählen und automatisch
             //in den Kalender importieren.
-            IconButton(
+            /*IconButton(
               onPressed: () {},
               icon: PhosphorIcon(PhosphorIcons.duotone.download,
                   color: Theme.of(context).colorScheme.primary),
-            ),
+            ),*/
 
             IconButton(
-              onPressed: () {},
+              onPressed: _shareExamPlan,
               icon: PhosphorIcon(PhosphorIcons.duotone.shareFat,
                   color: Theme.of(context).colorScheme.primary),
             )
@@ -119,5 +121,12 @@ class _ExamScreenState extends State<ExamScreen> {
       _isLoading = false;
       _pdfViewerKey = UniqueKey();
     });
+  }
+
+  ///Diese Funktion wird aufgerufen, wenn der User den Share-Button drückt
+  ///Sie teilt die PDF-Datei mit anderen Apps
+  void _shareExamPlan() async {
+    Share.shareXFiles([XFile(_file.path)],
+        text: 'Klausurplan ${_classId.name}');
   }
 }
