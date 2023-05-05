@@ -7,7 +7,6 @@ import 'package:hive/hive.dart';
 
 class HomeworkManager {
   //Zwischenspeicher, der verhindert, dass mehr als ein Dialog gleichzeitig geöffnet werden kann
-  static bool _isHomeworkDialogOpen = false;
   static List<HomeworkEntry> entries() =>
       List<HomeworkEntry>.from(Hive.box('homework').values.toList());
 
@@ -19,24 +18,30 @@ class HomeworkManager {
     return entries().where((element) => element.done).toList();
   }
 
-  static void showHomeworkDialog(Function() refresh, BuildContext context) {
-    //Wenn der Dialog bereits offen ist, wird kein weiterer geöffnet.
-    if (_isHomeworkDialogOpen) return;
+  static void addHomeworkEntry(HomeworkEntry entry) {
+    Hive.box('homework').add(entry);
+  }
 
-    HomeworkDialog.show(context,
-        onClose: () => {_isHomeworkDialogOpen = false});
-
-    //Der Dialog ist jetzt offen
-    _isHomeworkDialogOpen = true;
-    /*HomeworkEntry e = HomeworkEntry(
-        subject: "Mathe",
-        //generate random string
-        notes: Random().nextInt(1000000000).toString(),
-        dueDate: DateTime.now(),
+  static void _dialogCallback(
+      {required String subject,
+      required String annotations,
+      required bool autoRemind,
+      required DateTime remindDT}) {
+    var entry = HomeworkEntry(
+        subject: subject,
+        notes: annotations,
+        dueDate: remindDT,
         lastUpdated: DateTime.now());
-    Hive.box('homework').add(e);
-    refresh();*/
-    _isHomeworkDialogOpen = false;
+
+    if (autoRemind) {
+      //TODO: Auto-set due date
+    }
+
+    addHomeworkEntry(entry);
+  }
+
+  static void showHomeworkDialog(Function() refresh, BuildContext context) {
+    HomeworkDialog.show(context, onClose: _dialogCallback);
   }
 
   static bool hasHomework() {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:animated_list_plus/animated_list_plus.dart';
 import 'package:annette_app_x/models/homework_entry.dart';
 import 'package:annette_app_x/utilities/homework_manager.dart';
@@ -14,9 +16,20 @@ class HomeworkScreen extends StatefulWidget {
 }
 
 class HomeworkScreenState extends State<HomeworkScreen> {
+  StreamSubscription<BoxEvent>? subscription;
+
   @override
   void initState() {
+    subscription = Hive.box('homework').watch().listen((event) {
+      setState(() {});
+    });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    subscription?.cancel();
+    super.dispose();
   }
 
   List<HomeworkEntry> pendingHomework = [];
@@ -25,11 +38,7 @@ class HomeworkScreenState extends State<HomeworkScreen> {
   Widget build(BuildContext context) {
     pendingHomework = HomeworkManager.pendingHomework();
     int pendingHomeworkCount = pendingHomework.length;
-    Hive.box('homework').watch().listen((event) {
-      if (true) {
-        setState(() {});
-      }
-    });
+
     return pendingHomeworkCount != 0
         ? ImplicitlyAnimatedList(
             items: pendingHomework,

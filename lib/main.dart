@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:annette_app_x/consts/default_color_schemes.dart';
 import 'package:annette_app_x/models/theme_mode.dart';
 import 'package:annette_app_x/providers/user_config.dart';
@@ -10,6 +12,7 @@ import 'package:annette_app_x/utilities/homework_manager.dart';
 import 'package:annette_app_x/utilities/on_init_app.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 Future<void> main() async {
@@ -88,6 +91,28 @@ enum _Destination {
 class _MyHomePageState extends State<MyHomePage> {
   _Destination _selectedDestination = _Destination.vertretung;
 
+  //StreamSubscription für die Hausaufgaben, wird in initState() initialisiert
+  late StreamSubscription<BoxEvent>? subscription;
+
+  //Anzahl der Hausaufgaben
+  int _homeworkCount = HomeworkManager.howManyPendingEntries();
+
+  @override
+  void initState() {
+    subscription = Hive.box('homework').watch().listen((event) {
+      setState(() {
+        _homeworkCount = HomeworkManager.howManyPendingEntries();
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    subscription?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -155,11 +180,11 @@ class _MyHomePageState extends State<MyHomePage> {
           NavigationDestination(
             icon: HomeworkManager.hasHomework()
                 ? Badge(
-                    label: Text(
-                        (HomeworkManager.howManyPendingEntries()).toString()),
-                child: PhosphorIcon(PhosphorIcons.duotone.checkFat,
-                    color: Theme.of(context).colorScheme.onBackground)),
-                : const Icon(Icons.checklist_rounded),
+                    label: Text((_homeworkCount).toString()),
+                    child: PhosphorIcon(PhosphorIcons.duotone.checkFat,
+                        color: Theme.of(context).colorScheme.onBackground))
+                : PhosphorIcon(PhosphorIcons.duotone.smileyWink,
+                    color: Theme.of(context).colorScheme.onBackground),
             label: 'HAs',
           ),
 
