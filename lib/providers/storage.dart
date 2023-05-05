@@ -6,6 +6,8 @@ class StorageProvider {
     //Save the current date to Hive
     var cache = await Hive.openBox("cache");
     cache.put('examPlanDate${id.name}', DateTime.now());
+    print(DateTime.now());
+    print(cache.get('examPlanDate${id.name}'));
     print("Saved exam plan date for ${id.name}");
   }
 
@@ -15,8 +17,10 @@ class StorageProvider {
     var cache = await Hive.openBox("cache");
     print('examPlanDate${id.name}');
     var examPlanDate = (cache.get('examPlanDate${id.name}'));
+    print(examPlanDate);
     if (examPlanDate == null ||
         DateTime.now().difference(examPlanDate).inDays > 7) {
+      print("Exam plan is outdated");
       return false;
     }
     return true;
