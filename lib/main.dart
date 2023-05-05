@@ -10,6 +10,7 @@ import 'package:annette_app_x/utilities/homework_manager.dart';
 import 'package:annette_app_x/utilities/on_init_app.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 Future<void> main() async {
   //Initialisierung der App in Gang setzen
@@ -138,12 +139,17 @@ class _MyHomePageState extends State<MyHomePage> {
         selectedIndex: _selectedDestination.index,
         labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
         destinations: [
-          const NavigationDestination(
-            icon: Badge(label: Text("4"), child: Icon(Icons.dashboard_rounded)),
+          NavigationDestination(
+            icon: Badge(
+              label: const Text("4"),
+              child: PhosphorIcon(PhosphorIcons.duotone.rows,
+                  color: Theme.of(context).colorScheme.onBackground),
+            ),
             label: 'Vertretung',
           ),
-          const NavigationDestination(
-            icon: Icon(Icons.table_view_rounded),
+          NavigationDestination(
+            icon: PhosphorIcon(PhosphorIcons.duotone.calendar,
+                color: Theme.of(context).colorScheme.onBackground),
             label: 'Stundenplan',
           ),
           NavigationDestination(
@@ -151,7 +157,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 ? Badge(
                     label: Text(
                         (HomeworkManager.howManyPendingEntries()).toString()),
-                    child: const Icon(Icons.checklist_rounded))
+                child: PhosphorIcon(PhosphorIcons.duotone.checkFat,
+                    color: Theme.of(context).colorScheme.onBackground)),
                 : const Icon(Icons.checklist_rounded),
             label: 'HAs',
           ),
@@ -159,12 +166,14 @@ class _MyHomePageState extends State<MyHomePage> {
           /* Klausurplan nur für Oberstufe anzeigen */
 
           if (UserConfig.isOberstufe)
-            const NavigationDestination(
-              icon: Icon(Icons.calendar_month_outlined),
+            NavigationDestination(
+              icon: PhosphorIcon(PhosphorIcons.duotone.exam,
+                  color: Theme.of(context).colorScheme.onBackground),
               label: 'Klausurplan',
             ),
-          const NavigationDestination(
-            icon: Icon(Icons.more_horiz_rounded),
+          NavigationDestination(
+            icon: PhosphorIcon(PhosphorIcons.duotone.dotsThreeOutline,
+                color: Theme.of(context).colorScheme.onBackground),
             label: 'Sonstiges',
           ),
         ],
@@ -193,9 +202,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ][_selectedDestination.index],
       floatingActionButton: FloatingActionButton(
-        //neue HA hinzufügen, wenn der Button gedrückt wird
         onPressed: () => HomeworkManager.showHomeworkDialog(refresh, context),
-        child: const Icon(Icons.add),
+        child: PhosphorIcon(PhosphorIcons.duotone.listPlus,
+            color: Theme.of(context).colorScheme.onBackground),
       ),
     );
   }
