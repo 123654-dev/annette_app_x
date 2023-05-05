@@ -1,15 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class HomeworkDialog {
   static void show(BuildContext context,
       {bool? editOnly = false,
-      required Function(
-              {required String subject,
-              required String annotations,
-              required bool autoRemind,
-              required DateTime remindDT})
+      required Function({
+        required String subject,
+        required String annotations,
+        required bool autoRemind,
+        required DateTime remindDT,
+      })
           onClose}) {
     var subjects = ["Test", "Test2", "Test3"];
     var selectedSubject = subjects[0];
@@ -145,7 +147,7 @@ class _dialogSheetState extends State<_dialogSheet> {
                     children: [
                       SizedBox(
                         height: 60,
-                        width: 190,
+                        width: 150,
                         child: FilledButton.icon(
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
@@ -158,7 +160,7 @@ class _dialogSheetState extends State<_dialogSheet> {
                             ),
                             //Label: Date only
                             label: Text(
-                                "${_selectedDate.day}.${_selectedDate.month}.${_selectedDate.year}"),
+                                "${DateFormat.EEEE('de_DE').format(_selectedDate)}, ${DateFormat.yMd('de_DE').format(_selectedDate)}"),
                             onPressed: () async {
                               var date = await showDatePicker(
                                       context: context,
@@ -179,10 +181,10 @@ class _dialogSheetState extends State<_dialogSheet> {
                             icon:
                                 PhosphorIcon(PhosphorIcons.duotone.calendarX)),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 10, width: 10),
                       SizedBox(
                         height: 60,
-                        width: 190,
+                        width: 150,
                         child: FilledButton.icon(
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
@@ -194,13 +196,13 @@ class _dialogSheetState extends State<_dialogSheet> {
                               )),
                             ),
                             //Label: Date only
-                            label: Text(
-                                "${_selectedTime.hour}:${_selectedTime.minute}"),
+                            label: Text(DateFormat.Hm().format(_selectedDate)),
                             onPressed: () async {
                               var time = await showTimePicker(
-                                  context: context,
-                                  initialTime:
-                                      const TimeOfDay(hour: 16, minute: 0));
+                                context: context,
+                                initialTime:
+                                    const TimeOfDay(hour: 16, minute: 0),
+                              );
 
                               setState(() {
                                 _selectedTime = time!;
@@ -220,7 +222,7 @@ class _dialogSheetState extends State<_dialogSheet> {
                   ),
                 SizedBox(
                     width: 200,
-                    height: 80,
+                    height: 50,
                     child: FilledButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {

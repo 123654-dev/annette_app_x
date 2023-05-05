@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:annette_app_x/models/homework_entry.dart';
 import 'package:annette_app_x/screens/homework/homework_dialog.dart';
+import 'package:annette_app_x/screens/homework/homework_info.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
@@ -20,6 +21,11 @@ class HomeworkManager {
 
   static void addHomeworkEntry(HomeworkEntry entry) {
     Hive.box('homework').add(entry);
+  }
+
+  static void editHomeworkEntry(
+      HomeworkEntry oldEntry, HomeworkEntry newEntry) {
+    Hive.box('homework').putAt(entries().indexOf(oldEntry), newEntry);
   }
 
   static void _dialogCallback(
@@ -42,6 +48,11 @@ class HomeworkManager {
 
   static void showHomeworkDialog(Function() refresh, BuildContext context) {
     HomeworkDialog.show(context, onClose: _dialogCallback);
+  }
+
+  static void showHomeworkEditDialog(BuildContext context, HomeworkEntry entry,
+      Function(HomeworkEntry, HomeworkEntry) onClose) {
+    HomeworkInfo.show(context, entry);
   }
 
   static bool hasHomework() {

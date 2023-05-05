@@ -1,5 +1,6 @@
 import 'package:annette_app_x/models/homework_entry.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/date_symbol_data_file.dart';
 
 /// Enthält Code, der beim Start der App ausgeführt werden soll
 class AppInitializer {
@@ -22,6 +23,7 @@ class AppInitializer {
             .deleteAt(Hive.box("homework").values.toList().indexOf(element));
       }
     });
+
     //hier weiteren Code einfügen:
   }
 }

@@ -11,6 +11,9 @@ class HomeworkEntry {
   @HiveField(2)
   DateTime dueDate;
 
+  @HiveField(5)
+  DateTime? remindDate;
+
   @HiveField(3)
   bool done = false;
 
@@ -22,6 +25,7 @@ class HomeworkEntry {
     required this.notes,
     required this.dueDate,
     required this.lastUpdated,
+    this.remindDate,
     this.done = false,
   });
 
@@ -30,12 +34,16 @@ class HomeworkEntry {
         notes = json['notes'],
         dueDate = DateTime.parse(json['dueDate']),
         lastUpdated = DateTime.parse(json['lastUpdated']),
+        remindDate = json['remindDate'] != null
+            ? DateTime.parse(json['remindDate'])
+            : null,
         done = json['done'];
 
   Map<String, dynamic> toJson() => {
         'subject': subject,
         'notes': notes,
         'dueDate': dueDate.toIso8601String(),
+        'remindDate': remindDate?.toIso8601String(),
         'lastUpdated': lastUpdated.toIso8601String(),
         'done': done,
       };
@@ -49,11 +57,13 @@ class HomeworkEntryAdapter extends TypeAdapter<HomeworkEntry> {
   @override
   HomeworkEntry read(BinaryReader reader) {
     return HomeworkEntry(
-        subject: reader.read(),
-        notes: reader.read(),
-        dueDate: reader.read(),
-        lastUpdated: reader.read(),
-        done: reader.read());
+      subject: reader.read(),
+      notes: reader.read(),
+      dueDate: reader.read(),
+      lastUpdated: reader.read(),
+      done: reader.read(),
+      remindDate: reader.read(),
+    );
   }
 
   @override
@@ -66,5 +76,6 @@ class HomeworkEntryAdapter extends TypeAdapter<HomeworkEntry> {
     writer.write(obj.dueDate);
     writer.write(obj.lastUpdated);
     writer.write(obj.done);
+    writer.write(obj.remindDate);
   }
 }
