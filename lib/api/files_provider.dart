@@ -19,6 +19,7 @@ class FilesProvider {
     final response = await http
         .get(Uri.http('annette-app-files.vercel.app', 'klausur_$idString.pdf'));
     final bytes = response.bodyBytes;
+    StorageProvider.saveExamPlanDate(id);
     return await _storeFile(idString, bytes);
   }
 
