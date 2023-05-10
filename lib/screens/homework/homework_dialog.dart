@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class HomeworkDialog {
   static void show(BuildContext context,
@@ -13,7 +14,7 @@ class HomeworkDialog {
         required DateTime remindDT,
       })
           onClose}) {
-    var subjects = ["Test", "Test2", "Test3"];
+    var subjects = ["Sowi", "Mathe PK", "Literatur"];
     var selectedSubject = subjects[0];
 
     //Der Dialog wird mit showDialog() erzeugt
@@ -68,6 +69,8 @@ class _dialogSheetState extends State<_dialogSheet> {
 
   @override
   Widget build(BuildContext context) {
+    initializeDateFormatting("de_DE", null);
+
     if (!_autoRemind) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToEnd());
     }
@@ -126,10 +129,16 @@ class _dialogSheetState extends State<_dialogSheet> {
                 const SizedBox(height: 30),
                 Center(
                     child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      "Automatisch erinnern",
-                      textAlign: TextAlign.center,
+                    GestureDetector(
+                      onTap: () => setState(() {
+                        _autoRemind = !_autoRemind;
+                      }),
+                      child: const Text(
+                        "Fälligkeitsdatum automatisch festlegen",
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                     const SizedBox(width: 10),
                     Checkbox(

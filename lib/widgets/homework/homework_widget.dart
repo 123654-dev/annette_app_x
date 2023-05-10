@@ -30,6 +30,7 @@ class _HomeworkWidgetState extends State<HomeworkWidget> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: ListTile(
+            isThreeLine: true,
             visualDensity: const VisualDensity(horizontal: 0, vertical: 4),
             title: Text(widget.entry.subject,
                 style: const TextStyle(fontSize: 20)),
