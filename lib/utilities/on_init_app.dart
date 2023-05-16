@@ -1,4 +1,8 @@
+import 'package:annette_app_x/models/homework_entry.dart';
+import 'package:annette_app_x/providers/notifications.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/date_symbol_data_file.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 /// Enthält Code, der beim Start der App ausgeführt werden soll
 class AppInitializer {
@@ -8,6 +12,28 @@ class AppInitializer {
     await Hive.initFlutter();
     await Hive.openBox('user_config');
     await Hive.openBox('cache');
+
+    //TypeAdapter
+    HomeworkEntry.registerAdapter();
+
+    //Homework (Hive) initialisieren
+    //Hive.deleteBoxFromDisk('homework');
+
+    if (!Hive.isBoxOpen('homework')) await Hive.openBox('homework');
+    Hive.box("homework").values.toList().forEach((element) {
+      print(element);
+      //TODO: HomeworkEntry muss noch angepasst werden
+      if (element.done) {
+        Hive.box("homework")
+            .deleteAt(Hive.box("homework").values.toList().indexOf(element));
+      }
+    });
+
+    //Notifications initialisieren
+    await NotificationProvider().init();
+
+    //Zeitzonen initialisieren (für Notifications)
+    tz.initializeTimeZones();
 
     //hier weiteren Code einfügen:
   }
