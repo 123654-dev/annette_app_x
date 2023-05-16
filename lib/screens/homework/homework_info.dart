@@ -35,11 +35,11 @@ class _HomeworkInfoWidgetState extends State<HomeworkInfoWidget> {
   void initState() {
     super.initState();
     if (widget.showDefault) {
-      _selectedDateR = widget.entry.remindDate ?? DateTime.now();
+      _selectedDateR = widget.entry.reminderDateTime ?? DateTime.now();
       _selectedDate = widget.entry.dueDate;
 
-      _selectedTimeR =
-          TimeOfDay.fromDateTime(widget.entry.remindDate ?? DateTime.now());
+      _selectedTimeR = TimeOfDay.fromDateTime(
+          widget.entry.reminderDateTime ?? DateTime.now());
 
       _selectedTime = TimeOfDay.fromDateTime(widget.entry.dueDate);
       _controller.text = widget.entry.notes;
@@ -268,15 +268,15 @@ class _HomeworkInfoWidgetState extends State<HomeworkInfoWidget> {
                     width: 150,
                     height: 40,
                     child: FilledButton(
-                      onPressed: () {
-                        HomeworkManager.editHomeworkEntry(
+                      onPressed: () async {
+                        await HomeworkManager.editHomeworkEntry(
                             widget.entry,
                             HomeworkEntry(
                                 lastUpdated: DateTime.now(),
                                 dueDate: _selectedDate,
                                 subject: widget.entry.subject,
                                 notes: _controller.text,
-                                remindDate: _selectedDateR));
+                                reminderDateTime: _selectedDateR));
                         Navigator.of(context).pop();
                       },
                       child: const Text("Speichern"),

@@ -11,40 +11,53 @@ class HomeworkEntry {
   @HiveField(2)
   DateTime dueDate;
 
-  @HiveField(5)
-  DateTime? remindDate;
-
   @HiveField(3)
   bool done = false;
 
   @HiveField(4)
   DateTime lastUpdated;
 
+  @HiveField(5)
+  DateTime? reminderDateTime;
+
+  @HiveField(6)
+  int? scheduledNotificationId;
+
   HomeworkEntry({
     required this.subject,
     required this.notes,
     required this.dueDate,
     required this.lastUpdated,
-    this.remindDate,
+    this.reminderDateTime,
+    this.scheduledNotificationId,
     this.done = false,
-  });
+  }) {
+    reminderDateTime ??=
+        dueDate.subtract(const Duration(days: 1)).isBefore(DateTime.now())
+            ? DateTime.now().add(const Duration(seconds: 15))
+            : dueDate
+                .subtract(const Duration(days: 1))
+                .copyWith(hour: 16, minute: 0);
+  }
 
   HomeworkEntry.fromJson(Map<String, dynamic> json)
       : subject = json['subject'],
         notes = json['notes'],
         dueDate = DateTime.parse(json['dueDate']),
         lastUpdated = DateTime.parse(json['lastUpdated']),
-        remindDate = json['remindDate'] != null
+        reminderDateTime = json['remindDate'] != null
             ? DateTime.parse(json['remindDate'])
             : null,
+        scheduledNotificationId = json['scheduledNotificationId'],
         done = json['done'];
 
   Map<String, dynamic> toJson() => {
         'subject': subject,
         'notes': notes,
         'dueDate': dueDate.toIso8601String(),
-        'remindDate': remindDate?.toIso8601String(),
+        'remindDate': reminderDateTime?.toIso8601String(),
         'lastUpdated': lastUpdated.toIso8601String(),
+        'scheduledNotificationId': scheduledNotificationId,
         'done': done,
       };
 
@@ -62,7 +75,8 @@ class HomeworkEntryAdapter extends TypeAdapter<HomeworkEntry> {
       dueDate: reader.read(),
       lastUpdated: reader.read(),
       done: reader.read(),
-      remindDate: reader.read(),
+      reminderDateTime: reader.read(),
+      scheduledNotificationId: reader.read(),
     );
   }
 
@@ -76,6 +90,7 @@ class HomeworkEntryAdapter extends TypeAdapter<HomeworkEntry> {
     writer.write(obj.dueDate);
     writer.write(obj.lastUpdated);
     writer.write(obj.done);
-    writer.write(obj.remindDate);
+    writer.write(obj.reminderDateTime);
+    writer.write(obj.scheduledNotificationId);
   }
 }

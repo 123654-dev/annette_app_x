@@ -1,10 +1,12 @@
 import 'dart:math';
 
 import 'package:annette_app_x/models/homework_entry.dart';
+import 'package:annette_app_x/providers/notifications.dart';
 import 'package:annette_app_x/screens/homework/homework_dialog.dart';
 import 'package:annette_app_x/screens/homework/homework_info.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 
 class HomeworkManager {
   //Zwischenspeicher, der verhindert, dass mehr als ein Dialog gleichzeitig geöffnet werden kann
@@ -19,12 +21,31 @@ class HomeworkManager {
     return entries().where((element) => element.done).toList();
   }
 
-  static void addHomeworkEntry(HomeworkEntry entry) {
+  static generateRemainingTimeToast(DateTime dueDate) {
+    return "Fällig am ${DateFormat.EEEE('de_DE').format(dueDate)}, ${DateFormat.yMd('de_DE').format(dueDate)} um ${DateFormat.Hm().format(dueDate)}";
+  }
+
+  static Future<void> addHomeworkEntry(HomeworkEntry entry) async {
+    entry.scheduledNotificationId = await NotificationProvider()
+        .scheduleNotification(
+            date: entry.reminderDateTime!,
+            title: "Hausaufgaben in ${entry.subject}!",
+            body: generateRemainingTimeToast(entry.dueDate),
+            payload: entry.toJson().toString());
     Hive.box('homework').add(entry);
   }
 
-  static void editHomeworkEntry(
-      HomeworkEntry oldEntry, HomeworkEntry newEntry) {
+  static Future<void> editHomeworkEntry(
+      HomeworkEntry oldEntry, HomeworkEntry newEntry) async {
+    NotificationProvider()
+        .cancelNotification(oldEntry.scheduledNotificationId!);
+    newEntry.scheduledNotificationId = oldEntry.scheduledNotificationId;
+    await NotificationProvider().scheduleNotification(
+        id: newEntry.scheduledNotificationId!,
+        date: newEntry.reminderDateTime!,
+        title: "Hausaufgaben in ${newEntry.subject}!",
+        body: generateRemainingTimeToast(newEntry.dueDate),
+        payload: newEntry.toJson().toString());
     Hive.box('homework').putAt(entries().indexOf(oldEntry), newEntry);
   }
 
@@ -32,7 +53,7 @@ class HomeworkManager {
       {required String subject,
       required String annotations,
       required bool autoRemind,
-      required DateTime remindDT}) {
+      required DateTime remindDT}) async {
     var entry = HomeworkEntry(
         subject: subject,
         notes: annotations,
@@ -43,7 +64,7 @@ class HomeworkManager {
       //TODO: Auto-set due date
     }
 
-    addHomeworkEntry(entry);
+    await addHomeworkEntry(entry);
   }
 
   static void showHomeworkDialog(Function() refresh, BuildContext context) {
@@ -64,6 +85,7 @@ class HomeworkManager {
   static int howManyEntries() => entries().length;
 
   static void moveToBin(HomeworkEntry entry) {
+    NotificationProvider().cancelNotification(entry.scheduledNotificationId!);
     entries().elementAt(entries().indexOf(entry)).done = true;
     Hive.box('homework').putAt(entries().indexOf(entry), entry);
   }
