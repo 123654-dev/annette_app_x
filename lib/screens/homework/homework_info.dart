@@ -14,7 +14,6 @@ class HomeworkInfo {
                 entry: entry,
               )
             ]));
-    ;
   }
 }
 
@@ -62,6 +61,7 @@ class _HomeworkInfoWidgetState extends State<HomeworkInfoWidget> {
       child: ListView(
         shrinkWrap: true,
         children: [
+          const SizedBox(height: 5),
           const Padding(
             padding: EdgeInsets.all(12.0),
             child: Text(
@@ -70,7 +70,7 @@ class _HomeworkInfoWidgetState extends State<HomeworkInfoWidget> {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 5),
           Padding(
               padding: const EdgeInsets.all(20.0),
 

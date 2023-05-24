@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:annette_app_x/models/homework_entry.dart';
+import 'package:annette_app_x/models/sorting_types.dart';
 import 'package:annette_app_x/providers/notifications.dart';
 import 'package:annette_app_x/screens/homework/homework_dialog.dart';
 import 'package:annette_app_x/screens/homework/homework_info.dart';
@@ -88,5 +89,15 @@ class HomeworkManager {
     NotificationProvider().cancelNotification(entry.scheduledNotificationId!);
     entries().elementAt(entries().indexOf(entry)).done = true;
     Hive.box('homework').putAt(entries().indexOf(entry), entry);
+  }
+
+  static void restoreFromBin(HomeworkEntry entry) {
+    entries().elementAt(entries().indexOf(entry)).done = false;
+    Hive.box('homework').putAt(entries().indexOf(entry), entry);
+  }
+
+  static void deleteFromBin(HomeworkEntry entry) {
+    NotificationProvider().cancelNotification(entry.scheduledNotificationId!);
+    Hive.box('homework').deleteAt(entries().indexOf(entry));
   }
 }
