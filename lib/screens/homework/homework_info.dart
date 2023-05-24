@@ -8,7 +8,13 @@ class HomeworkInfo {
   static void show(BuildContext context, HomeworkEntry entry) {
     showModalBottomSheet(
         context: context,
-        builder: (context) => HomeworkInfoWidget(entry: entry));
+        isScrollControlled: true,
+        builder: (context) => Wrap(children: [
+              HomeworkInfoWidget(
+                entry: entry,
+              )
+            ]));
+    ;
   }
 }
 
@@ -54,9 +60,10 @@ class _HomeworkInfoWidgetState extends State<HomeworkInfoWidget> {
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       //Listenansicht für alle Widgets
       child: ListView(
+        shrinkWrap: true,
         children: [
           const Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(12.0),
             child: Text(
               "Hausaufgabe bearbeiten",
               textAlign: TextAlign.center,
@@ -154,7 +161,7 @@ class _HomeworkInfoWidgetState extends State<HomeworkInfoWidget> {
           ),
           const SizedBox(height: 20),
           //Datum und Uhrzeit (2x)
-          Text(
+          const Text(
             "Erinnerung:",
             textAlign: TextAlign.center,
           ),
@@ -236,7 +243,7 @@ class _HomeworkInfoWidgetState extends State<HomeworkInfoWidget> {
                     });
                   },
                   icon: PhosphorIcon(PhosphorIcons.duotone.alarm),
-                  label: Text("In einer Stunde")),
+                  label: const Text("In einer Stunde")),
               const SizedBox(height: 10),
               FilledButton.tonalIcon(
                   onPressed: () {
@@ -251,13 +258,16 @@ class _HomeworkInfoWidgetState extends State<HomeworkInfoWidget> {
                     });
                   },
                   icon: PhosphorIcon(PhosphorIcons.duotone.alarm),
-                  label: Text("Am Nachmittag")),
+                  label: const Text("Am Nachmittag")),
               const SizedBox(height: 20),
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 SizedBox(
                     width: 150,
                     height: 40,
                     child: OutlinedButton(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Theme.of(context).colorScheme.surface)),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },

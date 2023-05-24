@@ -85,6 +85,7 @@ class _dialogSheetState extends State<_dialogSheet> {
           child: Form(
             key: _formKey,
             child: ListView(
+              shrinkWrap: true,
               controller: _scrollController,
               children: [
                 (widget.editOnly
