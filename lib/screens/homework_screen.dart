@@ -101,16 +101,17 @@ class HomeworkScreenState extends State<HomeworkScreen> {
         ),
       ),
       Expanded(
-          child: pendingHomeworkCount != 0
-              ? ImplicitlyAnimatedList(
-                  items: pendingHomework,
-                  itemBuilder: _buildItem,
-                  areItemsTheSame: (oldItem, newItem) => oldItem == newItem,
-                  updateDuration: const Duration(milliseconds: 200),
-                  insertDuration: const Duration(milliseconds: 200),
-                  removeDuration: const Duration(milliseconds: 200),
-                )
-              : const Text("Keine Hausaufgaben!")),
+        child: pendingHomeworkCount != 0
+            ? ImplicitlyAnimatedList(
+                items: pendingHomework,
+                itemBuilder: _buildItem,
+                areItemsTheSame: (oldItem, newItem) => oldItem == newItem,
+                updateDuration: const Duration(milliseconds: 200),
+                insertDuration: const Duration(milliseconds: 200),
+                removeDuration: const Duration(milliseconds: 200),
+              )
+            : const Center(child: Text("Keine Hausaufgaben!")),
+      ),
     ]);
   }
 
