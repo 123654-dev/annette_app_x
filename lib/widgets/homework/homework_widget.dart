@@ -22,7 +22,7 @@ class _HomeworkWidgetState extends State<HomeworkWidget> {
     initializeDateFormatting("de_DE", null);
 
     return GestureDetector(
-      onLongPress: () => {
+      onTap: () => {
         HomeworkManager.showHomeworkEditDialog(
             context, widget.entry, HomeworkManager.editHomeworkEntry)
       },
