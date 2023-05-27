@@ -27,7 +27,7 @@ class _HomeworkWidgetState extends State<HomeworkTrayWidget> {
       child: ListTile(
         isThreeLine: true,
         visualDensity: const VisualDensity(horizontal: 0, vertical: 4),
-        title: Text(widget.entry.subject, style: const TextStyle(fontSize: 20)),
+        title: Text(widget.entry.subject, style: const TextStyle(fontSize: 15)),
         subtitle: Text(
             "${widget.entry.notes}\n${DateFormat("'Bis': EEEE, dd.MM. (kk:mm)", "de_DE").format(widget.entry.dueDate)}"),
         trailing: SizedBox(

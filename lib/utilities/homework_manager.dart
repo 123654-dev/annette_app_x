@@ -41,12 +41,14 @@ class HomeworkManager {
     NotificationProvider()
         .cancelNotification(oldEntry.scheduledNotificationId!);
     newEntry.scheduledNotificationId = oldEntry.scheduledNotificationId;
-    await NotificationProvider().scheduleNotification(
-        id: newEntry.scheduledNotificationId!,
-        date: newEntry.reminderDateTime!,
-        title: "Hausaufgaben in ${newEntry.subject}!",
-        body: generateRemainingTimeToast(newEntry.dueDate),
-        payload: newEntry.toJson().toString());
+    if (newEntry.reminderDateTime!.isAfter(DateTime.now())) {
+      NotificationProvider().scheduleNotification(
+          id: newEntry.scheduledNotificationId!,
+          date: newEntry.reminderDateTime!,
+          title: "Hausaufgaben in ${newEntry.subject}!",
+          body: generateRemainingTimeToast(newEntry.dueDate),
+          payload: newEntry.toJson().toString());
+    }
     Hive.box('homework').putAt(entries().indexOf(oldEntry), newEntry);
   }
 

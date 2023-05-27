@@ -51,7 +51,7 @@ class _HomeworkTrayState extends State<HomeworkTray> {
       padding: const EdgeInsets.all(5.0),
       child: pendingHomeworkCount != 0
           ? Column(children: [
-              const SizedBox(height: 5),
+              const SizedBox(height: 15),
               const Text("Papierkorb",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
@@ -83,15 +83,23 @@ class _HomeworkTrayState extends State<HomeworkTray> {
       HomeworkEntry entry, int index) {
     return FadeTransition(
       opacity: animation,
-      child: HomeworkTrayWidget(
-          entry: entry,
-          onChecked: () {
-            HomeworkManager.moveToBin(entry);
-            setState(() {
-              contents.removeAt(index);
-            });
-            widget.refresh();
-          }),
+      child: Column(
+        children: [
+          HomeworkTrayWidget(
+              entry: entry,
+              onChecked: () {
+                HomeworkManager.moveToBin(entry);
+                setState(() {
+                  contents.removeAt(index);
+                });
+                widget.refresh();
+              }),
+          const Divider(
+            endIndent: 30,
+            indent: 30,
+          )
+        ],
+      ),
     );
   }
 }
