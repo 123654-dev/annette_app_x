@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:annette_app_x/models/class_ids.dart';
+import 'package:annette_app_x/models/file_format.dart';
 import 'package:annette_app_x/providers/storage.dart';
 import 'package:annette_app_x/providers/user_config.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,11 @@ import 'package:annette_app_x/api/files_provider.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:cross_file/cross_file.dart';
+import 'package:annette_app_x/api/files_provider.dart';
+
+import 'package:pdfx/pdfx.dart';
+
+bool image = true;
 
 ///Diese Seite zeigt Klausurpläne an.
 class ExamScreen extends StatefulWidget {
@@ -126,7 +132,29 @@ class _ExamScreenState extends State<ExamScreen> {
   ///Diese Funktion wird aufgerufen, wenn der User den Share-Button drückt
   ///Sie teilt die PDF-Datei mit anderen Apps
   void _shareExamPlan() async {
-    Share.shareXFiles([XFile(_file.path)],
-        text: 'Klausurplan ${_classId.name}');
+    print("sharing exam plan for ${_classId.name} as ${image ? "image" : "pdf"}");
+    if (!image) {
+      Share.shareXFiles([XFile(_file.path)],
+          text: 'Klausurplan ${_classId.name}');
+    } else {
+      //Öffnet die PDF-Datei
+      var document = await PdfDocument.openFile(_file.path);
+
+      //Iteriert über alle Seiten und speichert sie als JPG-Dateien in einer Liste
+      List<XFile> pages = [];
+      for (int i = 1; i <= document.pagesCount; i++) {
+        //Öffnet die Datei erneut (eigentlich ist das nicht nötig, aber sonst gibt es einen "unknown error" mit cause "null" vom Plugin)
+        document = await PdfDocument.openFile(_file.path);
+
+        var page = await document.getPage(i);
+        var pageImage =
+            await page.render(width: page.width, height: page.height, backgroundColor: '#FFFFFF');
+        //Speichert die Datei lokal zwischen, damit sie zu einer XFile konvertiert werden kann
+        var file = await FilesProvider.storeFile(
+            "examPlan$_classId;page$i", pageImage!.bytes, FileFormat.JPG);
+        pages.add(XFile(file.path));
+      }
+      Share.shareXFiles(pages, text: 'Klausurplan ${_classId.name}');
+    }
   }
 }

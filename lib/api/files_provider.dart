@@ -7,6 +7,8 @@ import 'package:annette_app_x/providers/storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
+import '../models/file_format.dart';
+
 ///
 /// Enthält Methoden zum Herunterladen von Dateien aus dem Backend
 ///
@@ -20,14 +22,14 @@ class FilesProvider {
         .get(Uri.http('annette-app-files.vercel.app', 'klausur_$idString.pdf'));
     final bytes = response.bodyBytes;
     StorageProvider.saveExamPlanDate(id);
-    return await _storeFile(idString, bytes);
+    return await storeFile(idString, bytes, FileFormat.PDF);
   }
 
   ///Helper-Methode, die die Datei lokal speichert und ein File-Objekt zurückgibt
   ///Das File-Objekt kann dann z.B. mit dem PDFView-Widget angezeigt werden.
   ///[name] ist der Name. unter dem die Datei gespeichert werden soll
-  static Future<File> _storeFile(name, bytes) async {
-    final filename = '$name.pdf';
+  static Future<File> storeFile(name, bytes, FileFormat fileFormat) async {
+    final filename = fileFormat == FileFormat.PDF ? '$name.pdf' : fileFormat == FileFormat.PNG ? '$name.png' : '$name.jpg';
     final dir = await getApplicationDocumentsDirectory();
 
     //File lokal speichern
@@ -47,14 +49,14 @@ class FilesProvider {
 
       //File laden und zurückgeben
       final file = File('${dir.path}/$filename');
-      print("Serving a locally-sourced exam plan for $id 🪴");
+      print("Serving a locally-sourced exam plan for $id");
 
       return file;
     } else {
       //Der Stundenplan ist veraltet -> herunterladen
       try {
         File file = await _loadExamPlansFromNetwork(id)
-            .timeout(const Duration(seconds: 10), onTimeout: () {
+            .timeout(const Duration(seconds: 100), onTimeout: () {
           throw TimeoutException('Timeout downloading exam plan');
         });
         return file;
