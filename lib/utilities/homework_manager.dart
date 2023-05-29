@@ -96,6 +96,13 @@ class HomeworkManager {
   static void restoreFromBin(HomeworkEntry entry) {
     entries().elementAt(entries().indexOf(entry)).done = false;
     Hive.box('homework').putAt(entries().indexOf(entry), entry);
+    //Erneutes Setzen der Notification
+    NotificationProvider().scheduleNotification(
+        id: entry.scheduledNotificationId!,
+        date: entry.reminderDateTime!,
+        title: "Hausaufgaben in ${entry.subject}!",
+        body: generateRemainingTimeToast(entry.dueDate),
+        payload: entry.toJson().toString());
   }
 
   static void deleteFromBin(HomeworkEntry entry) {
