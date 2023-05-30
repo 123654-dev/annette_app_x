@@ -1,0 +1,96 @@
+import 'package:hive_flutter/hive_flutter.dart';
+
+@HiveType(typeId: 0)
+class HomeworkEntry {
+  @HiveField(0)
+  String subject;
+
+  @HiveField(1)
+  String notes;
+
+  @HiveField(2)
+  DateTime dueDate;
+
+  @HiveField(3)
+  bool done = false;
+
+  @HiveField(4)
+  DateTime lastUpdated;
+
+  @HiveField(5)
+  DateTime? reminderDateTime;
+
+  @HiveField(6)
+  int? scheduledNotificationId;
+
+  HomeworkEntry({
+    required this.subject,
+    required this.notes,
+    required this.dueDate,
+    required this.lastUpdated,
+    this.reminderDateTime,
+    this.scheduledNotificationId,
+    this.done = false,
+  }) {
+    reminderDateTime ??=
+        dueDate.subtract(const Duration(days: 1)).isBefore(DateTime.now())
+            ? DateTime.now().add(const Duration(seconds: 15))
+            : dueDate
+                .subtract(const Duration(days: 1))
+                .copyWith(hour: 16, minute: 0);
+  }
+
+  HomeworkEntry.fromJson(Map<String, dynamic> json)
+      : subject = json['subject'],
+        notes = json['notes'],
+        dueDate = DateTime.parse(json['dueDate']),
+        lastUpdated = DateTime.parse(json['lastUpdated']),
+        reminderDateTime = json['remindDate'] != null
+            ? DateTime.parse(json['remindDate'])
+            : null,
+        scheduledNotificationId = json['scheduledNotificationId'],
+        done = json['done'];
+
+  Map<String, dynamic> toJson() => {
+        'subject': subject,
+        'notes': notes,
+        'dueDate': dueDate.toIso8601String(),
+        'remindDate': reminderDateTime?.toIso8601String(),
+        'lastUpdated': lastUpdated.toIso8601String(),
+        'scheduledNotificationId': scheduledNotificationId,
+        'done': done,
+      };
+
+  static void registerAdapter() {
+    Hive.registerAdapter(HomeworkEntryAdapter());
+  }
+}
+
+class HomeworkEntryAdapter extends TypeAdapter<HomeworkEntry> {
+  @override
+  HomeworkEntry read(BinaryReader reader) {
+    return HomeworkEntry(
+      subject: reader.read(),
+      notes: reader.read(),
+      dueDate: reader.read(),
+      lastUpdated: reader.read(),
+      done: reader.read(),
+      reminderDateTime: reader.read(),
+      scheduledNotificationId: reader.read(),
+    );
+  }
+
+  @override
+  int get typeId => 0;
+
+  @override
+  void write(BinaryWriter writer, HomeworkEntry obj) {
+    writer.write(obj.subject);
+    writer.write(obj.notes);
+    writer.write(obj.dueDate);
+    writer.write(obj.lastUpdated);
+    writer.write(obj.done);
+    writer.write(obj.reminderDateTime);
+    writer.write(obj.scheduledNotificationId);
+  }
+}
