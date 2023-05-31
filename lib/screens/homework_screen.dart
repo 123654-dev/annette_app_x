@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:animated_list_plus/animated_list_plus.dart';
 import 'package:annette_app_x/models/homework_entry.dart';
 import 'package:annette_app_x/models/sorting_types.dart';
-import 'package:annette_app_x/screens/homework/homework_tray.dart';
+import 'package:annette_app_x/screens/homework/homework_bin.dart';
 import 'package:annette_app_x/utilities/homework_manager.dart';
 import 'package:annette_app_x/widgets/homework/homework_widget.dart';
 import 'package:flutter/material.dart';

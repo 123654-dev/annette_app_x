@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:animated_list_plus/animated_list_plus.dart';
 import 'package:annette_app_x/models/homework_entry.dart';
 import 'package:annette_app_x/utilities/homework_manager.dart';
-import 'package:annette_app_x/widgets/homework/homework_tray_widget.dart';
+import 'package:annette_app_x/widgets/homework/homework_bin_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
@@ -85,7 +85,7 @@ class _HomeworkTrayState extends State<HomeworkTray> {
       opacity: animation,
       child: Column(
         children: [
-          HomeworkTrayWidget(
+          HomeworkBinWidget(
               entry: entry,
               onChecked: () {
                 HomeworkManager.moveToBin(entry);

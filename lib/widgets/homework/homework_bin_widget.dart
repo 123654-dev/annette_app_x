@@ -6,18 +6,18 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class HomeworkTrayWidget extends StatefulWidget {
+class HomeworkBinWidget extends StatefulWidget {
   final Function onChecked;
   final HomeworkEntry entry;
 
-  const HomeworkTrayWidget(
+  const HomeworkBinWidget(
       {super.key, required this.entry, required this.onChecked});
 
   @override
-  State<HomeworkTrayWidget> createState() => _HomeworkWidgetState();
+  State<HomeworkBinWidget> createState() => _HomeworkBinWidgetState();
 }
 
-class _HomeworkWidgetState extends State<HomeworkTrayWidget> {
+class _HomeworkBinWidgetState extends State<HomeworkBinWidget> {
   @override
   Widget build(BuildContext context) {
     initializeDateFormatting("de_DE", null);
