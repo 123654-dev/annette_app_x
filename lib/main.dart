@@ -80,6 +80,8 @@ class MyHomePage extends StatefulWidget {
 ///Enum für verschiedene Navigationsbuttons
 ///Wird verwendet, um die richtige Seite anzuzeigen
 ///!! Klausurplan nur für Oberstufe !!
+
+//? Wieso machen wir nicht aus has -> hausaufgaben
 enum _Destination {
   vertretung,
   stundenplan,

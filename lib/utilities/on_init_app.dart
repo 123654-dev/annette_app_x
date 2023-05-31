@@ -8,6 +8,8 @@ import 'package:timezone/data/latest.dart' as tz;
 /// Enthält Code, der beim Start der App ausgeführt werden soll
 class AppInitializer {
   ///Hier wird alles initialisiert, was initialisiert werden möchte
+  
+
   static Future<void> init() async {
     //Config (Hive) initialisieren
     await Hive.initFlutter();
@@ -19,7 +21,6 @@ class AppInitializer {
 
     //Homework (Hive) initialisieren
     //Hive.deleteBoxFromDisk('homework');
-
     if (!Hive.isBoxOpen('homework')) await Hive.openBox('homework');
     Hive.box("homework").values.toList().forEach((element) {
       print(element);
@@ -38,6 +39,17 @@ class AppInitializer {
     //Zeitzonen initialisieren (für Notifications)
     tz.initializeTimeZones();
 
+    // Nachrichten von Contentful initialisieren.
+    if (!Hive.isBoxOpen("news")) {
+      Box newsBox = await Hive.openBox("news"); 
+      
+    }
+
+
+
     //hier weiteren Code einfügen:
+    
+    
+
   }
 }

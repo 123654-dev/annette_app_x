@@ -78,6 +78,7 @@ class _ExamScreenState extends State<ExamScreen> {
             //mit diesem Button sollen alle Klausurtermine vorgeschlagen werden,
             //der User kann nun alle ihn betreffenden Termine auswählen und automatisch
             //in den Kalender importieren.
+            // ? Welchen Kalender, den des Handys?
             /*IconButton(
               onPressed: () {},
               icon: PhosphorIcon(PhosphorIcons.duotone.download,
