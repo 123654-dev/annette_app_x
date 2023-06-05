@@ -50,7 +50,9 @@ dependencies:
   intl: ^0.18.1
   flutter_local_notifications: ^14.0.0+1
   nanoid: ^1.0.0
-  graphql_flutter: ^5.1.2
+  graphql: ^5.1.2
+  web_socket_channel: ^2.4.0
+  stream_channel: ^2.1.1
 
 dev_dependencies:
   flutter_test:

@@ -3,7 +3,6 @@ import 'package:annette_app_x/providers/news.dart';
 import 'package:annette_app_x/providers/notifications.dart';
 import 'package:annette_app_x/utilities/homework_manager.dart';
 import 'package:flutter/foundation.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/date_symbol_data_file.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -18,7 +17,7 @@ class AppInitializer {
     await Hive.initFlutter();
     await Hive.openBox('user_config');
     await Hive.openBox('cache');
-    await Hive.openBox(NewsProvider.newsBox);
+    await Hive.openBox(NewsProvider.newsBoxName);
 
     
     // Nachrichten werden initialisiert
@@ -47,28 +46,6 @@ class AppInitializer {
 
     //Zeitzonen initialisieren (für Notifications)
     tz.initializeTimeZones();
-
-
-    //hier weiteren Code einfügen:
-    
-    // GraphQl Verbindung wird initialisiert (https://pub.dev/packages/graphql_flutter#usage)
-    // schließlich benutzen wir GraphQl, um die Informationen von Contentful zu holen
-    final HttpLink httpLink = HttpLink(
-      "https://graphql.contentful.com/content/v1/spaces/${NewsProvider.spaceID}/environments/master"
-    );
-
-    final AuthLink authLink = AuthLink(
-      getToken: () => "Bearer ${NewsProvider.contentDeliveryApiAccessToken}"
-    );
-
-    final Link fullLink = authLink.concat(httpLink);
-
-     = ValueNotifier(
-      GraphQLClient(
-        link: fullLink,
-        cache: GraphQLCache()
-      ),
-    );
     
 
   }

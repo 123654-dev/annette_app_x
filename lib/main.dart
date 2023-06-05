@@ -10,19 +10,15 @@ import 'package:annette_app_x/screens/misc_screen.dart';
 import 'package:annette_app_x/screens/substitution_screen.dart';
 import 'package:annette_app_x/screens/timetable_screen.dart';
 import 'package:annette_app_x/utilities/homework_manager.dart';
-import 'package:annette_app_x/utilities/on_init_app.dart';
+import 'package:annette_app_x/on_init_app.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 Future<void> main() async {
   //Initialisierung der App in Gang setzen
-  await AppInitializer.init();
-
-  //ausführen
-  runApp(const MyApp());
+  await AppInitializer.init().then((value) => runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -33,18 +29,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     var home = const MyHomePage(title: 'Annette App X');
 
-    // die gesamte App wird in GraphQLProvider "gewrapped" (https://pub.dev/packages/graphql_flutter#usage)
-    return GraphQLProvider(
-      client: NewsProvider.graphQLClient,
+    /*  
+    Wenn der User den Material3-Modus aktiviert hat, erzeugt der DynamicColorBuilder
+    ein auf der Systemfarbe basierendes Farbschema.
 
-      /*
-      Wenn der User den Material3-Modus aktiviert hat, erzeugt der DynamicColorBuilder
-      ein auf der Systemfarbe basierendes Farbschema.
+    Ansonsten wird die App mit den Standardschemata konstruiert (definiert in default_color_schemes.dart!)
+    */
 
-      Ansonsten wird die App mit den Standardschemata konstruiert (definiert in default_color_schemes.dart!)
-      */
-
-      child: UserConfig.themeMode == AnnetteThemeMode.material3
+    return UserConfig.themeMode == AnnetteThemeMode.material3
         ? DynamicColorBuilder(
             builder: ((lightDynamic, darkDynamic) => MaterialApp(
                   title: 'Annette App X',
@@ -69,8 +61,7 @@ class MyApp extends StatelessWidget {
                 useMaterial3: true),
             home: home,
             themeMode: ThemeMode.dark,
-          )
-    );
+          );
   }
 }
 
