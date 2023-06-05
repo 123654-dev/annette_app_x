@@ -2,6 +2,8 @@ import 'package:annette_app_x/models/homework_entry.dart';
 import 'package:annette_app_x/providers/news.dart';
 import 'package:annette_app_x/providers/notifications.dart';
 import 'package:annette_app_x/utilities/homework_manager.dart';
+import 'package:flutter/foundation.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/date_symbol_data_file.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -16,6 +18,11 @@ class AppInitializer {
     await Hive.initFlutter();
     await Hive.openBox('user_config');
     await Hive.openBox('cache');
+    await Hive.openBox(NewsProvider.newsBox);
+
+    
+    // Nachrichten werden initialisiert
+    await NewsProvider.initializeNewsHiveBox();
 
     //TypeAdapter
     HomeworkEntry.registerAdapter();
@@ -23,6 +30,7 @@ class AppInitializer {
     //Homework (Hive) initialisieren
     //Hive.deleteBoxFromDisk('homework');
     if (!Hive.isBoxOpen('homework')) await Hive.openBox('homework');
+
     Hive.box("homework").values.toList().forEach((element) {
       print(element);
 
@@ -40,17 +48,27 @@ class AppInitializer {
     //Zeitzonen initialisieren (für Notifications)
     tz.initializeTimeZones();
 
-    // Nachrichten von Contentful initialisieren, damit in der Hive-Datenbank überhaupt irgendwelche Werte drinstehen
-    print("");
-    print("================");
-    print("intializing news");
-    print("================");
-    print("");
-    NewsProvider.initializeNewsHiveBox();
-
 
     //hier weiteren Code einfügen:
     
+    // GraphQl Verbindung wird initialisiert (https://pub.dev/packages/graphql_flutter#usage)
+    // schließlich benutzen wir GraphQl, um die Informationen von Contentful zu holen
+    final HttpLink httpLink = HttpLink(
+      "https://graphql.contentful.com/content/v1/spaces/${NewsProvider.spaceID}/environments/master"
+    );
+
+    final AuthLink authLink = AuthLink(
+      getToken: () => "Bearer ${NewsProvider.contentDeliveryApiAccessToken}"
+    );
+
+    final Link fullLink = authLink.concat(httpLink);
+
+     = ValueNotifier(
+      GraphQLClient(
+        link: fullLink,
+        cache: GraphQLCache()
+      ),
+    );
     
 
   }

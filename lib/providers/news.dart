@@ -1,5 +1,6 @@
+import 'package:flutter/foundation.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:http/http.dart' as http;
 
 ///
 /// Der Code dieser Datei wird vom Programm herangezogen, sobald es startet, damit
@@ -29,10 +30,11 @@ class NewsProvider {
   static const latestViewedNewsDefaultValue = "none";
 
 
-  static String newsEntries = "";
+  // ValueNotifiers werden genutzt, damit die App wieder was neues anzeigt, wenn neue Nachrichten vorhanden sind.
+  static ValueNotifier newsEntries = ValueNotifier("");
 
   // gibt an, ob oben rechts eine Notifikation kommen soll, die angibt, dass es neue Nachrichten gibt.
-  static bool shouldShowInAppNotification = false;
+  static ValueNotifier shouldShowInAppNotification = ValueNotifier(false);
 
   /// diese Methode macht einen API request an Contentful, um den Wert von "newsEntries" zu setzen. "newsEntries"
   /// kann dann von der Rest der App genutzt werden, um die Nachrichten anzuzeigen
@@ -40,26 +42,35 @@ class NewsProvider {
   /// legt damit fest, ob [shouldShowInAppNotification] auf true gesetzt werden soll
   static updateNewsEntries() async {
 
-    final uri = Uri.https(
-      "cdn.contentful.com",
-      "/spaces/${NewsProvider.spaceID}/environments/master/entries",
-      {"access_token": NewsProvider.contentDeliveryApiAccessToken}
+    // gönnt sich erst mal die Daten von Contentful
+    final contentfulQueryResults = useQuery(
+      QueryOptions(
+        document: gql(
+          """
+            query {
+              newsEntryCollection(limit: 1, order: sys_firstPublishedAt_DESC) {
+                total
+                items {
+                  title
+                }
+              }
+            }
+          """
+        )
+      )
     );
-    final response = await http.get(uri);
 
     print("Contentful Response: ");
-    print(response.body);
+    print(contentfulQueryResults.result);
 
   }
 
   /// diese Methode wird in on_init_app aufgerufen, um den Speicher zu initialisieren, damit überhaupt ein Wert drin ist.
   static initializeNewsHiveBox() async {
-    if (!Hive.isBoxOpen(newsBox)) {
-      Box newsBox = await Hive.openBox(NewsProvider.newsBox); 
-      if (!newsBox.containsKey(NewsProvider.latestViewedNewsKey)) {
-        newsBox.put(NewsProvider.latestViewedNewsKey, NewsProvider.latestViewedNewsDefaultValue);
-      }
-      updateNewsEntries();
+    // Speicher wird initialisiert
+    Box newsBox = await Hive.openBox(NewsProvider.newsBox); 
+    if (!newsBox.containsKey(NewsProvider.latestViewedNewsKey)) {
+      newsBox.put(NewsProvider.latestViewedNewsKey, NewsProvider.latestViewedNewsDefaultValue);
     }
   }
 

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:annette_app_x/consts/default_color_schemes.dart';
 import 'package:annette_app_x/models/theme_mode.dart';
+import 'package:annette_app_x/providers/news.dart';
 import 'package:annette_app_x/providers/user_config.dart';
 import 'package:annette_app_x/screens/exam_screen.dart';
 import 'package:annette_app_x/screens/homework_screen.dart';
@@ -12,6 +13,7 @@ import 'package:annette_app_x/utilities/homework_manager.dart';
 import 'package:annette_app_x/utilities/on_init_app.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -31,16 +33,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     var home = const MyHomePage(title: 'Annette App X');
 
-    /*
+    // die gesamte App wird in GraphQLProvider "gewrapped" (https://pub.dev/packages/graphql_flutter#usage)
+    return GraphQLProvider(
+      client: NewsProvider.graphQLClient,
 
-    Wenn der User den Material3-Modus aktiviert hat, erzeugt der DynamicColorBuilder
-    ein auf der Systemfarbe basierendes Farbschema.
+      /*
+      Wenn der User den Material3-Modus aktiviert hat, erzeugt der DynamicColorBuilder
+      ein auf der Systemfarbe basierendes Farbschema.
 
-    Ansonsten wird die App mit den Standardschemata konstruiert (definiert in default_color_schemes.dart!)
+      Ansonsten wird die App mit den Standardschemata konstruiert (definiert in default_color_schemes.dart!)
+      */
 
-    */
-
-    return UserConfig.themeMode == AnnetteThemeMode.material3
+      child: UserConfig.themeMode == AnnetteThemeMode.material3
         ? DynamicColorBuilder(
             builder: ((lightDynamic, darkDynamic) => MaterialApp(
                   title: 'Annette App X',
@@ -65,7 +69,8 @@ class MyApp extends StatelessWidget {
                 useMaterial3: true),
             home: home,
             themeMode: ThemeMode.dark,
-          );
+          )
+    );
   }
 }
 
@@ -101,12 +106,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
+
     subscription = Hive.box('homework').watch().listen((event) {
       setState(() {
         _homeworkCount = HomeworkManager.howManyPendingEntries();
       });
     });
+
+    // sobald die HomeScreen initialisiert wird, wird auch "nachgeschaut", welche neuen Nachrichten es gibt.
+    NewsProvider.updateNewsEntries();
+
     super.initState();
+
   }
 
   @override
@@ -221,7 +232,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Colors.white,
                 onPressed: () {
                   // redirect to newspage
-                  
+
                 },
                 icon: const Icon(Icons.priority_high, size: 10)
               )
