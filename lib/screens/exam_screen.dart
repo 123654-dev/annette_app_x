@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:annette_app_x/models/class_ids.dart';
+import 'package:annette_app_x/models/file_format.dart';
 import 'package:annette_app_x/providers/storage.dart';
 import 'package:annette_app_x/providers/user_config.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,9 @@ import 'package:annette_app_x/api/files_provider.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:cross_file/cross_file.dart';
+import 'package:annette_app_x/api/files_provider.dart';
+
+import 'package:pdfx/pdfx.dart';
 
 ///Diese Seite zeigt Klausurpläne an.
 class ExamScreen extends StatefulWidget {
@@ -33,6 +37,9 @@ class _ExamScreenState extends State<ExamScreen> {
 
   //Enthält später den Pfad zur heruntergeladenen PDF-Datei
   late File _file;
+
+  //Bestimmt, ob das Menü zum Teilen des Klausurplans angezeigt wird
+  bool showFileChoiceMenu = false;
 
   @override
   void initState() {
@@ -84,12 +91,25 @@ class _ExamScreenState extends State<ExamScreen> {
               icon: PhosphorIcon(PhosphorIcons.duotone.download,
                   color: Theme.of(context).colorScheme.primary),
             ),*/
-
-            IconButton(
-              onPressed: _shareExamPlan,
+            //Das Menü zum Teilen des Klausurplans, das angezeigt wird, wenn der User auf den Share-Button drückt
+            PopupMenuButton(
+              onSelected: (value) {
+                _shareExamPlan(value);
+              },
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: FileFormat.PDF,
+                  child: Text("als PDF teilen"),
+                ),
+                PopupMenuItem(
+                  value: FileFormat.PNG,
+                  child: Text("als Bilder teilen"),
+                ),
+              ],
               icon: PhosphorIcon(PhosphorIcons.duotone.shareFat,
                   color: Theme.of(context).colorScheme.primary),
-            )
+              offset: const Offset(0, 60),
+            ),
           ])),
       Expanded(
         child: _catastrophicFailure
@@ -126,8 +146,32 @@ class _ExamScreenState extends State<ExamScreen> {
 
   ///Diese Funktion wird aufgerufen, wenn der User den Share-Button drückt
   ///Sie teilt die PDF-Datei mit anderen Apps
-  void _shareExamPlan() async {
-    Share.shareXFiles([XFile(_file.path)],
-        text: 'Klausurplan ${_classId.name}');
+  void _shareExamPlan(FileFormat fileFormat) async {
+    print(
+        "sharing exam plan for ${_classId.name} as ${fileFormat == FileFormat.JPG ? "image" : "pdf"}");
+    if (fileFormat == FileFormat.PDF) {
+      Share.shareXFiles([XFile(_file.path)],
+          text: 'Klausurplan ${_classId.name}');
+    } else {
+      //Öffnet die PDF-Datei
+      var document = await PdfDocument.openFile(_file.path);
+
+      //Iteriert über alle Seiten und speichert sie als JPG-Dateien in einer Liste
+      List<XFile> pages = [];
+      for (int i = 1; i <= document.pagesCount; i++) {
+        //Öffnet die Datei erneut (eigentlich ist das nicht nötig, aber sonst gibt es einen "unknown error" mit cause "null" vom Plugin)
+        document = await PdfDocument.openFile(_file.path);
+
+        var page = await document.getPage(i);
+        var pageImage = await page.render(
+            width: page.width, height: page.height, backgroundColor: '#FFFFFF');
+        //Speichert die Datei lokal zwischen, damit sie anschließend zu einer XFile konvertiert werden kann
+        //Dies ist als PNG und als JPG möglich, obwohl momentan nur JPG verwendet wird
+        var file = await FilesProvider.storeFile(
+            "examPlan$_classId;page$i", pageImage!.bytes, fileFormat);
+        pages.add(XFile(file.path));
+      }
+      Share.shareXFiles(pages, text: 'Klausurplan ${_classId.name}');
+    }
   }
 }

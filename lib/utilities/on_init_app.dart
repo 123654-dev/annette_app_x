@@ -1,4 +1,5 @@
 import 'package:annette_app_x/models/homework_entry.dart';
+import 'package:annette_app_x/providers/news.dart';
 import 'package:annette_app_x/providers/notifications.dart';
 import 'package:annette_app_x/utilities/homework_manager.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -39,12 +40,13 @@ class AppInitializer {
     //Zeitzonen initialisieren (für Notifications)
     tz.initializeTimeZones();
 
-    // Nachrichten von Contentful initialisieren.
-    if (!Hive.isBoxOpen("news")) {
-      Box newsBox = await Hive.openBox("news"); 
-      
-    }
-
+    // Nachrichten von Contentful initialisieren, damit in der Hive-Datenbank überhaupt irgendwelche Werte drinstehen
+    print("");
+    print("================");
+    print("intializing news");
+    print("================");
+    print("");
+    NewsProvider.initializeNewsHiveBox();
 
 
     //hier weiteren Code einfügen:

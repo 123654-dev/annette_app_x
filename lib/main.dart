@@ -205,29 +205,55 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: <Widget>[
-        Container(
-          alignment: Alignment.center,
-          child: const SubstitutionScreen(),
-        ),
-        Container(
-          alignment: Alignment.center,
-          child: const TimetableScreen(),
-        ),
-        Container(
-          alignment: Alignment.center,
-          child: HomeworkScreen(refresh: refresh),
-        ),
-        if (UserConfig.isOberstufe)
-          Container(
-            alignment: Alignment.center,
-            child: const ExamScreen(),
+      body: Stack(
+        children: [
+          // hiermit wird eine oben rechts positionierte Notifikation für Nachrichten angezeigt.
+          Positioned(
+            right: 10,
+            top: 10,
+            child: SizedBox(
+              height: 30,
+              width: 30,
+              child: IconButton( 
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.red),
+                ),
+                color: Colors.white,
+                onPressed: () {
+                  // redirect to newspage
+                  
+                },
+                icon: const Icon(Icons.priority_high, size: 10)
+              )
+            ) 
           ),
-        Container(
-          alignment: Alignment.center,
-          child: const MiscScreen(),
-        ),
-      ][_selectedDestination.index],
+
+          // hiermit wird die zugehörige Screen / Seite angezeigt
+          <Widget>[
+            Container(
+              alignment: Alignment.center,
+              child: const SubstitutionScreen(),
+            ),
+            Container(
+              alignment: Alignment.center,
+              child: const TimetableScreen(),
+            ),
+            Container(
+              alignment: Alignment.center,
+              child: HomeworkScreen(refresh: refresh),
+            ),
+            if (UserConfig.isOberstufe)
+              Container(
+                alignment: Alignment.center,
+                child: const ExamScreen(),
+              ),
+            Container(
+              alignment: Alignment.center,
+              child: const MiscScreen(),
+            ),
+          ][_selectedDestination.index],
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => HomeworkManager.showHomeworkDialog(refresh, context),
         child: PhosphorIcon(PhosphorIcons.duotone.listPlus,
