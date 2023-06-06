@@ -91,6 +91,7 @@ class NewsProvider {
     // das ist das Datum, an dem die neuste Nachricht publiziert wurde, als String
     final String dateOfLatestPublicationAsString = entries[0]["sys"]["firstPublishedAt"];
 
+    // todo: diese Logik auslagern
     // dieser String muss dann geparsed werden
     // von Contentful vorgegebenes Format: yyyy-mm-ddThh:mm Gemäß dessen wird im Folgenden geparsed
     final List<String> dateTimeParts = dateOfLatestPublicationAsString.split("T");
@@ -112,8 +113,9 @@ class NewsProvider {
       latestViewedNewsDate == NewsProvider.latestViewedNewsDefaultValue || 
       latestViewedNewsDate.isBefore(dateOfPublicationNewestArticle)
     ) {
-      shouldShowInAppNotification.value = true;
-      newsEntries.value = entries;
+      print("soll Notifikation zeigen");
+      NewsProvider.shouldShowInAppNotification.value = true;
+      NewsProvider.newsEntries.value = entries;
     }
 
 

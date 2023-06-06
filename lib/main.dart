@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:annette_app_x/consts/default_color_schemes.dart';
 import 'package:annette_app_x/models/theme_mode.dart';
-import 'package:annette_app_x/providers/news.dart';
+import 'package:annette_app_x/providers/api/news_provider.dart';
 import 'package:annette_app_x/providers/user_config.dart';
 import 'package:annette_app_x/screens/exam_screen.dart';
 import 'package:annette_app_x/screens/homework_screen.dart';
@@ -11,6 +11,7 @@ import 'package:annette_app_x/screens/substitution_screen.dart';
 import 'package:annette_app_x/screens/timetable_screen.dart';
 import 'package:annette_app_x/utilities/homework_manager.dart';
 import 'package:annette_app_x/on_init_app.dart';
+import 'package:annette_app_x/widgets/news/news_notification.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -104,8 +105,6 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     });
 
-    // sobald die HomeScreen initialisiert wird, wird auch "nachgeschaut", welche neuen Nachrichten es gibt.
-    NewsProvider.updateNewsEntries();
 
     super.initState();
 
@@ -210,25 +209,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Stack(
         children: [
           // hiermit wird eine oben rechts positionierte Notifikation für Nachrichten angezeigt.
-          Positioned(
-            right: 10,
-            top: 10,
-            child: SizedBox(
-              height: 30,
-              width: 30,
-              child: IconButton( 
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.red),
-                ),
-                color: Colors.white,
-                onPressed: () {
-                  // redirect to newspage
-
-                },
-                icon: const Icon(Icons.priority_high, size: 10)
-              )
-            ) 
-          ),
+          NewsNotification(),
 
           // hiermit wird die zugehörige Screen / Seite angezeigt
           <Widget>[

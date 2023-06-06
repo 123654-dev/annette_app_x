@@ -7,7 +7,7 @@ import 'package:annette_app_x/providers/storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
-import '../models/file_format.dart';
+import '../../models/file_format.dart';
 
 ///
 /// Enthält Methoden zum Herunterladen von Dateien aus dem Backend
