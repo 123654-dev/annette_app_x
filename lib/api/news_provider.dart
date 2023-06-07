@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:graphql/client.dart';
@@ -23,27 +25,30 @@ class NewsProvider {
 
   // todo: use environment variables
   // eindeutige ID der Umgebung, in der die Nachrichten abgespeichert werden
-  static const spaceID = "mr1v1r1x37i0";
+  static const String spaceID = "mr1v1r1x37i0";
 
   // dieser Wert muss bei jeder API Request angegeben werden, um Inhalte von Contentful zurückzubekommen
   // stellt euch es vor wie ein Passwort, damit Contentful weiß, dass du es auch wirklich bist
-  static const contentDeliveryApiAccessToken = "B7d8auyBaT6BOR3_dc-i4Klp2YzdoL7jg0NK2dXC5B0";
+  static const String contentDeliveryApiAccessToken = "B7d8auyBaT6BOR3_dc-i4Klp2YzdoL7jg0NK2dXC5B0";
 
   // selber Nutzen wie oben, aber für "Preview-Content", also Inhalte, die als Entwürfe vorhanden sind,
   // jedoch noch nicht publiziert wurden.
-  static const contentPreviewApiAccessToken = "A8xgwjwpKgUJDi5T0nVfxNYqjz4GYFbjApq3ryv_viM";
+  static const String contentPreviewApiAccessToken = "A8xgwjwpKgUJDi5T0nVfxNYqjz4GYFbjApq3ryv_viM";
 
 
   // für die Nachrichten:
-  static const newsBoxName = "news";
-  static const latestViewedNewsKey = "latestViewedNews";
+  static const String newsBoxName = "news";
+  static const String latestViewedNewsKey = "latestViewedNews";
 
   // dieser Wert wird abgespeichert unter dem Schlüssel "latestViewedNews", wenn noch keine Nachrichteneinträge gelesen wurden.
-  static final latestViewedNewsDefaultValue = DateTime.utc(0);
+  static final DateTime latestViewedNewsDefaultValue = DateTime.utc(0);
 
+  // dieser Cache ist für die Nachrichtenseite, wo alle Nachrichten angezeigt werden.
+  static final List newsCollectionCache = List.empty();
 
-  // ValueNotifiers werden genutzt, damit die App wieder was neues anzeigt, wenn neue Nachrichten vorhanden sind.
-  static ValueNotifier<dynamic> newsEntries = ValueNotifier(null);
+  // dieser Cache ist für die detaillierte Ansicht der Nachrichten
+  // dieser Cache ordnet dem ID eines Nachrichteneintrags ihrem detaillierten Inhalt zu, sodass keine Nachricht zweimal von Contentful abgefragt werden muss.
+  static final HashMap detailedNewsCache = HashMap();
 
   // gibt an, ob oben rechts eine Notifikation kommen soll, die angibt, dass es neue Nachrichten gibt.
   static ValueNotifier shouldShowInAppNotification = ValueNotifier(false);
@@ -52,7 +57,7 @@ class NewsProvider {
   /// kann dann von der Rest der App genutzt werden, um die Nachrichten anzuzeigen
   /// diese Methode vergleicht gleichzeitig das Datum der neusten Nachricht und die neuste, schon vom User gelesene Nachricht 
   /// legt damit fest, ob [shouldShowInAppNotification] auf true gesetzt werden soll
-  static updateNewsEntries() async {
+  static updateShouldShowInAppNotification() async {
 
     // gönnt sich erst mal die Daten von Contentful
     final QueryResult contentfulQueryResults = await NewsProvider.graphQLClient.query(
@@ -60,18 +65,8 @@ class NewsProvider {
         document: gql(
           """
             query {
-              newsEntryCollection(order: sys_firstPublishedAt_DESC) {
-                total
+              newsEntryCollection(limit: 1, order: sys_firstPublishedAt_DESC) {
                 items {
-                  title
-                  body {
-                    json
-                  }
-                  optionalMedia {
-                    url
-                    width
-                    height
-                  }
                   sys {
                     firstPublishedAt
                   }
@@ -82,9 +77,6 @@ class NewsProvider {
         )
       )
     );
-
-    print("Contentful Response: ");
-    print(contentfulQueryResults.data);
 
     final List entries = contentfulQueryResults.data?["newsEntryCollection"]["items"] as List;
 
@@ -115,11 +107,84 @@ class NewsProvider {
     ) {
       print("soll Notifikation zeigen");
       NewsProvider.shouldShowInAppNotification.value = true;
-      NewsProvider.newsEntries.value = entries;
     }
 
 
   }
+
+  /// Mit der Angabe einer ID wird der detaillierte Inhalt dieser Nachricht zurückgegeben und in den Cache [newsCollectionCache] reingetan
+  /// das ist für die Seite der Nachricht
+  static getDetailedNewsEntry(String id) async {
+
+  }
+
+  /// gönnt sich die gesamte Anzahl an Einträge, die es gibt
+  static getTotalEntries() async {
+
+    // gönnt sich erst mal die Daten von Contentful
+    final QueryResult contentfulQueryResults = await NewsProvider.graphQLClient.query(
+      QueryOptions(
+        document: gql(
+          """
+            query {
+              newsEntryCollection {
+                total
+              }
+            }
+          """
+        )
+      )
+    );
+
+    // todo
+
+  }
+
+  /// Mit der Angabe einer Anzahl [count] und einer Anzahl an übersprungenen Einträgen [skip] werden die 
+  /// undetaillierten Inhalte von [count] Nachrichteneinträge zurückgegeben.
+  /// Das ist für die "Vorschau"
+  static getNewsEntries([int count=0, int skip=0]) async {
+
+
+    // erst gucken, ob der Inhalt schon im Cache vorhanden ist oder nicht
+    if (newsCollectionCache.length >= count + skip) return newsCollectionCache.sublist(skip, skip + count);
+
+    // ansonsten wird Contentful gefragt.
+    final QueryResult contentfulQueryResults = await NewsProvider.graphQLClient.query(
+      QueryOptions(
+        document: gql(
+          """
+            query {
+              newsEntryCollection(skip: ${skip}, limit: ${count}, order: sys_firstPublishedAt_DESC) {
+                items {
+                  title
+                  optionalMedia {
+                    url
+                    width
+                    height
+                  }
+                  sys {
+                    id
+                  }
+                }
+              }
+            }
+          """
+        )
+      )
+    );
+
+    final List entries = contentfulQueryResults.data?["newsEntryCollection"]["items"] as List;
+
+    // und dann werden die Entries zum Cache hinzugefügt.
+    newsCollectionCache.fillRange(skip, skip + count, null);
+    newsCollectionCache.replaceRange(skip, skip + count, entries);
+
+    return entries;
+
+  }
+
+
 
   /// diese Methode wird in on_init_app aufgerufen, um den Speicher zu initialisieren, damit überhaupt ein Wert drin ist.
   static initializeNewsHiveBox() async {

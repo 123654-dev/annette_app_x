@@ -1,5 +1,5 @@
 import 'package:annette_app_x/models/homework_entry.dart';
-import 'package:annette_app_x/providers/api/news_provider.dart';
+import 'package:annette_app_x/api/news_provider.dart';
 import 'package:annette_app_x/providers/notifications.dart';
 import 'package:annette_app_x/utilities/homework_manager.dart';
 import 'package:flutter/foundation.dart';

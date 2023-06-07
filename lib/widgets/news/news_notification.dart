@@ -1,5 +1,7 @@
-import 'package:annette_app_x/providers/api/news_provider.dart';
+import 'package:annette_app_x/api/news_provider.dart';
+import 'package:annette_app_x/screens/news/news_collection_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:graphql/client.dart';
 
 ///
 /// Diese Datei enthält den Code für das Aussehen der roten Notifikation oben rechts, wenn es neue Nachrichten gibt.
@@ -17,7 +19,7 @@ class _NewsNotificationState extends State<NewsNotification> {
 
     /// Sinn dieser Function ist es, die neusten Nachrichten zu laden und gegebenenfalls eine Notifikation oben rechts anzuzeigen
   updateNewsNotification() async {
-    await NewsProvider.updateNewsEntries();
+    await NewsProvider.updateShouldShowInAppNotification();
 
     /// setState muss gerufen werden, da nach dem Aufruf von NewsProvider.updateNewsEntries() der Wert von 
     setState(() {});
@@ -47,8 +49,12 @@ class _NewsNotificationState extends State<NewsNotification> {
                   ),
                   color: Colors.white,
                   onPressed: () {
-                    // redirect to newspage
 
+                    // redirect to newspage
+                    Navigator.push(
+                      context, 
+                      MaterialPageRoute(builder: (context) => NewsCollectionScreen())
+                    );
                   },
                   icon: const Icon(Icons.priority_high, size: 10)
                 )
