@@ -23,6 +23,8 @@ class NewsProvider {
     cache: GraphQLCache()
   );
 
+
+
   // todo: use environment variables
   // eindeutige ID der Umgebung, in der die Nachrichten abgespeichert werden
   static const String spaceID = "mr1v1r1x37i0";
@@ -44,7 +46,7 @@ class NewsProvider {
   static final DateTime latestViewedNewsDefaultValue = DateTime.utc(0);
 
   // dieser Cache ist für die Nachrichtenseite, wo alle Nachrichten angezeigt werden.
-  static final List newsCollectionCache = List.empty();
+  static final List newsCollectionCache = [];
 
   // dieser Cache ist für die detaillierte Ansicht der Nachrichten
   // dieser Cache ordnet dem ID eines Nachrichteneintrags ihrem detaillierten Inhalt zu, sodass keine Nachricht zweimal von Contentful abgefragt werden muss.
@@ -52,6 +54,14 @@ class NewsProvider {
 
   // gibt an, ob oben rechts eine Notifikation kommen soll, die angibt, dass es neue Nachrichten gibt.
   static ValueNotifier shouldShowInAppNotification = ValueNotifier(false);
+
+
+
+  // contentful schema:
+  static final newsContentTypeId = "newsEntry";
+  static final newsCollectionContentTypeId = newsContentTypeId + "Collection";
+
+
 
   /// diese Methode macht einen API request an Contentful, um den Wert von "newsEntries" zu setzen. "newsEntries"
   /// kann dann von der Rest der App genutzt werden, um die Nachrichten anzuzeigen
@@ -65,7 +75,7 @@ class NewsProvider {
         document: gql(
           """
             query {
-              newsEntryCollection(limit: 1, order: sys_firstPublishedAt_DESC) {
+              $newsCollectionContentTypeId(limit: 1, order: sys_firstPublishedAt_DESC) {
                 items {
                   sys {
                     firstPublishedAt
@@ -78,7 +88,7 @@ class NewsProvider {
       )
     );
 
-    final List entries = contentfulQueryResults.data?["newsEntryCollection"]["items"] as List;
+    final List entries = contentfulQueryResults.data?[newsCollectionContentTypeId]["items"] as List;
 
     // das ist das Datum, an dem die neuste Nachricht publiziert wurde, als String
     final String dateOfLatestPublicationAsString = entries[0]["sys"]["firstPublishedAt"];
@@ -105,7 +115,6 @@ class NewsProvider {
       latestViewedNewsDate == NewsProvider.latestViewedNewsDefaultValue || 
       latestViewedNewsDate.isBefore(dateOfPublicationNewestArticle)
     ) {
-      print("soll Notifikation zeigen");
       NewsProvider.shouldShowInAppNotification.value = true;
     }
 
@@ -116,10 +125,35 @@ class NewsProvider {
   /// das ist für die Seite der Nachricht
   static getDetailedNewsEntry(String id) async {
 
+    // gönnt sich erst mal die Daten von Contentful
+    final QueryResult contentfulQueryResults = await NewsProvider.graphQLClient.query(
+      QueryOptions(
+        document: gql(
+          """
+            query {
+              $newsContentTypeId (id: "$id") {
+                title
+                optionalMedia {
+                  url
+                  width
+                  height
+                }
+                body {
+                  json
+                }
+              }
+            }
+          """
+        )
+      )
+    );
+
+    print(contentfulQueryResults.data);
+
   }
 
   /// gönnt sich die gesamte Anzahl an Einträge, die es gibt
-  static getTotalEntries() async {
+  static Future<int> getTotalEntries() async {
 
     // gönnt sich erst mal die Daten von Contentful
     final QueryResult contentfulQueryResults = await NewsProvider.graphQLClient.query(
@@ -127,7 +161,7 @@ class NewsProvider {
         document: gql(
           """
             query {
-              newsEntryCollection {
+              $newsCollectionContentTypeId {
                 total
               }
             }
@@ -136,7 +170,8 @@ class NewsProvider {
       )
     );
 
-    // todo
+    return contentfulQueryResults.data?[newsCollectionContentTypeId]["total"];
+    
 
   }
 
@@ -155,7 +190,8 @@ class NewsProvider {
         document: gql(
           """
             query {
-              newsEntryCollection(skip: ${skip}, limit: ${count}, order: sys_firstPublishedAt_DESC) {
+              $newsCollectionContentTypeId (skip: ${skip}, limit: ${count}, order: sys_firstPublishedAt_DESC) {
+                total
                 items {
                   title
                   optionalMedia {
@@ -174,11 +210,14 @@ class NewsProvider {
       )
     );
 
-    final List entries = contentfulQueryResults.data?["newsEntryCollection"]["items"] as List;
+    final List entries = contentfulQueryResults.data?[newsCollectionContentTypeId]["items"] as List;
+    final int total = contentfulQueryResults.data?[newsCollectionContentTypeId]["total"];
 
     // und dann werden die Entries zum Cache hinzugefügt.
-    newsCollectionCache.fillRange(skip, skip + count, null);
-    newsCollectionCache.replaceRange(skip, skip + count, entries);
+    while (newsCollectionCache.length < skip + total) {
+      newsCollectionCache.add(null);
+    }
+    newsCollectionCache.setRange(skip, skip + total, entries);
 
     return entries;
 

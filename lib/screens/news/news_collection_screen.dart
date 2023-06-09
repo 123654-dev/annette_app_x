@@ -27,14 +27,24 @@ class _NewsCollectionScreenState extends State<NewsCollectionScreen> {
   /// _page = 1 -> Seite 2
   /// ...
   int _page = 0;
+
+  /// das braucht man für die "Seiten-Bar" unten
+  int _totalPages = 0;
   dynamic _newsEntries;
 
   updateNewsEntries() async {
+
     final updatedNewsEntries = await NewsProvider.getNewsEntries(widget.entriesPerPage, _page * widget.entriesPerPage);
     print(updatedNewsEntries);
     setState(() {
       _newsEntries = updatedNewsEntries;
     });
+
+    final totalEntries = await NewsProvider.getTotalEntries();
+    setState(() {
+      _totalPages = (totalEntries / 5).ceil();
+    });
+
   }
 
 
@@ -49,7 +59,5 @@ class _NewsCollectionScreenState extends State<NewsCollectionScreen> {
     // todo: design
     return Container();
   }
-
-
 
 }
