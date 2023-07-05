@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:annette_app_x/consts/default_color_schemes.dart';
 import 'package:annette_app_x/models/theme_mode.dart';
+import 'package:annette_app_x/api/news_provider.dart';
 import 'package:annette_app_x/providers/user_config.dart';
 import 'package:annette_app_x/screens/exam_screen.dart';
 import 'package:annette_app_x/screens/homework_screen.dart';
@@ -9,7 +10,8 @@ import 'package:annette_app_x/screens/misc_screen.dart';
 import 'package:annette_app_x/screens/substitution_screen.dart';
 import 'package:annette_app_x/screens/timetable_screen.dart';
 import 'package:annette_app_x/utilities/homework_manager.dart';
-import 'package:annette_app_x/utilities/on_init_app.dart';
+import 'package:annette_app_x/on_init_app.dart';
+import 'package:annette_app_x/widgets/news/news_notification.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -17,10 +19,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 Future<void> main() async {
   //Initialisierung der App in Gang setzen
-  await AppInitializer.init();
-
-  //ausführen
-  runApp(const MyApp());
+  await AppInitializer.init().then((value) => runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -31,13 +30,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     var home = const MyHomePage(title: 'Annette App X');
 
-    /*
-
+    /*  
     Wenn der User den Material3-Modus aktiviert hat, erzeugt der DynamicColorBuilder
     ein auf der Systemfarbe basierendes Farbschema.
 
     Ansonsten wird die App mit den Standardschemata konstruiert (definiert in default_color_schemes.dart!)
-
     */
 
     return UserConfig.themeMode == AnnetteThemeMode.material3
@@ -80,6 +77,8 @@ class MyHomePage extends StatefulWidget {
 ///Enum für verschiedene Navigationsbuttons
 ///Wird verwendet, um die richtige Seite anzuzeigen
 ///!! Klausurplan nur für Oberstufe !!
+
+//? Wieso machen wir nicht aus has -> hausaufgaben
 enum _Destination {
   vertretung,
   stundenplan,
@@ -91,7 +90,7 @@ enum _Destination {
 class _MyHomePageState extends State<MyHomePage> {
   _Destination _selectedDestination = _Destination.vertretung;
 
-  //StreamSubscription für die Hausaufgaben, wird in initState() initialisiert
+  // StreamSubscription für die Hausaufgaben, wird in initState() initialisiert
   late StreamSubscription<BoxEvent>? subscription;
 
   //Anzahl der Hausaufgaben
@@ -99,12 +98,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
+
     subscription = Hive.box('homework').watch().listen((event) {
       setState(() {
         _homeworkCount = HomeworkManager.howManyPendingEntries();
       });
     });
+
+
     super.initState();
+
   }
 
   @override
@@ -203,29 +206,37 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: <Widget>[
-        Container(
-          alignment: Alignment.center,
-          child: const SubstitutionScreen(),
-        ),
-        Container(
-          alignment: Alignment.center,
-          child: const TimetableScreen(),
-        ),
-        Container(
-          alignment: Alignment.center,
-          child: HomeworkScreen(refresh: refresh),
-        ),
-        if (UserConfig.isOberstufe)
-          Container(
-            alignment: Alignment.center,
-            child: const ExamScreen(),
-          ),
-        Container(
-          alignment: Alignment.center,
-          child: const MiscScreen(),
-        ),
-      ][_selectedDestination.index],
+      body: Stack(
+        children: [
+          // hiermit wird eine oben rechts positionierte Notifikation für Nachrichten angezeigt.
+          NewsNotification(),
+
+          // hiermit wird die zugehörige Screen / Seite angezeigt
+          <Widget>[
+            Container(
+              alignment: Alignment.center,
+              child: const SubstitutionScreen(),
+            ),
+            Container(
+              alignment: Alignment.center,
+              child: const TimetableScreen(),
+            ),
+            Container(
+              alignment: Alignment.center,
+              child: HomeworkScreen(refresh: refresh),
+            ),
+            if (UserConfig.isOberstufe)
+              Container(
+                alignment: Alignment.center,
+                child: const ExamScreen(),
+              ),
+            Container(
+              alignment: Alignment.center,
+              child: const MiscScreen(),
+            ),
+          ][_selectedDestination.index],
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => HomeworkManager.showHomeworkDialog(refresh, context),
         child: PhosphorIcon(PhosphorIcons.duotone.listPlus,

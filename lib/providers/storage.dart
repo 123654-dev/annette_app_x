@@ -2,7 +2,12 @@ import 'package:annette_app_x/models/class_ids.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 
+//? könnten wir nicht hier noch etwas für die Hausaufgaben tun?
+//? oder doch lieber umbenennen zu exam_provider?
+
 class StorageProvider {
+
+
   static void saveExamPlanDate(ClassId id) async {
     //Save the current date to Hive
     var cache = await Hive.openBox("cache");
