@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     var home = const MyHomePage(title: 'Annette App X');
 
-    /*  
+    /*
     Wenn der User den Material3-Modus aktiviert hat, erzeugt der DynamicColorBuilder
     ein auf der Systemfarbe basierendes Farbschema.
 
@@ -98,16 +98,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-
     subscription = Hive.box('homework').watch().listen((event) {
       setState(() {
         _homeworkCount = HomeworkManager.howManyPendingEntries();
       });
     });
 
-
     super.initState();
-
   }
 
   @override
@@ -122,6 +119,13 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         centerTitle: true,
         title: Text("Annette App X"),
+        actions: [
+          // hiermit wird eine oben rechts positionierte Notifikation für Nachrichten angezeigt.
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: NewsNotification(),
+          ),
+        ],
       ),
       backgroundColor: Theme.of(context).colorScheme.background,
       bottomNavigationBar: NavigationBar(
@@ -208,9 +212,6 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Stack(
         children: [
-          // hiermit wird eine oben rechts positionierte Notifikation für Nachrichten angezeigt.
-          NewsNotification(),
-
           // hiermit wird die zugehörige Screen / Seite angezeigt
           <Widget>[
             Container(
