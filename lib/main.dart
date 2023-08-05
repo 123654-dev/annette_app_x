@@ -4,6 +4,7 @@ import 'package:annette_app_x/providers/user_config.dart';
 import 'package:annette_app_x/screens/exam_screen.dart';
 import 'package:annette_app_x/screens/homework_screen.dart';
 import 'package:annette_app_x/screens/misc_screen.dart';
+import 'package:annette_app_x/screens/onboarding/onboarding_screen.dart';
 import 'package:annette_app_x/screens/substitution_screen.dart';
 import 'package:annette_app_x/screens/timetable_screen.dart';
 import 'package:annette_app_x/utilities/on_init_app.dart';
@@ -14,7 +15,6 @@ Future<void> main() async {
   //Initialisierung der App in Gang setzen
   await AppInitializer.init();
 
-  //ausführen
   runApp(const AnnetteApp());
 }
 
@@ -35,10 +35,18 @@ class AnnetteApp extends StatelessWidget {
 
     */
 
-    return UserConfig.themeMode == AnnetteThemeMode.material3
+    bool canUseMaterial3 = UserConfig.themeMode == AnnetteThemeMode.material3;
+    bool shouldPerformOnboarding = AppInitializer.shouldPerformOnboarding();
+
+    return canUseMaterial3
         ? DynamicColorBuilder(
             builder: ((lightDynamic, darkDynamic) => MaterialApp(
                   title: 'Annette App X',
+                  //Ermöglicht einfachen Wechsel
+                  routes: {
+                    "/onboarding": (context) => const Onboarding(),
+                    "/home": (context) => home,
+                  },
                   theme: ThemeData(
                       colorScheme:
                           lightDynamic ?? AnnetteColorSchemes.lightColorScheme,
@@ -47,19 +55,24 @@ class AnnetteApp extends StatelessWidget {
                       colorScheme:
                           darkDynamic ?? AnnetteColorSchemes.darkColorScheme,
                       useMaterial3: true),
-                  home: home,
+                  initialRoute:
+                      shouldPerformOnboarding ? "/onboarding" : "/home",
                   themeMode: ThemeMode.dark,
                 )),
           )
         : MaterialApp(
             title: 'Annette App X',
+            routes: {
+              "/onboarding": (context) => const Onboarding(),
+              "/home": (context) => home,
+            },
             theme: ThemeData(
                 colorScheme: AnnetteColorSchemes.lightColorScheme,
                 useMaterial3: true),
             darkTheme: ThemeData(
                 colorScheme: AnnetteColorSchemes.darkColorScheme,
                 useMaterial3: true),
-            home: home,
+            initialRoute: shouldPerformOnboarding ? "/onboarding" : "/home",
             themeMode: ThemeMode.dark,
           );
   }
