@@ -118,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Annette App X"),
+        title: const Text("Annette App X"),
         actions: [
           // hiermit wird eine oben rechts positionierte Notifikation für Nachrichten angezeigt.
           Padding(
