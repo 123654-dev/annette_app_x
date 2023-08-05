@@ -37,6 +37,11 @@ class _OnboardingState extends State<Onboarding> {
 
   @override
   Widget build(BuildContext context) {
+    _pageController.addListener(() {
+      setState(() {
+        _currentPage = _pageController.page!.round();
+      });
+    });
     return Scaffold(
       body: Center(
         child: SizedBox(
@@ -116,6 +121,7 @@ class _OnboardingState extends State<Onboarding> {
           ),
         ),
       ),
+      //floatingActionButton: ,
     );
   }
 }
