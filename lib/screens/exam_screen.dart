@@ -11,7 +11,7 @@ import 'package:annette_app_x/providers/api/files_provider.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:cross_file/cross_file.dart';
-import 'package:annette_app_x/api/files_provider.dart';
+import 'package:annette_app_x/providers/api/files_provider.dart';
 
 import 'package:pdfx/pdfx.dart';
 

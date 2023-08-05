@@ -7,7 +7,7 @@ import 'package:annette_app_x/providers/storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
-import '../models/file_format.dart';
+import '../../models/file_format.dart';
 
 ///
 /// Enthält Methoden zum Herunterladen von Dateien aus dem Backend
@@ -29,7 +29,11 @@ class FilesProvider {
   ///Das File-Objekt kann dann z.B. mit dem PDFView-Widget angezeigt werden.
   ///[name] ist der Name. unter dem die Datei gespeichert werden soll
   static Future<File> storeFile(name, bytes, FileFormat fileFormat) async {
-    final filename = fileFormat == FileFormat.PDF ? '$name.pdf' : fileFormat == FileFormat.PNG ? '$name.png' : '$name.jpg';
+    final filename = fileFormat == FileFormat.PDF
+        ? '$name.pdf'
+        : fileFormat == FileFormat.PNG
+            ? '$name.png'
+            : '$name.jpg';
     final dir = await getApplicationDocumentsDirectory();
 
     //File lokal speichern
