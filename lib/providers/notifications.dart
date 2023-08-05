@@ -32,6 +32,7 @@ class NotificationProvider {
     });
   }
 
+  //? kurze Dokumentation hier
   makeNotificationDetails() {
     return const NotificationDetails(
         android: AndroidNotificationDetails('annette_app_x', 'Annette App',
