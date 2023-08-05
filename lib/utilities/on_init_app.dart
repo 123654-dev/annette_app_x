@@ -10,4 +10,9 @@ class AppInitializer {
 
     //hier weiteren Code einfügen:
   }
+
+  static bool shouldPerformOnboarding() {
+    var userConfig = Hive.box('user_config');
+    return userConfig.get('shouldPerformOnboarding') ?? true;
+  }
 }

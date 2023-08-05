@@ -15,11 +15,11 @@ Future<void> main() async {
   await AppInitializer.init();
 
   //ausführen
-  runApp(const MyApp());
+  runApp(const AnnetteApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class AnnetteApp extends StatelessWidget {
+  const AnnetteApp({super.key});
 
   //Der Anker der App
   @override
