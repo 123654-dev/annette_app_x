@@ -28,4 +28,12 @@ class UserConfig {
   static bool get isOberstufe {
     return [ClassId.EF, ClassId.Q1, ClassId.Q2].contains(classId);
   }
+
+  static List<dynamic> get selectedSubjects {
+    return _box.get('selected_subjects', defaultValue: []);
+  }
+
+  static set selectedSubjects(List<dynamic> value) {
+    _box.put('selected_subjects', value);
+  }
 }

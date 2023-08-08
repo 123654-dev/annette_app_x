@@ -39,6 +39,14 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
   @override
   void initState() {
     _currentFuture = ApiProvider.fetchClasses();
+    var previousSelection = UserConfig.selectedSubjects;
+    if (previousSelection.isNotEmpty) {
+      previousSelection.forEach((element) {
+        _selectedOptions[element["block_title"]] =
+            element["selection"][0]["name"];
+        print(element["selection"][0]["name"]);
+      });
+    }
     super.initState();
   }
 
@@ -220,6 +228,36 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
   }
 
   void submitSelectedOptions() {
+    if (_selectedOptions.length != _options.length) {
+      //show snack bar
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+              "Bitte wähle für jeden Block eine Option aus! (Fehlende Optionen: ${_options.length - _selectedOptions.length})")));
+      return;
+    }
+
+    List opt = [];
+
+    _selectedOptions.forEach((key, value) {
+      var option =
+          _options.firstWhere((element) => element["block_title"] == key);
+      var sel =
+          option["lessons"].firstWhere((element) => element["name"] == value);
+      var obj = {
+        "block_title": key,
+        "selection": [
+          {"name": sel["name"], "id": sel["internal_id"]}
+        ]
+      };
+
+      opt.add(obj);
+    });
+
+    UserConfig.selectedSubjects = opt;
+    print("Great! Options saved.");
+
+    Navigator.pushReplacementNamed(context, "/home");
+
     setState(() {});
   }
 
