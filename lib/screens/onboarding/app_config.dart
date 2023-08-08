@@ -39,14 +39,7 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
   @override
   void initState() {
     _currentFuture = ApiProvider.fetchClasses();
-    var previousSelection = UserConfig.selectedSubjects;
-    if (previousSelection.isNotEmpty) {
-      previousSelection.forEach((element) {
-        _selectedOptions[element["block_title"]] =
-            element["selection"][0]["name"];
-        print(element["selection"][0]["name"]);
-      });
-    }
+
     super.initState();
   }
 
@@ -100,6 +93,7 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                             }),
                           );
                         } else {
+                          //Für Schritt 1 (Auswahl der Klasse)
                           if (!_secondStep) {
                             _classes = jsonDecode(snapshot.data.toString());
                             return Center(
@@ -118,11 +112,17 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                               ),
                             );
                           } else {
-                            _options =
-                                jsonDecode(snapshot.data.toString()) as List;
+                            //Wir sind bei Schritt 2 (Auswahl der Kurse)
+
+                            //Da wir für die Unterstufe ein leicht abgeändertes
+                            //Format benutzen, um bei parallelen Diff- oder Relikursen
+                            //die Kurse zu unterscheiden, müssen wir hier zwei unterschiedliche UIs anzeigen.
+                            //Dieses ist für die Oberstufe.
                             if (_selectedClass == "EF" ||
                                 _selectedClass == "Q1" ||
                                 _selectedClass == "Q2") {
+                              _options =
+                                  jsonDecode(snapshot.data.toString()) as List;
                               print(_options);
                               return Center(
                                   child: ListView(
@@ -160,9 +160,48 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                                 ],
                               ));
                             } else {
+                              /* ------
+                              Für die UNTERSTUFE.
+                              ------ */
+
+                              _options =
+                                  jsonDecode(snapshot.data.toString()) as List;
+
                               return Center(
-                                child: Text("Opfer lol"),
-                              );
+                                  child: ListView(
+                                children: [
+                                  for (var block in _options)
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Text(block["block_title"] as String),
+                                        DropdownButton(
+                                            //Inhalt der Map unter dem Wert von block["block_title"] (z.B. GK-Schiene 1)
+                                            value: _selectedOptions[
+                                                block["block_title"] as String],
+                                            hint: const Text("Kurs auswählen"),
+                                            items: (block["lessons"]
+                                                    as List<dynamic>)
+                                                .map((e) {
+                                              return DropdownMenuItem(
+                                                value: e["name"],
+                                                child: Text(e["name"]),
+                                              );
+                                            }).toList(),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                _selectedOptions[
+                                                        block["block_title"]] =
+                                                    value;
+                                                print(value);
+                                                print(_selectedOptions);
+                                              });
+                                            }),
+                                      ],
+                                    )
+                                ],
+                              ));
                             }
                           }
                         }
@@ -228,11 +267,13 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
   }
 
   void submitSelectedOptions() {
-    if (_selectedOptions.length != _options.length) {
+    if (_selectedOptions.containsValue(null)) {
       //show snack bar
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(
-              "Bitte wähle für jeden Block eine Option aus! (Fehlende Optionen: ${_options.length - _selectedOptions.length})")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Bitte wähle für jeden Block eine Option aus!"),
+        ),
+      );
       return;
     }
 
@@ -254,6 +295,7 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
     });
 
     UserConfig.selectedSubjects = opt;
+    UserConfig.subjectLastClassId = _selectedClass;
     print("Great! Options saved.");
 
     Navigator.pushReplacementNamed(context, "/home");
@@ -269,6 +311,20 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
   }
 
   void loadOptions() {
+    if (UserConfig.subjectLastClassId == _selectedClass) {
+      print("Preparing previous selection...");
+      var previousSelection = UserConfig.selectedSubjects;
+      if (previousSelection.isNotEmpty) {
+        previousSelection.forEach((element) {
+          _selectedOptions[element["block_title"]] =
+              element["selection"][0]["name"];
+          print(element["selection"][0]["name"]);
+        });
+      }
+    } else {
+      _selectedOptions = {};
+    }
+
     setState(() {
       _secondStep = true;
       _hasOptionsResponseYet = false;

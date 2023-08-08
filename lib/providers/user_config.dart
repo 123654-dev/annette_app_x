@@ -29,6 +29,14 @@ class UserConfig {
     return [ClassId.EF, ClassId.Q1, ClassId.Q2].contains(classId);
   }
 
+  static String get subjectLastClassId {
+    return _box.get('subject_last_class_id', defaultValue: classId.name);
+  }
+
+  static set subjectLastClassId(String value) {
+    _box.put('subject_last_class_id', value);
+  }
+
   static List<dynamic> get selectedSubjects {
     return _box.get('selected_subjects', defaultValue: []);
   }
