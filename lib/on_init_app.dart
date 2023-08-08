@@ -1,0 +1,57 @@
+import 'package:annette_app_x/models/homework_entry.dart';
+import 'package:annette_app_x/api/news_provider.dart';
+import 'package:annette_app_x/providers/connection.dart';
+import 'package:annette_app_x/providers/notifications.dart';
+import 'package:annette_app_x/utilities/homework_manager.dart';
+import 'package:flutter/foundation.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/date_symbol_data_file.dart';
+import 'package:timezone/data/latest.dart' as tz;
+
+/// Enthält Code, der beim Start der App ausgeführt werden soll
+class AppInitializer {
+  ///Hier wird alles initialisiert, was initialisiert werden möchte
+
+  static Future<void> init() async {
+    //Config (Hive) initialisieren
+    await Hive.initFlutter();
+    await Hive.openBox('user_config');
+    await Hive.openBox('cache');
+    await Hive.openBox(NewsProvider.newsBoxName);
+
+    // Nachrichten werden initialisiert
+    await NewsProvider.initializeNewsHiveBox();
+
+    //TypeAdapter
+    HomeworkEntry.registerAdapter();
+
+    //Homework (Hive) initialisieren
+    //Hive.deleteBoxFromDisk('homework');
+    if (!Hive.isBoxOpen('homework')) await Hive.openBox('homework');
+
+    Hive.box("homework").values.toList().forEach((element) {
+      print(element);
+
+      if (element.done &&
+          (element as HomeworkEntry)
+              .lastUpdated
+              .isBefore(DateTime.now().subtract(const Duration(days: 7)))) {
+        HomeworkManager.deleteFromBin(element);
+      }
+    });
+
+    //Notifications initialisieren
+    await NotificationProvider().init();
+
+    //ConnectionProvider initialisieren
+    ConnectionProvider.init();
+
+    //Zeitzonen initialisieren (für Notifications)
+    tz.initializeTimeZones();
+  }
+
+  static bool shouldPerformOnboarding() {
+    var userConfig = Hive.box('user_config');
+    return userConfig.get('shouldPerformOnboarding') ?? true;
+  }
+}
