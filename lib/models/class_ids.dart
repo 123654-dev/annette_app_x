@@ -52,7 +52,7 @@ enum ClassId {
 ///Super-duper-praktische Erweiterung, die die [ClassId]s in Strings und umgekehrt umwandelt.
 extension ClassExt on ClassId {
   ///gibt den natürlichen Klassennamen als String zurück (in KLEINBUCHSTABEN).
-  String get name {
+  String get fmtName {
     switch (this) {
       case ClassId.c5A:
         return '5a';

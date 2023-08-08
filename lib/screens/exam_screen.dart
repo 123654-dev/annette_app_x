@@ -148,10 +148,10 @@ class _ExamScreenState extends State<ExamScreen> {
   ///Sie teilt die PDF-Datei mit anderen Apps
   void _shareExamPlan(FileFormat fileFormat) async {
     print(
-        "sharing exam plan for ${_classId.name} as ${fileFormat == FileFormat.JPG ? "image" : "pdf"}");
+        "sharing exam plan for ${_classId.fmtName} as ${fileFormat == FileFormat.JPG ? "image" : "pdf"}");
     if (fileFormat == FileFormat.PDF) {
       Share.shareXFiles([XFile(_file.path)],
-          text: 'Klausurplan ${_classId.name}');
+          text: 'Klausurplan ${_classId.fmtName}');
     } else {
       //Öffnet die PDF-Datei
       var document = await PdfDocument.openFile(_file.path);
@@ -171,7 +171,7 @@ class _ExamScreenState extends State<ExamScreen> {
             "examPlan$_classId;page$i", pageImage!.bytes, fileFormat);
         pages.add(XFile(file.path));
       }
-      Share.shareXFiles(pages, text: 'Klausurplan ${_classId.name}');
+      Share.shareXFiles(pages, text: 'Klausurplan ${_classId.fmtName}');
     }
   }
 }

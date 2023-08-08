@@ -261,7 +261,8 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
 
   void submitSelectedClass() {
     UserConfig.classId = ClassId.values.firstWhere(
-      (element) => element.name.toUpperCase() == _selectedClass.toUpperCase(),
+      (element) =>
+          element.fmtName.toUpperCase() == _selectedClass.toUpperCase(),
     );
     print(UserConfig.classId);
   }
@@ -296,9 +297,10 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
 
     UserConfig.selectedSubjects = opt;
     UserConfig.subjectLastClassId = _selectedClass;
+    UserConfig.shouldPerformOnboarding = false;
     print("Great! Options saved.");
 
-    Navigator.pushReplacementNamed(context, "/home");
+    Navigator.of(context).pushNamedAndRemoveUntil("/home", (r) => false);
 
     setState(() {});
   }
