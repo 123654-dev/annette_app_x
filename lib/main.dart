@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:annette_app_x/consts/default_color_schemes.dart';
 import 'package:annette_app_x/models/theme_mode.dart';
-import 'package:annette_app_x/api/news_provider.dart';
 import 'package:annette_app_x/providers/user_config.dart';
 import 'package:annette_app_x/screens/exam_screen.dart';
 import 'package:annette_app_x/screens/homework_screen.dart';
 import 'package:annette_app_x/screens/misc_screen.dart';
+import 'package:annette_app_x/screens/onboarding/onboarding_screen.dart';
 import 'package:annette_app_x/screens/substitution_screen.dart';
 import 'package:annette_app_x/screens/timetable_screen.dart';
 import 'package:annette_app_x/utilities/homework_manager.dart';
@@ -19,11 +19,11 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 Future<void> main() async {
   //Initialisierung der App in Gang setzen
-  await AppInitializer.init().then((value) => runApp(const MyApp()));
+  await AppInitializer.init().then((value) => runApp(const AnnetteApp()));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class AnnetteApp extends StatelessWidget {
+  const AnnetteApp({super.key});
 
   //Der Anker der App
   @override
@@ -37,10 +37,18 @@ class MyApp extends StatelessWidget {
     Ansonsten wird die App mit den Standardschemata konstruiert (definiert in default_color_schemes.dart!)
     */
 
-    return UserConfig.themeMode == AnnetteThemeMode.material3
+    bool canUseMaterial3 = UserConfig.themeMode == AnnetteThemeMode.material3;
+    bool shouldPerformOnboarding = AppInitializer.shouldPerformOnboarding();
+
+    return canUseMaterial3
         ? DynamicColorBuilder(
             builder: ((lightDynamic, darkDynamic) => MaterialApp(
                   title: 'Annette App X',
+                  //Ermöglicht einfachen Wechsel
+                  routes: {
+                    "/onboarding": (context) => const Onboarding(),
+                    "/home": (context) => home,
+                  },
                   theme: ThemeData(
                       colorScheme:
                           lightDynamic ?? AnnetteColorSchemes.lightColorScheme,
@@ -49,18 +57,24 @@ class MyApp extends StatelessWidget {
                       colorScheme:
                           darkDynamic ?? AnnetteColorSchemes.darkColorScheme,
                       useMaterial3: true),
-                  home: home,
+                  initialRoute:
+                      shouldPerformOnboarding ? "/onboarding" : "/home",
                   themeMode: ThemeMode.dark,
                 )),
           )
         : MaterialApp(
+            title: 'Annette App X',
+            routes: {
+              "/onboarding": (context) => const Onboarding(),
+              "/home": (context) => home,
+            },
             theme: ThemeData(
                 colorScheme: AnnetteColorSchemes.lightColorScheme,
                 useMaterial3: true),
             darkTheme: ThemeData(
                 colorScheme: AnnetteColorSchemes.darkColorScheme,
                 useMaterial3: true),
-            home: home,
+            initialRoute: shouldPerformOnboarding ? "/onboarding" : "/home",
             themeMode: ThemeMode.dark,
           );
   }

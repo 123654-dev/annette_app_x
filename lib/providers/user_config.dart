@@ -9,11 +9,13 @@ class UserConfig {
 
   ///[ClassId] ist Klasse, die der User ausgewählt hat
   static ClassId get classId {
-    return _box.get('class_id', defaultValue: ClassId.Q1);
+    var classIdString = _box.get('class_id', defaultValue: ClassId.Q1.name);
+    return ClassId.values
+        .firstWhere((e) => e.name.toUpperCase() == classIdString.toUpperCase());
   }
 
   static set classId(ClassId value) {
-    _box.put('class_id', value);
+    _box.put('class_id', value.name);
   }
 
   ///[AnnetteThemeMode] ist das Theme, das der User ausgewählt hat (aus dem [AnnetteThemeMode] Enum)
@@ -25,5 +27,21 @@ class UserConfig {
   ///Vereinfacht das Schreiben von Code (statt [ClassId.EF, ClassId.Q1, ClassId.Q2].contains(classId)) und so
   static bool get isOberstufe {
     return [ClassId.EF, ClassId.Q1, ClassId.Q2].contains(classId);
+  }
+
+  static String get subjectLastClassId {
+    return _box.get('subject_last_class_id', defaultValue: classId.name);
+  }
+
+  static set subjectLastClassId(String value) {
+    _box.put('subject_last_class_id', value);
+  }
+
+  static List<dynamic> get selectedSubjects {
+    return _box.get('selected_subjects', defaultValue: []);
+  }
+
+  static set selectedSubjects(List<dynamic> value) {
+    _box.put('selected_subjects', value);
   }
 }

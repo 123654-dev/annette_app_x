@@ -7,26 +7,37 @@ enum ClassId {
   c5C(15),
   c5D(20),
   c5E(25),
+  c5F(26),
   c6A(30),
   c6B(35),
   c6C(40),
   c6D(45),
+  c6E(46),
   c6F(50),
   c7A(55),
   c7B(60),
   c7C(65),
   c7D(70),
+  c7E(71),
   c7F(75),
   c8A(80),
   c8B(85),
   c8C(90),
   c8D(95),
   c8E(100),
+  c8F(101),
   c9A(105),
   c9B(110),
   c9C(115),
   c9D(120),
   c9E(122),
+  c9F(123),
+  c10A(125),
+  c10B(130),
+  c10C(135),
+  c10D(140),
+  c10E(141),
+  c10F(142),
   EF(127),
   Q1(132),
   Q2(137);
@@ -53,6 +64,8 @@ extension ClassExt on ClassId {
         return '5d';
       case ClassId.c5E:
         return '5e';
+      case ClassId.c5F:
+        return '5f';
       case ClassId.c6A:
         return '6a';
       case ClassId.c6B:
@@ -61,6 +74,8 @@ extension ClassExt on ClassId {
         return '6c';
       case ClassId.c6D:
         return '6d';
+      case ClassId.c6E:
+        return '6e';
       case ClassId.c6F:
         return '6f';
       case ClassId.c7A:
@@ -71,6 +86,8 @@ extension ClassExt on ClassId {
         return '7c';
       case ClassId.c7D:
         return '7d';
+      case ClassId.c7E:
+        return '7e';
       case ClassId.c7F:
         return '7f';
       case ClassId.c8A:
@@ -83,6 +100,8 @@ extension ClassExt on ClassId {
         return '8d';
       case ClassId.c8E:
         return '8e';
+      case ClassId.c8F:
+        return '8f';
       case ClassId.c9A:
         return '9a';
       case ClassId.c9B:
@@ -93,6 +112,20 @@ extension ClassExt on ClassId {
         return '9d';
       case ClassId.c9E:
         return '9e';
+      case ClassId.c9F:
+        return '9f';
+      case ClassId.c10A:
+        return '10a';
+      case ClassId.c10B:
+        return '10b';
+      case ClassId.c10C:
+        return '10c';
+      case ClassId.c10D:
+        return '10d';
+      case ClassId.c10E:
+        return '10e';
+      case ClassId.c10F:
+        return '10f';
       case ClassId.EF:
         return 'ef';
       case ClassId.Q1:
