@@ -1,3 +1,4 @@
+import 'package:annette_app_x/screens/onboarding/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -121,9 +122,45 @@ class _OnboardingState extends State<Onboarding> {
           ),
         ),
       ),
-      //floatingActionButton: ,
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 40),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            const SizedBox(width: 20),
+            Expanded(
+              child: OutlinedButton(
+                  child: const Text("Überspringen"),
+                  onPressed: () {
+                    showConfigurationScreen(context);
+                  }),
+            ),
+            const SizedBox(width: 20),
+            Expanded(
+              child: FilledButton(
+                  child: const Text("Weiter"),
+                  onPressed: () {
+                    if (_currentPage < segments.length - 1) {
+                      _pageController.animateToPage(_currentPage + 1,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.linear);
+                    } else {
+                      showConfigurationScreen(context);
+                    }
+                  }),
+            ),
+            const SizedBox(width: 20),
+          ],
+        ),
+      ),
     );
   }
+}
+
+void showConfigurationScreen(BuildContext context) {
+  Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => AppConfigScreen(),
+      settings: const RouteSettings()));
 }
 
 void onCompleted(BuildContext context) {}

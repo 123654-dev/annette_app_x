@@ -9,11 +9,13 @@ class UserConfig {
 
   ///[ClassId] ist Klasse, die der User ausgewählt hat
   static ClassId get classId {
-    return _box.get('class_id', defaultValue: ClassId.Q1);
+    var classIdString = _box.get('class_id', defaultValue: ClassId.Q1.name);
+    return ClassId.values
+        .firstWhere((e) => e.name.toUpperCase() == classIdString.toUpperCase());
   }
 
   static set classId(ClassId value) {
-    _box.put('class_id', value);
+    _box.put('class_id', value.name);
   }
 
   ///[AnnetteThemeMode] ist das Theme, das der User ausgewählt hat (aus dem [AnnetteThemeMode] Enum)

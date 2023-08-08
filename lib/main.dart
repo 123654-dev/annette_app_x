@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:annette_app_x/consts/default_color_schemes.dart';
 import 'package:annette_app_x/models/theme_mode.dart';
-import 'package:annette_app_x/api/news_provider.dart';
 import 'package:annette_app_x/providers/user_config.dart';
 import 'package:annette_app_x/screens/exam_screen.dart';
 import 'package:annette_app_x/screens/homework_screen.dart';
@@ -20,7 +19,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 Future<void> main() async {
   //Initialisierung der App in Gang setzen
-  await AppInitializer.init().then((value) => runApp(const MyApp()));
+  await AppInitializer.init().then((value) => runApp(const AnnetteApp()));
 }
 
 class AnnetteApp extends StatelessWidget {

@@ -1,5 +1,6 @@
 import 'package:annette_app_x/models/homework_entry.dart';
 import 'package:annette_app_x/api/news_provider.dart';
+import 'package:annette_app_x/providers/connection.dart';
 import 'package:annette_app_x/providers/notifications.dart';
 import 'package:annette_app_x/utilities/homework_manager.dart';
 import 'package:flutter/foundation.dart';
@@ -10,7 +11,6 @@ import 'package:timezone/data/latest.dart' as tz;
 /// Enthält Code, der beim Start der App ausgeführt werden soll
 class AppInitializer {
   ///Hier wird alles initialisiert, was initialisiert werden möchte
-  
 
   static Future<void> init() async {
     //Config (Hive) initialisieren
@@ -19,7 +19,6 @@ class AppInitializer {
     await Hive.openBox('cache');
     await Hive.openBox(NewsProvider.newsBoxName);
 
-    
     // Nachrichten werden initialisiert
     await NewsProvider.initializeNewsHiveBox();
 
@@ -44,9 +43,15 @@ class AppInitializer {
     //Notifications initialisieren
     await NotificationProvider().init();
 
+    //ConnectionProvider initialisieren
+    ConnectionProvider.init();
+
     //Zeitzonen initialisieren (für Notifications)
     tz.initializeTimeZones();
-    
+  }
 
+  static bool shouldPerformOnboarding() {
+    var userConfig = Hive.box('user_config');
+    return userConfig.get('shouldPerformOnboarding') ?? true;
   }
 }
