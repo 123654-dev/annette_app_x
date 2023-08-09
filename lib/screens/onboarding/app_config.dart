@@ -9,7 +9,15 @@ import 'package:annette_app_x/widgets/request_error.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-//TODO für morgen: FutureBuilder verschieben, zweiten Builder für die Optionen implementieren!
+const Map<int, String> weekdayName = {
+  1: "Mo",
+  2: "Di",
+  3: "Mi",
+  4: "Do",
+  5: "Fr",
+  6: "Sa",
+  7: "So"
+};
 
 //SetClass V3 ;)
 class AppConfigScreen extends StatefulWidget {
@@ -178,6 +186,44 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                               _options =
                                   jsonDecode(snapshot.data.toString()) as List;
 
+                              //if there is a block in _options containing multiple lessons with identical names
+                              //we need to add a suffix to the name of the lesson to make it unique
+                              //this has to work for any subject name
+
+                              Map<String, String> roomInfo = {};
+
+                              //Find all lessons with identical names in the same blocjk
+                              for (var block in _options) {
+                                var lessons = block["lessons"] as List<dynamic>;
+                                var lessonNames = lessons
+                                    .map((e) => e["name"] as String)
+                                    .toList();
+                                var uniqueLessonNames = lessonNames.toSet();
+
+                                //if there are multiple lessons with the same name
+                                if (uniqueLessonNames.length !=
+                                    lessonNames.length) {
+                                  //find all lessons with the same name
+                                  for (var lessonName in uniqueLessonNames) {
+                                    var lessonsWithSameName = lessons
+                                        .where((element) =>
+                                            element["name"] == lessonName)
+                                        .toList();
+
+                                    //if there are multiple lessons with the same name in the same block
+                                    if (lessonsWithSameName.length > 1) {
+                                      //add a suffix to the name of the lesson
+                                      for (var lesson in lessonsWithSameName) {
+                                        lesson["name"] =
+                                            "${lesson["name"]} (${weekdayName[lesson["day"]]}: ${lesson["room"]})";
+                                      }
+                                    }
+                                  }
+                                }
+
+                                //if there is a room for this block
+                              }
+
                               return Center(
                                   child: ListView(
                                 children: [
@@ -209,6 +255,18 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                                                 print(_selectedOptions);
                                               });
                                             }),
+                                        if (roomInfo.containsKey(
+                                            block["block_title"] as String))
+                                          Tooltip(
+                                            message:
+                                                roomInfo[block["block_title"]]!,
+                                            child: PhosphorIcon(
+                                              PhosphorIcons.duotone.info,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
+                                            ),
+                                          ),
                                       ],
                                     )
                                 ],
