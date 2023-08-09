@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:annette_app_x/models/class_ids.dart';
 import 'package:annette_app_x/providers/api/api_provider.dart';
 import 'package:annette_app_x/providers/connection.dart';
-import 'package:annette_app_x/providers/user_config.dart';
+import 'package:annette_app_x/providers/user_settings.dart';
 import 'package:annette_app_x/widgets/no_signal_error.dart';
 import 'package:annette_app_x/widgets/request_error.dart';
 import 'package:flutter/material.dart';
@@ -85,12 +85,23 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                       if (snapshot.connectionState == ConnectionState.done) {
                         if (snapshot.hasError) {
                           return Center(
-                            child: BadRequestError(onPressed: () {
-                              setState(() {
-                                _hasError = false;
-                                _secondStep ? loadOptions() : reloadClasses();
-                              });
-                            }),
+                            child: ConnectionProvider.hasConnection()
+                                ? BadRequestError(onPressed: () {
+                                    setState(() {
+                                      _hasError = false;
+                                      _secondStep
+                                          ? loadOptions()
+                                          : reloadClasses();
+                                    });
+                                  })
+                                : NoSignalError(onPressed: () {
+                                    setState(() {
+                                      _hasError = false;
+                                      _secondStep
+                                          ? loadOptions()
+                                          : reloadClasses();
+                                    });
+                                  }),
                           );
                         } else {
                           //Für Schritt 1 (Auswahl der Klasse)
@@ -225,7 +236,6 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                     child: Text("Weiter"),
                     onPressed: () {
                       if (!_secondStep) {
-                        submitSelectedClass();
                         loadOptions();
                       } else {
                         submitSelectedOptions();
@@ -259,13 +269,6 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
     );
   }
 
-  void submitSelectedClass() {
-    UserConfig.classId = ClassId.values.firstWhere(
-      (element) => element.name.toUpperCase() == _selectedClass.toUpperCase(),
-    );
-    print(UserConfig.classId);
-  }
-
   void submitSelectedOptions() {
     if (_selectedOptions.containsValue(null)) {
       //show snack bar
@@ -294,11 +297,18 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
       opt.add(obj);
     });
 
-    UserConfig.selectedSubjects = opt;
-    UserConfig.subjectLastClassId = _selectedClass;
+    UserSettings.classId = ClassId.values.firstWhere(
+      (element) =>
+          element.fmtName.toUpperCase() == _selectedClass.toUpperCase(),
+    );
+    print(UserSettings.classId);
+
+    UserSettings.selectedSubjects = opt;
+    UserSettings.subjectLastClassId = _selectedClass;
+    UserSettings.shouldPerformOnboarding = false;
     print("Great! Options saved.");
 
-    Navigator.pushReplacementNamed(context, "/home");
+    Navigator.of(context).pushNamedAndRemoveUntil("/home", (r) => false);
 
     setState(() {});
   }
@@ -311,9 +321,9 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
   }
 
   void loadOptions() {
-    if (UserConfig.subjectLastClassId == _selectedClass) {
+    if (UserSettings.subjectLastClassId == _selectedClass) {
       print("Preparing previous selection...");
-      var previousSelection = UserConfig.selectedSubjects;
+      var previousSelection = UserSettings.selectedSubjects;
       if (previousSelection.isNotEmpty) {
         previousSelection.forEach((element) {
           _selectedOptions[element["block_title"]] =

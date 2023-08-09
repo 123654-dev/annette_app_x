@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:annette_app_x/models/class_ids.dart';
 import 'package:annette_app_x/models/file_format.dart';
 import 'package:annette_app_x/providers/storage.dart';
-import 'package:annette_app_x/providers/user_config.dart';
+import 'package:annette_app_x/providers/user_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:annette_app_x/providers/api/files_provider.dart';
@@ -33,7 +33,7 @@ class _ExamScreenState extends State<ExamScreen> {
   bool _catastrophicFailure = false;
 
   //Klassen-ID aus der User Config (siehe lib/providers/user_config.dart) laden
-  var _classId = UserConfig.classId;
+  var _classId = UserSettings.classId;
 
   //Enthält später den Pfad zur heruntergeladenen PDF-Datei
   late File _file;
@@ -148,10 +148,10 @@ class _ExamScreenState extends State<ExamScreen> {
   ///Sie teilt die PDF-Datei mit anderen Apps
   void _shareExamPlan(FileFormat fileFormat) async {
     print(
-        "sharing exam plan for ${_classId.name} as ${fileFormat == FileFormat.JPG ? "image" : "pdf"}");
+        "sharing exam plan for ${_classId.fmtName} as ${fileFormat == FileFormat.JPG ? "image" : "pdf"}");
     if (fileFormat == FileFormat.PDF) {
       Share.shareXFiles([XFile(_file.path)],
-          text: 'Klausurplan ${_classId.name}');
+          text: 'Klausurplan ${_classId.fmtName}');
     } else {
       //Öffnet die PDF-Datei
       var document = await PdfDocument.openFile(_file.path);
@@ -171,7 +171,7 @@ class _ExamScreenState extends State<ExamScreen> {
             "examPlan$_classId;page$i", pageImage!.bytes, fileFormat);
         pages.add(XFile(file.path));
       }
-      Share.shareXFiles(pages, text: 'Klausurplan ${_classId.name}');
+      Share.shareXFiles(pages, text: 'Klausurplan ${_classId.fmtName}');
     }
   }
 }

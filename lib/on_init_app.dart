@@ -17,6 +17,8 @@ class AppInitializer {
     await Hive.initFlutter();
     await Hive.openBox('user_config');
     await Hive.openBox('cache');
+    await Hive.openBox('app_settings');
+    await Hive.openBox('timetable');
     await Hive.openBox(NewsProvider.newsBoxName);
 
     // Nachrichten werden initialisiert

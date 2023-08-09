@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:annette_app_x/consts/default_color_schemes.dart';
 import 'package:annette_app_x/models/theme_mode.dart';
-import 'package:annette_app_x/providers/user_config.dart';
+import 'package:annette_app_x/providers/user_settings.dart';
 import 'package:annette_app_x/screens/exam_screen.dart';
 import 'package:annette_app_x/screens/homework_screen.dart';
 import 'package:annette_app_x/screens/misc_screen.dart';
@@ -37,46 +37,52 @@ class AnnetteApp extends StatelessWidget {
     Ansonsten wird die App mit den Standardschemata konstruiert (definiert in default_color_schemes.dart!)
     */
 
-    bool canUseMaterial3 = UserConfig.themeMode == AnnetteThemeMode.material3;
     bool shouldPerformOnboarding = AppInitializer.shouldPerformOnboarding();
 
-    return canUseMaterial3
-        ? DynamicColorBuilder(
-            builder: ((lightDynamic, darkDynamic) => MaterialApp(
+    return ValueListenableBuilder<ThemeMode>(
+        valueListenable: UserSettings.themeNotifier,
+        builder: (context, value, child) {
+          bool useDynamicColor = UserSettings.useMaterial3;
+
+          return useDynamicColor
+              ? DynamicColorBuilder(
+                  builder: ((lightDynamic, darkDynamic) => MaterialApp(
+                        title: 'Annette App X',
+                        //Ermöglicht einfachen Wechsel
+                        routes: {
+                          "/onboarding": (context) => const Onboarding(),
+                          "/home": (context) => home,
+                        },
+                        theme: ThemeData(
+                            colorScheme: lightDynamic ??
+                                AnnetteColorSchemes.lightColorScheme,
+                            useMaterial3: true),
+                        darkTheme: ThemeData(
+                            colorScheme: darkDynamic ??
+                                AnnetteColorSchemes.darkColorScheme,
+                            useMaterial3: true),
+                        initialRoute:
+                            shouldPerformOnboarding ? "/onboarding" : "/home",
+                        themeMode: value,
+                      )),
+                )
+              : MaterialApp(
                   title: 'Annette App X',
-                  //Ermöglicht einfachen Wechsel
                   routes: {
                     "/onboarding": (context) => const Onboarding(),
                     "/home": (context) => home,
                   },
                   theme: ThemeData(
-                      colorScheme:
-                          lightDynamic ?? AnnetteColorSchemes.lightColorScheme,
+                      colorScheme: AnnetteColorSchemes.lightColorScheme,
                       useMaterial3: true),
                   darkTheme: ThemeData(
-                      colorScheme:
-                          darkDynamic ?? AnnetteColorSchemes.darkColorScheme,
+                      colorScheme: AnnetteColorSchemes.darkColorScheme,
                       useMaterial3: true),
                   initialRoute:
                       shouldPerformOnboarding ? "/onboarding" : "/home",
-                  themeMode: ThemeMode.dark,
-                )),
-          )
-        : MaterialApp(
-            title: 'Annette App X',
-            routes: {
-              "/onboarding": (context) => const Onboarding(),
-              "/home": (context) => home,
-            },
-            theme: ThemeData(
-                colorScheme: AnnetteColorSchemes.lightColorScheme,
-                useMaterial3: true),
-            darkTheme: ThemeData(
-                colorScheme: AnnetteColorSchemes.darkColorScheme,
-                useMaterial3: true),
-            initialRoute: shouldPerformOnboarding ? "/onboarding" : "/home",
-            themeMode: ThemeMode.dark,
-          );
+                  themeMode: value,
+                );
+        });
   }
 }
 
@@ -147,7 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
           //sehr komischer Code, um den Klausurplan nur für Oberstufe anzuzeigen
           //NICHT ANFASSEN
           //ES FUNKTIONIERT OK?
-          if (UserConfig.isOberstufe) {
+          if (UserSettings.isOberstufe) {
             switch (value) {
               case 0:
                 _selectedDestination = _Destination.vertretung;
@@ -211,7 +217,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
           /* Klausurplan nur für Oberstufe anzeigen */
 
-          if (UserConfig.isOberstufe)
+          if (UserSettings.isOberstufe)
             NavigationDestination(
               icon: PhosphorIcon(PhosphorIcons.duotone.exam,
                   color: Theme.of(context).colorScheme.onBackground),
@@ -222,6 +228,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Theme.of(context).colorScheme.onBackground),
             label: 'Sonstiges',
           ),
+          //spacer for FAB
+          if (!UserSettings.isOberstufe)
+            const NavigationDestination(
+              icon: SizedBox(),
+              label: '',
+            ),
         ],
       ),
       body: Stack(
@@ -240,7 +252,7 @@ class _MyHomePageState extends State<MyHomePage> {
               alignment: Alignment.center,
               child: HomeworkScreen(refresh: refresh),
             ),
-            if (UserConfig.isOberstufe)
+            if (UserSettings.isOberstufe)
               Container(
                 alignment: Alignment.center,
                 child: const ExamScreen(),
@@ -252,6 +264,9 @@ class _MyHomePageState extends State<MyHomePage> {
           ][_selectedDestination.index],
         ],
       ),
+      floatingActionButtonLocation: UserSettings.isOberstufe
+          ? FloatingActionButtonLocation.endFloat
+          : FloatingActionButtonLocation.endContained,
       floatingActionButton: FloatingActionButton(
         onPressed: () => HomeworkManager.showHomeworkDialog(refresh, context),
         child: PhosphorIcon(PhosphorIcons.duotone.listPlus,

@@ -17,7 +17,7 @@ class FilesProvider {
   /// Das File-Objekt kann dann z.B. mit dem PDFView-Widget angezeigt werden.
   /// Speichert den Stundenplan lokal unter [id.name].pdf
   static Future<File> _loadExamPlansFromNetwork(ClassId id) async {
-    var idString = id.name;
+    var idString = id.fmtName;
     final response = await http
         .get(Uri.http('annette-app-files.vercel.app', 'klausur_$idString.pdf'));
     final bytes = response.bodyBytes;
@@ -47,7 +47,7 @@ class FilesProvider {
     //Ist der Stundenplan bereits auf dem neuesten Stand?
     if (await StorageProvider.isExamPlanUpToDate(id)) {
       //Dateinamen zusammensetzen
-      var idString = id.name;
+      var idString = id.fmtName;
       final filename = '$idString.pdf';
       final dir = await getApplicationDocumentsDirectory();
 
