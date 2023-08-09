@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:annette_app_x/models/class_ids.dart';
 import 'package:annette_app_x/models/file_format.dart';
 import 'package:annette_app_x/providers/storage.dart';
-import 'package:annette_app_x/providers/user_config.dart';
+import 'package:annette_app_x/providers/user_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:annette_app_x/providers/api/files_provider.dart';
@@ -33,7 +33,7 @@ class _ExamScreenState extends State<ExamScreen> {
   bool _catastrophicFailure = false;
 
   //Klassen-ID aus der User Config (siehe lib/providers/user_config.dart) laden
-  var _classId = UserConfig.classId;
+  var _classId = UserSettings.classId;
 
   //Enthält später den Pfad zur heruntergeladenen PDF-Datei
   late File _file;
