@@ -85,12 +85,23 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                       if (snapshot.connectionState == ConnectionState.done) {
                         if (snapshot.hasError) {
                           return Center(
-                            child: BadRequestError(onPressed: () {
-                              setState(() {
-                                _hasError = false;
-                                _secondStep ? loadOptions() : reloadClasses();
-                              });
-                            }),
+                            child: ConnectionProvider.hasConnection()
+                                ? BadRequestError(onPressed: () {
+                                    setState(() {
+                                      _hasError = false;
+                                      _secondStep
+                                          ? loadOptions()
+                                          : reloadClasses();
+                                    });
+                                  })
+                                : NoSignalError(onPressed: () {
+                                    setState(() {
+                                      _hasError = false;
+                                      _secondStep
+                                          ? loadOptions()
+                                          : reloadClasses();
+                                    });
+                                  }),
                           );
                         } else {
                           //Für Schritt 1 (Auswahl der Klasse)
