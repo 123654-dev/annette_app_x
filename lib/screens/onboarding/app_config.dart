@@ -186,13 +186,8 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                               _options =
                                   jsonDecode(snapshot.data.toString()) as List;
 
-                              //if there is a block in _options containing multiple lessons with identical names
-                              //we need to add a suffix to the name of the lesson to make it unique
-                              //this has to work for any subject name
-
                               Map<String, String> roomInfo = {};
 
-                              //Find all lessons with identical names in the same blocjk
                               for (var block in _options) {
                                 var lessons = block["lessons"] as List<dynamic>;
                                 var lessonNames = lessons
@@ -200,28 +195,29 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                                     .toList();
                                 var uniqueLessonNames = lessonNames.toSet();
 
-                                //if there are multiple lessons with the same name
                                 if (uniqueLessonNames.length !=
                                     lessonNames.length) {
-                                  //find all lessons with the same name
                                   for (var lessonName in uniqueLessonNames) {
                                     var lessonsWithSameName = lessons
                                         .where((element) =>
                                             element["name"] == lessonName)
                                         .toList();
 
-                                    //if there are multiple lessons with the same name in the same block
                                     if (lessonsWithSameName.length > 1) {
-                                      //add a suffix to the name of the lesson
+                                      var index = 1;
                                       for (var lesson in lessonsWithSameName) {
                                         lesson["name"] =
-                                            "${lesson["name"]} (${weekdayName[lesson["day"]]}: ${lesson["room"]})";
+                                            "${lesson["name"]} $index";
+                                        roomInfo[
+                                            block["block_title"]] = (roomInfo[
+                                                    block["block_title"]] ??
+                                                "Mehrere Kurse erkannt.\nInformationen zur Unterscheidung:\n") +
+                                            "${lesson["name"]}: ${weekdayName[lesson["day"]]} in ${lesson["room"]}\n";
+                                        index++;
                                       }
                                     }
                                   }
                                 }
-
-                                //if there is a room for this block
                               }
 
                               return Center(
@@ -258,10 +254,14 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                                         if (roomInfo.containsKey(
                                             block["block_title"] as String))
                                           Tooltip(
+                                            triggerMode: TooltipTriggerMode.tap,
+                                            showDuration:
+                                                const Duration(seconds: 20),
                                             message:
                                                 roomInfo[block["block_title"]]!,
                                             child: PhosphorIcon(
-                                              PhosphorIcons.duotone.info,
+                                              PhosphorIcons
+                                                  .duotone.sealQuestion,
                                               color: Theme.of(context)
                                                   .colorScheme
                                                   .primary,
