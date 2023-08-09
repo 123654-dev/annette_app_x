@@ -120,7 +120,7 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                                 useMagnifier: true,
                                 magnification: 2,
                                 perspective: 0.01,
-                                squeeze: 0.7,
+                                squeeze: 0.8,
                                 physics: const FixedExtentScrollPhysics(),
                                 itemExtent: 50,
                                 onSelectedItemChanged: (value) => setState(() {
