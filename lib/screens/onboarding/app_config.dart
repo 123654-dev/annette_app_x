@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:annette_app_x/models/class_ids.dart';
 import 'package:annette_app_x/providers/api/api_provider.dart';
+import 'package:annette_app_x/providers/api/subjects_provider.dart';
 import 'package:annette_app_x/providers/connection.dart';
 import 'package:annette_app_x/providers/user_settings.dart';
 import 'package:annette_app_x/widgets/no_signal_error.dart';
@@ -35,7 +37,7 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
   late var _classes = [];
   late var _options;
 
-  late Future<String> _currentFuture;
+  late Future<dynamic> _currentFuture;
 
   late var _selectedClass = _classes[0];
 
@@ -132,6 +134,7 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                             );
                           } else {
                             //Wir sind bei Schritt 2 (Auswahl der Kurse)
+                            _options = snapshot.data as List;
 
                             //Da wir für die Unterstufe ein leicht abgeändertes
                             //Format benutzen, um bei parallelen Diff- oder Relikursen
@@ -140,9 +143,9 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                             if (_selectedClass == "EF" ||
                                 _selectedClass == "Q1" ||
                                 _selectedClass == "Q2") {
-                              _options =
-                                  jsonDecode(snapshot.data.toString()) as List;
                               print(_options);
+                              print("wenomechainsama");
+                              stderr.writeln('print me');
                               return Center(
                                   child: ListView(
                                 children: [
@@ -183,8 +186,11 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                               Für die UNTERSTUFE.
                               ------ */
 
-                              _options =
-                                  jsonDecode(snapshot.data.toString()) as List;
+                              //Nur die für die Auswahl Blöcke anzeigen, die mehr als einen Kurs enthalten
+                              _options = _options
+                                  .where(
+                                      (i) => (i["lessons"].length > 1) as bool)
+                                  .toList();
 
                               Map<String, String> roomInfo = {};
 
@@ -359,12 +365,11 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
       (element) =>
           element.fmtName.toUpperCase() == _selectedClass.toUpperCase(),
     );
-    print(UserSettings.classId);
 
-    UserSettings.selectedSubjects = opt;
+    UserSettings.saveSubjects(opt);
     UserSettings.subjectLastClassId = _selectedClass;
     UserSettings.shouldPerformOnboarding = false;
-    print("Great! Options saved.");
+    print("Courses saved.");
 
     Navigator.of(context).pushNamedAndRemoveUntil("/home", (r) => false);
 
@@ -396,7 +401,10 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
     setState(() {
       _secondStep = true;
       _hasOptionsResponseYet = false;
-      _currentFuture = ApiProvider.fetchChoiceOptions(_selectedClass);
+      _currentFuture = SubjectsProvider.getSubjects(ClassId.values.firstWhere(
+        (element) =>
+            element.fmtName.toUpperCase() == _selectedClass.toUpperCase(),
+      ));
     });
   }
 }

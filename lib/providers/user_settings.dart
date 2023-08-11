@@ -1,7 +1,9 @@
 import 'package:annette_app_x/models/class_ids.dart';
-import 'package:annette_app_x/models/theme_mode.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+
+import 'api/subjects_provider.dart';
 
 ///Speichert User-Einstellungen, z.B. Klasse, Theme etc.
 class UserSettings {
@@ -19,6 +21,23 @@ class UserSettings {
 
   static set classId(ClassId value) {
     _config.put('class_id', value.fmtName);
+  }
+
+  static void saveSubjects(List<dynamic> parallelSubjects) {
+    List<dynamic> subjects = [];
+
+    // Get all non parallel subjects from the selected class
+    subjects.addAll(SubjectsProvider.getSubjects(classId).then((value) => value
+        .where((subject) => (subject["lessons"].length > 1) as bool)
+        .toList()) as Iterable);
+
+    // Add all parallel subjects
+    subjects.addAll(parallelSubjects);
+
+    subjects.forEach((element) {
+      print(element);
+    });
+    selectedSubjects = subjects;
   }
 
   static final ValueNotifier<ThemeMode> themeNotifier =

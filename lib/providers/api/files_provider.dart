@@ -29,11 +29,7 @@ class FilesProvider {
   ///Das File-Objekt kann dann z.B. mit dem PDFView-Widget angezeigt werden.
   ///[name] ist der Name. unter dem die Datei gespeichert werden soll
   static Future<File> storeFile(name, bytes, FileFormat fileFormat) async {
-    final filename = fileFormat == FileFormat.PDF
-        ? '$name.pdf'
-        : fileFormat == FileFormat.PNG
-            ? '$name.png'
-            : '$name.jpg';
+    final filename = name + '.' + fileFormat.name.toLowerCase();
     final dir = await getApplicationDocumentsDirectory();
 
     //File lokal speichern
