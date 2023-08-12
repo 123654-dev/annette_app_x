@@ -94,6 +94,7 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
                         if (snapshot.hasError) {
+                          print(snapshot.error); 
                           return Center(
                             child: ConnectionProvider.hasConnection()
                                 ? BadRequestError(onPressed: () {

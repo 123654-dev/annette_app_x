@@ -23,21 +23,56 @@ class UserSettings {
     _config.put('class_id', value.fmtName);
   }
 
-  static void saveSubjects(List<dynamic> parallelSubjects) {
-    List<dynamic> subjects = [];
+  static void saveSubjects(List<dynamic> parallelSubjects) async {
+    if(parallelSubjects == []) {
+      parallelSubjects = selectedSubjects;
+    } else {
+      selectedSubjects = parallelSubjects;
+    }
+    List<dynamic> allSubjects = [];
+    subjects = [];
 
-    // Get all non parallel subjects from the selected class
-    subjects.addAll(SubjectsProvider.getSubjects(classId).then((value) => value
-        .where((subject) => (subject["lessons"].length > 1) as bool)
-        .toList()) as Iterable);
+    // Get all subjects from the selected class
+    var allSubjectsFromAPI = await SubjectsProvider.getSubjects(classId);
 
-    // Add all parallel subjects
-    subjects.addAll(parallelSubjects);
+    // Sort out all parallel subjects
+    var nonParallelSubjects = allSubjectsFromAPI
+        .where((subject) => (subject["lessons"].length == 1))
+        .toList();
 
-    subjects.forEach((element) {
-      print(element);
-    });
-    selectedSubjects = subjects;
+    print("Parallel subjects: $parallelSubjects");
+
+    for (var element in parallelSubjects) {
+      for (var subject in allSubjectsFromAPI) {
+        if(element["selection"][0]["id"] == -420) {
+          break;
+        }
+        var lesson = subject["lessons"].firstWhere(
+            (lesson) => lesson["internal_id"] == element["selection"][0]["id"],
+            orElse: () => null);
+        if (lesson != null) {
+          subject["lessons"] = [lesson];
+          allSubjects.add(subject);
+        }
+      }
+    }
+
+    allSubjects.addAll(nonParallelSubjects);
+
+    print(allSubjects);
+
+    _saveSubjectNames(allSubjects);
+
+    print(subjectNames);
+    subjects = allSubjects;
+  }
+
+  static void _saveSubjectNames(List<dynamic> subjects){
+    List<String> names = [];
+    for (var subject in subjects) {
+      names.add(subject["lessons"][0]["name"]);
+    }
+    subjectNames = names;
   }
 
   static final ValueNotifier<ThemeMode> themeNotifier =
@@ -82,6 +117,24 @@ class UserSettings {
 
   static set selectedSubjects(List<dynamic> value) {
     _config.put('selected_subjects', value);
+  }
+
+  static List<dynamic> get subjects {
+    return _config.get('subjects', defaultValue: []);
+  }
+
+  static set subjects(List<dynamic> value) {
+    _config.put('subjects', value);
+  }
+
+  static List<String> get subjectNames {
+    var namesDynamic = _config.get('subjectNames', defaultValue: []);
+    List<String> namesStrings = List<String>.from(namesDynamic);
+    return namesStrings;
+  }
+
+  static set subjectNames(List<dynamic> value) {
+    _config.put('subjectNames', value);
   }
 
   static set shouldPerformOnboarding(bool value) {
