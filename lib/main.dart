@@ -4,7 +4,7 @@ import 'package:annette_app_x/consts/default_color_schemes.dart';
 import 'package:annette_app_x/models/theme_mode.dart';
 import 'package:annette_app_x/providers/user_settings.dart';
 import 'package:annette_app_x/screens/exam_screen.dart';
-import 'package:annette_app_x/screens/homework_screen.dart';
+import 'package:annette_app_x/screens/homework/homework_screen.dart';
 import 'package:annette_app_x/screens/misc_screen.dart';
 import 'package:annette_app_x/screens/onboarding/onboarding_screen.dart';
 import 'package:annette_app_x/screens/substitution_screen.dart';
