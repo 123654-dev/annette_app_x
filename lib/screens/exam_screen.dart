@@ -165,11 +165,7 @@ class _ExamScreenState extends State<ExamScreen> {
         var page = await document.getPage(i);
         var pageImage = await page.render(
             width: page.width, height: page.height, backgroundColor: '#FFFFFF');
-        //Speichert die Datei lokal zwischen, damit sie anschließend zu einer XFile konvertiert werden kann
-        //Dies ist als PNG und als JPG möglich, obwohl momentan nur JPG verwendet wird
-        var file = await FilesProvider.storeFile(
-            "examPlan$_classId;page$i", pageImage!.bytes, fileFormat);
-        pages.add(XFile(file.path));
+        pages.add(XFile.fromData(pageImage!.bytes, name: "examPlan$_classId;page$i"));
       }
       Share.shareXFiles(pages, text: 'Klausurplan ${_classId.fmtName}');
     }
