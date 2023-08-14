@@ -1,41 +1,34 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:annette_app_x/models/homework_entry.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:annette_app_x/providers/api/files_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:cross_file/src/types/interface.dart';
 
-import 'package:cross_file/cross_file.dart';
+import '../models/file_format.dart';
 
-class HomeworkSharer {
-  static void shareHomework(HomeworkEntry entry) async {
+class HomeworkSharer{
+  static Future<void> shareHomework(HomeworkEntry entry) async {
     //Share the homework as a file with the extension .homework
     List<int> bytes = convertHomeworkToBytes(entry);
-    final dir = await getApplicationDocumentsDirectory();
     //Share the file
-    await Share.shareXFiles([
-      XFile.fromData(
-        Uint8List.fromList(bytes),
-        name: 'entry.subject + ".homework"',
-        path: dir.path + "/" + entry.subject + ".homework"
-      )
-    ], text: 'test');
+    Share.shareXFiles([XFile.fromData(Uint8List.fromList(bytes))], text: 'test');
   }
 
-  static List<int> convertMapToBytes(Map<String, dynamic> map) {
+  static List<int> convertMapToBytes(Map<String, dynamic> map){
     String json = jsonEncode(map);
     List<int> bytes = utf8.encode(json);
     return bytes;
   }
 
-  static List<int> convertHomeworkToBytes(HomeworkEntry entry) {
+  static List<int> convertHomeworkToBytes(HomeworkEntry entry){
     String json = jsonEncode(entry);
     List<int> bytes = utf8.encode(json);
     return bytes;
   }
 
-  static Map<String, dynamic> convertBytesToMap(List<int> bytes) {
+  static Map<String, dynamic> convertBytesToMap(List<int> bytes){
     String json = utf8.decode(bytes);
     Map<String, dynamic> map = jsonDecode(json);
     return map;
