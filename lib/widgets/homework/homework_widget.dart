@@ -1,9 +1,11 @@
 import 'package:annette_app_x/models/homework_entry.dart';
 import 'package:annette_app_x/utilities/homework_manager.dart';
+import 'package:annette_app_x/utilities/homework_sharing_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 import 'package:intl/intl.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class HomeworkWidget extends StatefulWidget {
   final Function onChecked;
@@ -21,7 +23,7 @@ class _HomeworkWidgetState extends State<HomeworkWidget> {
   Widget build(BuildContext context) {
     initializeDateFormatting("de_DE", null);
 
-    return GestureDetector(
+    return Column(children: [IconButton(onPressed:() => HomeworkSharer.shareHomework(widget.entry), icon: PhosphorIcon(PhosphorIcons.duotone.arrowBendRightUp)),GestureDetector(
       onTap: () => {
         HomeworkManager.showHomeworkEditDialog(
             context, widget.entry, HomeworkManager.editHomeworkEntry)
@@ -53,6 +55,6 @@ class _HomeworkWidgetState extends State<HomeworkWidget> {
           ),
         ),
       ),
-    );
+    )]);
   }
 }
