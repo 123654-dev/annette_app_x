@@ -7,6 +7,7 @@ import 'package:annette_app_x/screens/homework/homework_dialog.dart';
 import 'package:annette_app_x/screens/homework/homework_info.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
 class HomeworkManager {
@@ -26,7 +27,18 @@ class HomeworkManager {
     return "Fällig am ${DateFormat.EEEE('de_DE').format(dueDate)}, ${DateFormat.yMd('de_DE').format(dueDate)} um ${DateFormat.Hm().format(dueDate)}";
   }
 
+  static bool doesHomeworkEntryExist(HomeworkEntry entry) {
+    return entries().any((element) => element.notes == entry.notes && element.subject == entry.subject && element.dueDate == entry.dueDate);
+  }
+
   static Future<void> addHomeworkEntry(HomeworkEntry entry) async {
+    initializeDateFormatting("de_DE", null);
+    entry.lastUpdated = DateTime.now();
+    print(entry.toJson().toString());
+    if (entry.reminderDateTime == null ||
+        entry.reminderDateTime!.isBefore(DateTime.now())) {
+      return;
+    }
     entry.scheduledNotificationId = await NotificationProvider()
         .scheduleNotification(
             date: entry.reminderDateTime!,

@@ -1,11 +1,13 @@
 import 'package:annette_app_x/models/homework_entry.dart';
 import 'package:annette_app_x/utilities/homework_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class HomeworkInfo {
   static void show(BuildContext context, HomeworkEntry entry) {
+    initializeDateFormatting("de_DE", null);
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,

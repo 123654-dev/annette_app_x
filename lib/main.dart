@@ -11,6 +11,7 @@ import 'package:annette_app_x/screens/substitution_screen.dart';
 import 'package:annette_app_x/screens/timetable_screen.dart';
 import 'package:annette_app_x/utilities/homework_manager.dart';
 import 'package:annette_app_x/on_init_app.dart';
+import 'package:annette_app_x/utilities/homework_sharing_manager.dart';
 import 'package:annette_app_x/widgets/news/news_notification.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
@@ -123,6 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _homeworkCount = HomeworkManager.howManyPendingEntries();
       });
     });
+    HomeworkSharer.handleSharedData(context);
 
     super.initState();
   }
