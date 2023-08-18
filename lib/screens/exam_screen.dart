@@ -165,9 +165,15 @@ class _ExamScreenState extends State<ExamScreen> {
         var page = await document.getPage(i);
         var pageImage = await page.render(
             width: page.width, height: page.height, backgroundColor: '#FFFFFF');
-        pages.add(XFile.fromData(pageImage!.bytes, name: "examPlan$_classId;page$i"));
+        File file = await FilesProvider.storeFile("examPlan$_classId;page$i", pageImage!.bytes, FileFormat.JPG);
+        pages.add(XFile(file.path));
       }
       Share.shareXFiles(pages, text: 'Klausurplan ${_classId.fmtName}');
+
+      //Löscht die temporär gespeicherten JPG-Dateien
+      for (XFile file in pages) {
+        await File(file.path).delete();
+      }
     }
   }
 }

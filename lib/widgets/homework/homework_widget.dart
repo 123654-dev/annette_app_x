@@ -23,38 +23,49 @@ class _HomeworkWidgetState extends State<HomeworkWidget> {
   Widget build(BuildContext context) {
     initializeDateFormatting("de_DE", null);
 
-    return Column(children: [IconButton(onPressed:() => HomeworkSharer.shareHomework(widget.entry), icon: PhosphorIcon(PhosphorIcons.duotone.arrowBendRightUp)),GestureDetector(
-      onTap: () => {
-        HomeworkManager.showHomeworkEditDialog(
-            context, widget.entry, HomeworkManager.editHomeworkEntry)
-      },
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ListTile(
-            isThreeLine: true,
-            visualDensity: const VisualDensity(horizontal: 0, vertical: 4),
-            title: Text(widget.entry.subject,
-                style: const TextStyle(fontSize: 20)),
-            subtitle: Text(
-                "${widget.entry.notes}\n${DateFormat("'Bis': EEEE, dd.MM. (kk:mm)", "de_DE").format(widget.entry.dueDate)}"),
-            trailing: Transform.scale(
-              scale: 1.3,
-              child: Checkbox(
-                visualDensity: const VisualDensity(horizontal: 0, vertical: 4),
-                shape: const CircleBorder(),
-                value: widget.entry.done,
-                onChanged: (bool? value) {
-                  setState(() {
-                    widget.entry.done = value!;
-                  });
-                  widget.onChecked();
-                },
+    return GestureDetector(
+        onTap: () => {
+              HomeworkManager.showHomeworkEditDialog(
+                  context, widget.entry, HomeworkManager.editHomeworkEntry)
+            },
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListTile(
+              isThreeLine: true,
+              visualDensity: const VisualDensity(horizontal: 0, vertical: 4),
+              title: Text(widget.entry.subject,
+                  style: const TextStyle(fontSize: 20)),
+              subtitle: Text(
+                  "${widget.entry.notes}\n${DateFormat("'Bis': EEEE, dd.MM. (kk:mm)", "de_DE").format(widget.entry.dueDate)}"),
+              trailing: Transform.scale(
+                scale: 1.3,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                  IconButton(
+                    visualDensity: const VisualDensity(horizontal: -1, vertical: -1),
+                      iconSize: 20,
+                      onPressed: () =>
+                          HomeworkSharer.shareHomework(widget.entry),
+                      icon:
+                          PhosphorIcon(PhosphorIcons.duotone.arrowArcRight)),
+                  Checkbox(
+                    visualDensity:
+                        const VisualDensity(horizontal: -4, vertical: 4),
+                    shape: const CircleBorder(),
+                    value: widget.entry.done,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        widget.entry.done = value!;
+                      });
+                      widget.onChecked();
+                    },
+                  )
+                ]),
               ),
             ),
           ),
-        ),
-      ),
-    )]);
+        ));
   }
 }

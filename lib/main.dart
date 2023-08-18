@@ -12,6 +12,7 @@ import 'package:annette_app_x/screens/timetable_screen.dart';
 import 'package:annette_app_x/utilities/homework_manager.dart';
 import 'package:annette_app_x/on_init_app.dart';
 import 'package:annette_app_x/utilities/homework_sharing_manager.dart';
+import 'package:annette_app_x/utilities/navigation_service.dart';
 import 'package:annette_app_x/widgets/news/news_notification.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
@@ -73,6 +74,7 @@ class AnnetteApp extends StatelessWidget {
                     "/onboarding": (context) => const Onboarding(),
                     "/home": (context) => home,
                   },
+                  navigatorKey: NavigationService.navigatorKey,
                   theme: ThemeData(
                       colorScheme: AnnetteColorSchemes.lightColorScheme,
                       useMaterial3: true),
@@ -124,8 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _homeworkCount = HomeworkManager.howManyPendingEntries();
       });
     });
-    HomeworkSharer.handleSharedData(context);
-
+    HomeworkSharer.handleSharedData();
     super.initState();
   }
 

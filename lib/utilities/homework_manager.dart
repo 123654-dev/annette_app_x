@@ -4,6 +4,7 @@ import 'package:annette_app_x/models/homework_entry.dart';
 import 'package:annette_app_x/models/sorting_types.dart';
 import 'package:annette_app_x/providers/notifications.dart';
 import 'package:annette_app_x/screens/homework/homework_dialog.dart';
+import 'package:annette_app_x/screens/homework/homework_import.dart';
 import 'package:annette_app_x/screens/homework/homework_info.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -28,7 +29,18 @@ class HomeworkManager {
   }
 
   static bool doesHomeworkEntryExist(HomeworkEntry entry) {
-    return entries().any((element) => element.notes == entry.notes && element.subject == entry.subject && element.dueDate == entry.dueDate);
+    return entries().any((element) => element.notes == entry.notes && element.subject == entry.subject && element.dueDate == entry.dueDate && element.done == false);
+  }
+
+  static HomeworkEntry addEmptyHomeworkEntry() {
+    initializeDateFormatting("de_DE", null);
+    var entry = HomeworkEntry(
+        subject: "BRUH",
+        notes: "Wenn du das in der App siehst, ist etwas schief gelaufen. Bitte melde das!",
+        dueDate: DateTime.now().add(Duration(days: 1)),
+        lastUpdated: DateTime.now());
+    Hive.box('homework').add(entry);
+    return entry;
   }
 
   static Future<void> addHomeworkEntry(HomeworkEntry entry) async {
@@ -50,18 +62,29 @@ class HomeworkManager {
 
   static Future<void> editHomeworkEntry(
       HomeworkEntry oldEntry, HomeworkEntry newEntry) async {
-    NotificationProvider()
+    if(oldEntry.scheduledNotificationId != null){
+      NotificationProvider()
         .cancelNotification(oldEntry.scheduledNotificationId!);
+    }
     newEntry.scheduledNotificationId = oldEntry.scheduledNotificationId;
     if (newEntry.reminderDateTime!.isAfter(DateTime.now())) {
       NotificationProvider().scheduleNotification(
-          id: newEntry.scheduledNotificationId!,
+          id: newEntry.scheduledNotificationId == null ? await NotificationProvider() : newEntry.scheduledNotificationId!,
           date: newEntry.reminderDateTime!,
           title: "Hausaufgaben in ${newEntry.subject}!",
           body: generateRemainingTimeToast(newEntry.dueDate),
           payload: newEntry.toJson().toString());
     }
+    print(oldEntry.toJson().toString());
     Hive.box('homework').putAt(entries().indexOf(oldEntry), newEntry);
+  }
+
+  static void showImportDialog(HomeworkEntry entry) {
+    if (doesHomeworkEntryExist(entry)) {
+      print("Homework already exists ${entry.notes.toString()}}");
+      return;
+    }
+    HomeworkImport.show(entry);
   }
 
   static void _dialogCallback(
@@ -100,7 +123,9 @@ class HomeworkManager {
   static int howManyEntries() => entries().length;
 
   static void moveToBin(HomeworkEntry entry) {
-    NotificationProvider().cancelNotification(entry.scheduledNotificationId!);
+    if (entry.scheduledNotificationId != null){
+      NotificationProvider().cancelNotification(entry.scheduledNotificationId!);
+    }
     entries().elementAt(entries().indexOf(entry)).done = true;
     Hive.box('homework').putAt(entries().indexOf(entry), entry);
   }
@@ -120,7 +145,9 @@ class HomeworkManager {
   }
 
   static void deleteFromBin(HomeworkEntry entry) {
-    NotificationProvider().cancelNotification(entry.scheduledNotificationId!);
+    if(entry.scheduledNotificationId != null){
+      NotificationProvider().cancelNotification(entry.scheduledNotificationId!);
+    }
     Hive.box('homework').deleteAt(entries().indexOf(entry));
   }
 }
