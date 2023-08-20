@@ -45,9 +45,8 @@ class HomeworkScreenState extends State<HomeworkScreen> {
     int pendingHomeworkCount = pendingHomework.length;
 
     return Column(children: [
-      Container(
+      SizedBox(
         height: 40,
-        child: Expanded(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -98,7 +97,6 @@ class HomeworkScreenState extends State<HomeworkScreen> {
               ),
             ],
           ),
-        ),
       ),
       Expanded(
         child: pendingHomeworkCount != 0
