@@ -29,7 +29,7 @@ class BadRequestError extends StatelessWidget {
                   size: 100,
                 ),
                 Text(
-                  "Unser Server hat keine Antwort gesendet. Probier es später erneut und kontaktiere uns, wenn das Problem weiterhin auftritt.",
+                  "Unser Server hat keine gültige Antwort gesendet. Probier es später erneut und kontaktiere uns, wenn das Problem weiterhin auftritt.",
                   style: Theme.of(context)
                       .textTheme
                       .labelMedium

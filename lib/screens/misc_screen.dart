@@ -14,7 +14,7 @@ class MiscScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var id = UserSettings.classId.fmtName;
 
-    return Expanded(
+    return Column(children: [Expanded(
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(children: [
@@ -71,6 +71,6 @@ class MiscScreen extends StatelessWidget {
           ),
         ]),
       ),
-    );
+    )]);
   }
 }

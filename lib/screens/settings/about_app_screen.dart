@@ -35,7 +35,7 @@ class AboutAppScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             const Text(
-              "Die offizielle inoffizielle App für das Annette-von-Droste-Hülshoff-Gymnasium in Düsseldorf-Benrath von der Annette-Softwareentwicklungs-AG. Planung, Entwicklung und Umsetzung: Arwed Walke, Elias Dörr, Jonas Erdmann, Rui Zhang, 2023",
+              "Die offizielle inoffizielle App für das Annette-von-Droste-Hülshoff-Gymnasium in Düsseldorf-Benrath von der Annette-Softwareentwicklungs-AG.\n\n Planung, Entwicklung und Umsetzung: Arwed Walke, Elias Dörr, Jonas Erdmann, Rui Zhang, 2023",
               style: TextStyle(fontSize: 14),
               textAlign: TextAlign.center,
             ),

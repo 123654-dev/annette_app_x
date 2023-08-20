@@ -1,1 +1,5 @@
-class TimetableProvider {}
+class TimetableProvider{
+  static String getCurrentSubjectAsString(){
+    return "Bubatz";
+  }
+}

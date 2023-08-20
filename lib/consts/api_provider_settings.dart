@@ -3,5 +3,5 @@ class ApiProviderSettings {
   ///Allgemeiner URL-Präfix der API
   ///Standardmäßig annette-api-x.vercel.app.
   ///Kann zum Testen von nicht-prod-Branches der API geändert werden.
-  static const String baseURL = "10.20.5.179:3000";
+  static const String baseURL = "192.168.0.119:3000";
 }
