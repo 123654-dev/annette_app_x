@@ -16,6 +16,7 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 Future<void> main() async {
   //Initialisierung der App in Gang setzen
@@ -38,6 +39,8 @@ class AnnetteApp extends StatelessWidget {
     */
 
     bool shouldPerformOnboarding = AppInitializer.shouldPerformOnboarding();
+    bool isAprilFoolsDay =
+        DateTime.now().month == DateTime.april && DateTime.now().day == 1;
 
     return ValueListenableBuilder<ThemeMode>(
         valueListenable: UserSettings.themeNotifier,
@@ -54,10 +57,16 @@ class AnnetteApp extends StatelessWidget {
                           "/home": (context) => home,
                         },
                         theme: ThemeData(
+                            fontFamily: isAprilFoolsDay
+                                ? GoogleFonts.comicNeue().fontFamily
+                                : null,
                             colorScheme: lightDynamic ??
                                 AnnetteColorSchemes.lightColorScheme,
                             useMaterial3: true),
                         darkTheme: ThemeData(
+                            fontFamily: isAprilFoolsDay
+                                ? GoogleFonts.comicNeue().fontFamily
+                                : null,
                             colorScheme: darkDynamic ??
                                 AnnetteColorSchemes.darkColorScheme,
                             useMaterial3: true),
@@ -73,9 +82,15 @@ class AnnetteApp extends StatelessWidget {
                     "/home": (context) => home,
                   },
                   theme: ThemeData(
+                      fontFamily: isAprilFoolsDay
+                          ? GoogleFonts.comicNeue().fontFamily
+                          : null,
                       colorScheme: AnnetteColorSchemes.lightColorScheme,
                       useMaterial3: true),
                   darkTheme: ThemeData(
+                      fontFamily: isAprilFoolsDay
+                          ? GoogleFonts.comicNeue().fontFamily
+                          : null,
                       colorScheme: AnnetteColorSchemes.darkColorScheme,
                       useMaterial3: true),
                   initialRoute:
