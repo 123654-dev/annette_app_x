@@ -1,8 +1,11 @@
+import 'package:annette_app_x/providers/timetable_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
+
+import '../../providers/user_settings.dart';
 
 class HomeworkDialog {
   static void show(BuildContext context,
@@ -12,10 +15,8 @@ class HomeworkDialog {
         required String annotations,
         required bool autoRemind,
         required DateTime remindDT,
-      })
-          onClose}) {
-    var subjects = ["Sowi", "Mathe PK", "Literatur"];
-    var selectedSubject = subjects[0];
+      }) onClose}) {
+    var subjects = UserSettings.subjectNames;
 
     //Der Dialog wird mit showDialog() erzeugt
     showModalBottomSheet(
@@ -69,6 +70,10 @@ class _dialogSheetState extends State<_dialogSheet> {
 
   @override
   Widget build(BuildContext context) {
+    _selectedSubject = widget.subjects.firstWhere(
+      (element) => element == TimetableProvider.getCurrentSubjectAsString(),
+      orElse: () => widget.subjects.first,
+    );
     initializeDateFormatting("de_DE", null);
 
     if (!_autoRemind) {
@@ -77,7 +82,7 @@ class _dialogSheetState extends State<_dialogSheet> {
     return Padding(
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      child: Container(
+      child: SizedBox(
         height: 500,
         width: 300,
         child: Padding(
@@ -99,22 +104,22 @@ class _dialogSheetState extends State<_dialogSheet> {
                       )),
                 const SizedBox(height: 20),
                 DropdownButtonFormField(
-                  validator: (value) {
-                    return value == null ? "Feld darf nicht leer sein" : null;
-                  },
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Fach",
-                  ),
-                  items: List.generate(
-                      widget.subjects.length,
-                      (index) => DropdownMenuItem(
-                          value: widget.subjects[index],
-                          child: Text(widget.subjects[index]))),
-                  onChanged: (value) {
-                    _selectedSubject = value.toString();
-                  },
-                ),
+                    validator: (value) {
+                      return value == null ? "Feld darf nicht leer sein" : null;
+                    },
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: "Fach",
+                    ),
+                    items: List.generate(
+                        widget.subjects.length,
+                        (index) => DropdownMenuItem(
+                            value: widget.subjects[index],
+                            child: Text(widget.subjects[index]))),
+                    onChanged: (value) {
+                      _selectedSubject = value.toString();
+                    },
+                    value: _selectedSubject),
                 const SizedBox(height: 20),
                 TextFormField(
                   onChanged: (value) => _annotations = value,
@@ -129,26 +134,26 @@ class _dialogSheetState extends State<_dialogSheet> {
                 ),
                 const SizedBox(height: 30),
                 Center(
-                    child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                    child: Wrap(
                   children: [
-                    GestureDetector(
-                      onTap: () => setState(() {
-                        _autoRemind = !_autoRemind;
-                      }),
-                      child: const Text(
-                        "Fälligkeitsdatum automatisch festlegen",
-                        textAlign: TextAlign.center,
+                    CheckboxListTile(
+                      title: GestureDetector(
+                        onTap: () => setState(() {
+                          _autoRemind = !_autoRemind;
+                        }),
+                        child: const Text(
+                          "Automatisches Fälligkeitsdatum",
+                          textAlign: TextAlign.start,
+                        ),
                       ),
+                      value: _autoRemind,
+                      onChanged: (value) {
+                        setState(() {
+                          _autoRemind = value!;
+                        });
+                      },
+                      controlAffinity: ListTileControlAffinity.trailing,
                     ),
-                    const SizedBox(width: 10),
-                    Checkbox(
-                        value: _autoRemind,
-                        onChanged: (value) {
-                          setState(() {
-                            _autoRemind = value!;
-                          });
-                        })
                   ],
                 )),
                 const SizedBox(height: 10),
