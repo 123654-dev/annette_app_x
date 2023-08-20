@@ -16,7 +16,7 @@ class ApiProvider {
     var success = (result.statusCode == 200);
 
     if (!success) {
-      throw Exception('http.get error: statusCode= ${result.statusCode}');
+      throw Exception('‼️ http.get error: statusCode= ${result.statusCode}');
     }
 
     return result.body;
@@ -36,9 +36,23 @@ class ApiProvider {
     var success = (result.statusCode == 200);
 
     if (!success) {
-      throw Exception('http.get error: statusCode= ${result.statusCode}');
+      throw Exception('‼️ http.get error: statusCode= ${result.statusCode}');
     }
 
     return result.stream.bytesToString();
+  }
+
+  static Future<String> fetchTimetable(String id) async {
+    var result = await http.get(Uri.http(
+        ApiProviderSettings.baseURL, 'api/annette_app/info/timetable/$id'));
+
+    var success = (result.statusCode == 200);
+
+    if (!success) {
+      throw Exception(
+          '‼️ http.get error @ fetchTimetable: statusCode= ${result.statusCode}');
+    }
+
+    return result.body;
   }
 }
