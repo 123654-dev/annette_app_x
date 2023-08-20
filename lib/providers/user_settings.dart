@@ -19,12 +19,16 @@ class UserSettings {
         (e) => e.fmtName.toUpperCase() == classIdString.toUpperCase());
   }
 
+  static String get classIdString {
+    return classId.fmtName;
+  }
+
   static set classId(ClassId value) {
     _config.put('class_id', value.fmtName);
   }
 
   static void saveSubjects(List<dynamic> parallelSubjects) async {
-    if(parallelSubjects == []) {
+    if (parallelSubjects == []) {
       parallelSubjects = selectedSubjects;
     } else {
       selectedSubjects = parallelSubjects;
@@ -44,7 +48,7 @@ class UserSettings {
 
     for (var element in parallelSubjects) {
       for (var subject in allSubjectsFromAPI) {
-        if(element["selection"][0]["id"] == -420) {
+        if (element["selection"][0]["id"] == -420) {
           break;
         }
         var lesson = subject["lessons"].firstWhere(
@@ -67,7 +71,7 @@ class UserSettings {
     subjects = allSubjects;
   }
 
-  static void _saveSubjectNames(List<dynamic> subjects){
+  static void _saveSubjectNames(List<dynamic> subjects) {
     List<String> names = [];
     for (var subject in subjects) {
       names.add(subject["lessons"][0]["name"]);
