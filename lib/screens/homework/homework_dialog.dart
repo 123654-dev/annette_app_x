@@ -69,11 +69,16 @@ class _dialogSheetState extends State<_dialogSheet> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
     _selectedSubject = widget.subjects.firstWhere(
       (element) => element == TimetableProvider.getCurrentSubjectAsString(),
       orElse: () => widget.subjects.first,
     );
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     initializeDateFormatting("de_DE", null);
 
     if (!_autoRemind) {
@@ -117,7 +122,9 @@ class _dialogSheetState extends State<_dialogSheet> {
                             value: widget.subjects[index],
                             child: Text(widget.subjects[index]))),
                     onChanged: (value) {
-                      _selectedSubject = value.toString();
+                      setState(() {
+                        _selectedSubject = value.toString();
+                      });
                     },
                     value: _selectedSubject),
                 const SizedBox(height: 20),
