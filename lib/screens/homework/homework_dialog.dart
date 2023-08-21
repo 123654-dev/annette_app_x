@@ -20,6 +20,9 @@ class HomeworkDialog {
 
     //Der Dialog wird mit showDialog() erzeugt
     showModalBottomSheet(
+      constraints: BoxConstraints.expand(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height / 1.5),
       isScrollControlled: true,
       context: context,
       builder: (context) =>

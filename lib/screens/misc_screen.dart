@@ -14,63 +14,66 @@ class MiscScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var id = UserSettings.classId.fmtName;
 
-    return Column(children: [Expanded(
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(children: [
-          ListView(
-            shrinkWrap: true,
-            children: [
-              ListTile(
-                title: Text("Über die App"),
-                subtitle: Text("Version 1.0.0"),
-                trailing: PhosphorIcon(
-                  PhosphorIcons.duotone.info,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => AboutAppScreen())),
-              ),
-              ListTile(
-                title: Text("Klasse oder Kurse ändern"),
-                subtitle: Text("Aktuell: $id"),
-                trailing: PhosphorIcon(
-                  PhosphorIcons.duotone.pencil,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => AppConfigScreen())),
-              ),
-              ListTile(
-                title: Text("Appeinstellungen"),
-                trailing: PhosphorIcon(
-                  PhosphorIcons.duotone.gear,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                onTap: () async => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const SettingsPage())),
-              ),
-              ListTile(
-                title: Text("Hilfe, Feedback und Kontakt"),
-                trailing: PhosphorIcon(
-                  PhosphorIcons.duotone.lifebuoy,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                //Mailto-Link
-                onTap: () async => await launchUrl(
-                    Uri.parse("mailto:annettesoftware@gmail.com")),
-              ),
-              ListTile(
-                  title: Text("Lizenzen"),
+    return Column(children: [
+      Expanded(
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(children: [
+            ListView(
+              shrinkWrap: true,
+              children: [
+                ListTile(
+                  title: Text("Über die App"),
+                  subtitle: Text("Version 1.0.0"),
                   trailing: PhosphorIcon(
-                    PhosphorIcons.duotone.scales,
+                    PhosphorIcons.duotone.info,
                     color: Theme.of(context).colorScheme.primary,
                   ),
-                  onTap: () => showLicensePage(context: context)),
-            ],
-          ),
-        ]),
-      ),
-    )]);
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => AboutAppScreen())),
+                ),
+                ListTile(
+                  title: Text("Klasse oder Kurse ändern"),
+                  subtitle: Text("Aktuell: $id"),
+                  trailing: PhosphorIcon(
+                    PhosphorIcons.duotone.pencil,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => AppConfigScreen())),
+                ),
+                ListTile(
+                  title: Text("Appeinstellungen"),
+                  trailing: PhosphorIcon(
+                    PhosphorIcons.duotone.gearFine,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  onTap: () async => Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => const SettingsPage())),
+                ),
+                ListTile(
+                  title: Text("Hilfe, Feedback und Kontakt"),
+                  trailing: PhosphorIcon(
+                    PhosphorIcons.duotone.lifebuoy,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  //Mailto-Link
+                  onTap: () async => await launchUrl(
+                      Uri.parse("mailto:annettesoftware@gmail.com")),
+                ),
+                ListTile(
+                    title: Text("Lizenzen"),
+                    trailing: PhosphorIcon(
+                      PhosphorIcons.duotone.scales,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    onTap: () => showLicensePage(context: context)),
+              ],
+            ),
+          ]),
+        ),
+      )
+    ]);
   }
 }
