@@ -74,7 +74,8 @@ class UserSettings {
   static void _saveSubjectNames(List<dynamic> subjects) {
     List<String> names = [];
     for (var subject in subjects) {
-      names.add(subject["lessons"][0]["name"]);
+      print(subject["lessons"][0]["name"]);
+      names.add(subject["lessons"][0]["longname"]);
     }
     subjectNames = names;
   }
