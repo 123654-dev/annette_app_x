@@ -6,7 +6,6 @@ import 'dart:typed_data';
 import 'package:annette_app_x/models/file_format.dart';
 import 'package:annette_app_x/models/homework_entry.dart';
 import 'package:annette_app_x/providers/api/files_provider.dart';
-import 'package:annette_app_x/screens/homework/homework_dialog.dart';
 import 'package:annette_app_x/utilities/homework_manager.dart';
 import 'package:annette_app_x/utilities/navigation_service.dart';
 import 'package:flutter/services.dart';
@@ -17,9 +16,6 @@ import 'package:cross_file/cross_file.dart';
 class HomeworkSharer {
   static const platform =
       MethodChannel('com.example.annette_app_x/homework_sharing');
-  //static StreamController<String> _controller = StreamController.broadcast();
-
-  //static Stream get streamData => _controller.stream;
 
   static void handleSharedData() async {
     try {
@@ -44,10 +40,6 @@ class HomeworkSharer {
       if (homework != null) {
         print("openedHomework: $homework");
         HomeworkEntry entry = HomeworkEntry.fromJson(jsonDecode(homework));
-        if (HomeworkManager.doesHomeworkEntryExist(entry)) {
-          print("Homework already exists ${entry.notes.toString()}}");
-          return;
-        }
         var context = NavigationService.navigatorKey.currentContext!;
         if (context.mounted) {
           HomeworkManager.showImportDialog(
@@ -65,7 +57,7 @@ class HomeworkSharer {
     List<int> bytes = convertHomeworkToBytes(entry);
 
     final file = await FilesProvider.storeFile(
-        entry.scheduledNotificationId.toString(), bytes, FileFormat.HOMEWORK);
+        entry.id.toString(), bytes, FileFormat.HOMEWORK);
 
     XFile xFile = XFile(file.path);
     //Share the file

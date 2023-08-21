@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:annette_app_x/models/homework_entry.dart';
@@ -29,17 +30,18 @@ class HomeworkManager {
   }
 
   static bool doesHomeworkEntryExist(HomeworkEntry entry) {
-    return entries().any((element) => element.notes == entry.notes && element.subject == entry.subject && element.dueDate == entry.dueDate && element.done == false);
+    return entries().any((element) => element.id == entry.id);
   }
 
-  static HomeworkEntry addEmptyHomeworkEntry() {
+  static Future<HomeworkEntry> addEmptyHomeworkEntry() async{
     initializeDateFormatting("de_DE", null);
     var entry = HomeworkEntry(
-        subject: "BRUH",
+        id: Random().nextInt(1000000),
+        subject: "Sonstiges",
         notes: "Wenn du das in der App siehst, ist etwas schief gelaufen. Bitte melde das!",
         dueDate: DateTime.now().add(Duration(days: 1)),
         lastUpdated: DateTime.now());
-    Hive.box('homework').add(entry);
+    await Hive.box('homework').add(entry);
     return entry;
   }
 
@@ -58,6 +60,7 @@ class HomeworkManager {
             body: generateRemainingTimeToast(entry.dueDate),
             payload: entry.toJson().toString());
     Hive.box('homework').add(entry);
+    print((entries().first.toJson().toString()));
   }
 
   static Future<void> editHomeworkEntry(
@@ -80,19 +83,16 @@ class HomeworkManager {
   }
 
   static void showImportDialog(HomeworkEntry entry) {
-    if (doesHomeworkEntryExist(entry)) {
-      print("Homework already exists ${entry.notes.toString()}}");
-      return;
-    }
     HomeworkImport.show(entry);
   }
 
   static void _dialogCallback(
-      {required String subject,
+      {required int id,required String subject,
       required String annotations,
       required bool autoRemind,
       required DateTime remindDT}) async {
     var entry = HomeworkEntry(
+        id: id,
         subject: subject,
         notes: annotations,
         dueDate: remindDT,

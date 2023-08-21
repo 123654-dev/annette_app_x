@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:annette_app_x/models/homework_entry.dart';
 import 'package:annette_app_x/providers/timetable_provider.dart';
 import 'package:annette_app_x/providers/user_settings.dart';
@@ -41,6 +43,8 @@ class _HomeworkImportWidgetState extends State<HomeworkImportWidget> {
   DateTime _selectedDateR = DateTime.now();
   TimeOfDay _selectedTimeR = TimeOfDay(hour: 16, minute: 30);
 
+  String _selectedSubject = "Sonstiges";
+
   @override
   void initState() {
     super.initState();
@@ -55,10 +59,16 @@ class _HomeworkImportWidgetState extends State<HomeworkImportWidget> {
       _controller.text = widget.entry.notes;
       widget.showDefault = false;
     }
+
+    _selectedSubject = UserSettings.subjectFullNames.firstWhere(
+      (element) => element == widget.entry.subject,
+      orElse: () => "Sonstiges",
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    print(UserSettings.subjectFullNames);
     return Padding(
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -98,10 +108,6 @@ class _HomeworkImportWidgetState extends State<HomeworkImportWidget> {
   }
 
   List<Widget> subjectWidgets() {
-    String _selectedSubject = UserSettings.subjectFullNames.firstWhere(
-      (element) => element == widget.entry.subject,
-      orElse: () => "Sonstiges",
-    );
     return [
       DropdownButtonFormField(
           padding: const EdgeInsets.all(10.0),
@@ -118,7 +124,9 @@ class _HomeworkImportWidgetState extends State<HomeworkImportWidget> {
                   value: UserSettings.subjectFullNames[index],
                   child: Text(UserSettings.subjectFullNames[index]))),
           onChanged: (value) {
-            _selectedSubject = value.toString();
+            setState(() {
+              _selectedSubject = value.toString();
+            });
           },
           value: _selectedSubject),
     ];
@@ -345,13 +353,12 @@ class _HomeworkImportWidgetState extends State<HomeworkImportWidget> {
             child: FilledButton(
               onPressed: () async {
                 await HomeworkManager.editHomeworkEntry(
-                    HomeworkManager.doesHomeworkEntryExist(widget.entry)
-                        ? widget.entry
-                        : HomeworkManager.addEmptyHomeworkEntry(),
+                    await HomeworkManager.addEmptyHomeworkEntry(),
                     HomeworkEntry(
+                        id: Random().nextInt(1000000),
                         lastUpdated: DateTime.now(),
                         dueDate: _selectedDate,
-                        subject: widget.entry.subject,
+                        subject: _selectedSubject,
                         notes: _controller.text,
                         reminderDateTime: _selectedDateR));
                 Navigator.of(context).pop();

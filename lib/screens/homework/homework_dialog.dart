@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:annette_app_x/providers/timetable_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ class HomeworkDialog {
   static void show(BuildContext context,
       {bool? editOnly = false,
       required Function({
+        required int id,
         required String subject,
         required String annotations,
         required bool autoRemind,
@@ -32,7 +35,8 @@ class _dialogSheet extends StatefulWidget {
   bool editOnly;
   List<String> subjects;
   Function(
-      {required String subject,
+      {required int id,
+      required String subject,
       required String annotations,
       required bool autoRemind,
       required DateTime remindDT}) onClose;
@@ -242,6 +246,7 @@ class _dialogSheetState extends State<_dialogSheet> {
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           widget.onClose(
+                            id: Random().nextInt(1000000),
                             subject: _selectedSubject,
                             annotations: _annotations,
                             autoRemind: _autoRemind,

@@ -282,8 +282,10 @@ class _HomeworkInfoWidgetState extends State<HomeworkInfoWidget> {
                     child: FilledButton(
                       onPressed: () async {
                         await HomeworkManager.editHomeworkEntry(
-                            HomeworkManager.doesHomeworkEntryExist(widget.entry) ? widget.entry : HomeworkManager.addEmptyHomeworkEntry(),
+                            HomeworkManager.doesHomeworkEntryExist(widget.entry) ? widget.entry : await HomeworkManager.addEmptyHomeworkEntry(),
                             HomeworkEntry(
+                                id: widget.entry.id,
+                                done: widget.entry.done,
                                 lastUpdated: DateTime.now(),
                                 dueDate: _selectedDate,
                                 subject: widget.entry.subject,
