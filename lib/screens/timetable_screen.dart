@@ -1,3 +1,4 @@
+import 'package:annette_app_x/providers/timetable_provider.dart';
 import 'package:flutter/material.dart';
 
 class TimetableScreen extends StatelessWidget {
@@ -5,6 +6,12 @@ class TimetableScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Text('Timetable Screen');
+    return Center(
+      child: FilledButton.tonal(
+          onPressed: () {
+            TimetableProvider.getTimetable();
+          },
+          child: const Text("Load Timetable")),
+    );
   }
 }

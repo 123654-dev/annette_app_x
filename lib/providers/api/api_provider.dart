@@ -43,8 +43,8 @@ class ApiProvider {
   }
 
   static Future<String> fetchTimetable(String id) async {
-    var result = await http.get(Uri.http(
-        ApiProviderSettings.baseURL, 'api/annette_app/info/timetable/$id'));
+    var result = await http.get(
+        Uri.http(ApiProviderSettings.baseURL, 'api/annette_app/timetable/$id'));
 
     var success = (result.statusCode == 200);
 
