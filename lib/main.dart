@@ -244,11 +244,6 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Sonstiges',
           ),
           //spacer for FAB
-          if (!UserSettings.isOberstufe)
-            const NavigationDestination(
-              icon: SizedBox(),
-              label: '',
-            ),
         ],
       ),
       body: Stack(
@@ -279,10 +274,8 @@ class _MyHomePageState extends State<MyHomePage> {
           ][_selectedDestination.index],
         ],
       ),
-      floatingActionButtonLocation: UserSettings.isOberstufe
-          ? FloatingActionButtonLocation.endFloat
-          : FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         onPressed: () => HomeworkManager.showHomeworkDialog(refresh, context),
         child: PhosphorIcon(PhosphorIcons.duotone.listPlus,
             color: Theme.of(context).colorScheme.onBackground),

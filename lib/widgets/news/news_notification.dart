@@ -38,18 +38,24 @@ class _NewsNotificationState extends State<NewsNotification> {
             height: 40,
             width: 40,
             child: IconButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.red),
-                ),
-                color: Colors.white,
-                onPressed: () {
-                  // redirect to newspage
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => NewsCollectionScreen()));
-                },
-                icon: PhosphorIcon(PhosphorIcons.duotone.newspaper, size: 20)))
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                    Theme.of(context).colorScheme.error),
+              ),
+              icon: PhosphorIcon(
+                PhosphorIcons.duotone.newspaper,
+                size: 20,
+                color: Theme.of(context).colorScheme.onError,
+              ),
+              color: Colors.white,
+              onPressed: () {
+                // redirect to newspage
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => NewsCollectionScreen()));
+              },
+            ))
         : Container();
   }
 }
