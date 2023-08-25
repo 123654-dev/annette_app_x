@@ -26,7 +26,7 @@ class _HomeworkWidgetState extends State<HomeworkWidget> {
     return GestureDetector(
         onTap: () => {
               HomeworkManager.showHomeworkEditDialog(
-                  context, widget.entry, HomeworkManager.editHomeworkEntry)
+                  widget.entry, HomeworkManager.editHomeworkEntry)
             },
         child: Card(
           child: Padding(

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:annette_app_x/providers/timetable_provider.dart';
+import 'package:annette_app_x/utilities/navigation_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -10,7 +11,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import '../../providers/user_settings.dart';
 
 class HomeworkDialog {
-  static void show(BuildContext context,
+  static void show(
       {bool? editOnly = false,
       required Function({
         required int id,
@@ -20,6 +21,8 @@ class HomeworkDialog {
         required DateTime remindDT,
       }) onClose}) {
     var subjects = UserSettings.subjectNames;
+
+    BuildContext context = NavigationService.navigatorKey.currentContext!;
 
     //Der Dialog wird mit showDialog() erzeugt
     showModalBottomSheet(

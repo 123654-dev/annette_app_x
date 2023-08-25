@@ -40,11 +40,7 @@ class HomeworkSharer {
       if (homework != null) {
         print("openedHomework: $homework");
         HomeworkEntry entry = HomeworkEntry.fromJson(jsonDecode(homework));
-        var context = NavigationService.navigatorKey.currentContext!;
-        if (context.mounted) {
-          HomeworkManager.showImportDialog(
-              entry);
-        }
+        HomeworkManager.showImportDialog(entry);
         //HomeworkManager.addHomeworkEntry(entry);
       }
     } on Exception catch (e) {

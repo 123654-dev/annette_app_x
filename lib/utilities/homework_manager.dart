@@ -105,13 +105,13 @@ class HomeworkManager {
     await addHomeworkEntry(entry);
   }
 
-  static void showHomeworkDialog(Function() refresh, BuildContext context) {
-    HomeworkDialog.show(context, onClose: _dialogCallback);
+  static void showHomeworkDialog(Function() refresh) {
+    HomeworkDialog.show(onClose: _dialogCallback);
   }
 
-  static void showHomeworkEditDialog(BuildContext context, HomeworkEntry entry,
+  static void showHomeworkEditDialog(HomeworkEntry entry,
       Function(HomeworkEntry, HomeworkEntry) onClose) {
-    HomeworkInfo.show(context, entry);
+    HomeworkInfo.show(entry);
   }
 
   static bool hasHomework() {

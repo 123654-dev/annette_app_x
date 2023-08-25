@@ -52,7 +52,7 @@ class HomeworkScreenState extends State<HomeworkScreen> {
             children: [
               IconButton(
                 onPressed: () {
-                  HomeworkTray.show(context, widget.refresh);
+                  HomeworkTray.show(widget.refresh);
                 },
                 icon: PhosphorIcon(PhosphorIcons.duotone.tray,
                     color: Theme.of(context).colorScheme.primary),
