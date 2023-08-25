@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:annette_app_x/providers/connection.dart';
+import 'package:annette_app_x/providers/connection_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 

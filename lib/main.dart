@@ -271,7 +271,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ? FloatingActionButtonLocation.endFloat
           : FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () => HomeworkManager.showHomeworkDialog(refresh, context),
+        onPressed: () => HomeworkManager.showHomeworkDialog(refresh),
         child: PhosphorIcon(PhosphorIcons.duotone.listPlus,
             color: Theme.of(context).colorScheme.onBackground),
       ),

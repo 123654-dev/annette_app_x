@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:annette_app_x/providers/api/files_provider.dart';
+import 'package:annette_app_x/providers/connection_provider.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -36,7 +37,9 @@ class SubjectsProvider {
   }
 
   static Future<void> saveSubjectsToFile(ClassId classId) async {
-    print("Accessing the API");
+    //TODO: Display an error message if there is no internet connection
+    if(!ConnectionProvider.hasDownloadConnection()){return;}
+    print("Getting the subjects from the API");
     //Get the subjects from the api
     String subjects = await ApiProvider.fetchChoiceOptions(classId.fmtName);
     //Save the subjects
