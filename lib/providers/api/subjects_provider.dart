@@ -21,7 +21,11 @@ class SubjectsProvider {
     final dir = await getApplicationDocumentsDirectory();
     File file = File('${dir.path}/subjects-${classId.fmtName}.json');
     print("Loading subjects from file");
-    bool isExpired = DateTime.now().difference(box.get('subjects-${classId.fmtName}', defaultValue: DateTime(1420))).inHours >= 24 * 7;
+    bool isExpired = DateTime.now()
+            .difference(box.get('subjects-${classId.fmtName}',
+                defaultValue: DateTime(1420)))
+            .inHours >=
+        24 * 7;
     if (!(await file.exists()) || isExpired) {
       print("File does not exist or is expired. Saving subjects to file");
       await saveSubjectsToFile(classId);

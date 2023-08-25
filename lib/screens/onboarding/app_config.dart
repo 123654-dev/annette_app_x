@@ -43,7 +43,7 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
 
   bool _secondStep = false;
 
-//TODO: Type erstellen
+  //TODO: Type erstellen
   Map<String, dynamic> _selectedOptions = new Map();
 
   @override

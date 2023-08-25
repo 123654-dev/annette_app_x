@@ -9,13 +9,18 @@ class NotificationProvider {
       FlutterLocalNotificationsPlugin();
 
   Future<void> init() async {
+    notificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestPermission();
+
     AndroidInitializationSettings initializationSettingsAndroid =
         const AndroidInitializationSettings('@mipmap/ic_launcher');
 
     var initializationSettingsIOS = DarwinInitializationSettings(
-        requestSoundPermission: false,
-        requestBadgePermission: false,
-        requestAlertPermission: false,
+        requestSoundPermission: true,
+        requestBadgePermission: true,
+        requestAlertPermission: true,
         onDidReceiveLocalNotification:
             (int id, String? title, String? body, String? payload) async {
           print('📘 | Received notification with id $id [notifications.dart]');
