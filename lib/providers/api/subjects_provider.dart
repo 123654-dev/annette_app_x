@@ -11,12 +11,15 @@ import '../../models/file_format.dart';
 import 'api_provider.dart';
 
 class SubjectsProvider {
+  /// Gibt eine Liste von Fächern zurück, die in der Klasse classId unterrichtet werden 
   static Future<List<dynamic>> getSubjects(ClassId classId) async {
     List<dynamic> subjects =
         jsonDecode(await loadSubjectsFromFile(classId)) as List<dynamic>;
     return subjects;
   }
 
+  /// Versucht, die Fächer einer bestimmten Klasse aus der zugehörigen Datei zu laden.
+  /// Wenn die Datei nicht existiert oder veraltet ist, wird sie neu geladen und gespeichert.
   static Future<String> loadSubjectsFromFile(ClassId classId) async {
     final box = await Hive.openBox('update_timings');
     final dir = await getApplicationDocumentsDirectory();
@@ -36,6 +39,7 @@ class SubjectsProvider {
     return await file.readAsString();
   }
 
+  /// Lädt die Fächer einer bestimmten Klasse aus der API und speichert sie in einer Datei.
   static Future<void> saveSubjectsToFile(ClassId classId) async {
     //TODO: Display an error message if there is no internet connection
     if(!ConnectionProvider.hasDownloadConnection()){return;}

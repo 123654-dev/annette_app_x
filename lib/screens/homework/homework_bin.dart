@@ -58,16 +58,7 @@ class _HomeworkTrayState extends State<HomeworkTray> {
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               const SizedBox(height: 5),
-              Expanded(
-                child: ImplicitlyAnimatedList(
-                  items: contents,
-                  itemBuilder: _buildItem,
-                  areItemsTheSame: (oldItem, newItem) => oldItem == newItem,
-                  insertDuration: const Duration(milliseconds: 100),
-                  removeDuration: const Duration(milliseconds: 100),
-                  updateDuration: const Duration(milliseconds: 100),
-                ),
-              ),
+              trayHomeworkList(),
             ])
           : SizedBox(
               height: MediaQuery.of(context).size.height * 0.35,
@@ -101,6 +92,19 @@ class _HomeworkTrayState extends State<HomeworkTray> {
             indent: 30,
           )
         ],
+      ),
+    );
+  }
+
+  Widget trayHomeworkList() {
+    return Expanded(
+      child: ImplicitlyAnimatedList(
+        items: contents,
+        itemBuilder: _buildItem,
+        areItemsTheSame: (oldItem, newItem) => oldItem == newItem,
+        insertDuration: const Duration(milliseconds: 100),
+        removeDuration: const Duration(milliseconds: 100),
+        updateDuration: const Duration(milliseconds: 100),
       ),
     );
   }
