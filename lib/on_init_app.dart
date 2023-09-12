@@ -32,7 +32,6 @@ class AppInitializer {
     if (!Hive.isBoxOpen('homework')) await Hive.openBox('homework');
 
     Hive.box("homework").values.toList().forEach((element) {
-      print(element);
 
       if (element.done &&
           (element as HomeworkEntry)

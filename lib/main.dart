@@ -152,92 +152,10 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       backgroundColor: Theme.of(context).colorScheme.background,
       bottomNavigationBar: NavigationBar(
-        onDestinationSelected: (value) => setState(() {
-          //sehr komischer Code, um den Klausurplan nur für Oberstufe anzuzeigen
-          //NICHT ANFASSEN
-          //ES FUNKTIONIERT OK?
-          if (UserSettings.isOberstufe) {
-            switch (value) {
-              case 0:
-                _selectedDestination = _Destination.vertretung;
-                break;
-              case 1:
-                _selectedDestination = _Destination.stundenplan;
-                break;
-              case 2:
-                _selectedDestination = _Destination.has;
-                break;
-              case 3:
-                _selectedDestination = _Destination.sonstiges;
-                break;
-              case 4:
-                _selectedDestination = _Destination.klausurplan;
-                break;
-            }
-          } else {
-            switch (value) {
-              case 0:
-                _selectedDestination = _Destination.vertretung;
-                break;
-              case 1:
-                _selectedDestination = _Destination.stundenplan;
-                break;
-              case 2:
-                _selectedDestination = _Destination.has;
-                break;
-              case 3:
-                _selectedDestination = _Destination.sonstiges;
-                break;
-            }
-          }
-        }),
+        onDestinationSelected: (value) => setState(() {_selectedDestination = getDestination(value);}),
         selectedIndex: _selectedDestination.index,
         labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-        destinations: [
-          NavigationDestination(
-            icon: Badge(
-              label: const Text("4"),
-              child: PhosphorIcon(PhosphorIcons.duotone.rows,
-                  color: Theme.of(context).colorScheme.onBackground),
-            ),
-            label: 'Vertretung',
-          ),
-          NavigationDestination(
-            icon: PhosphorIcon(PhosphorIcons.duotone.calendar,
-                color: Theme.of(context).colorScheme.onBackground),
-            label: 'Stundenplan',
-          ),
-          NavigationDestination(
-            icon: HomeworkManager.hasHomework()
-                ? Badge(
-                    label: Text((_homeworkCount).toString()),
-                    child: PhosphorIcon(PhosphorIcons.duotone.checkFat,
-                        color: Theme.of(context).colorScheme.onBackground))
-                : PhosphorIcon(PhosphorIcons.duotone.smileyWink,
-                    color: Theme.of(context).colorScheme.onBackground),
-            label: 'HAs',
-          ),
-
-          /* Klausurplan nur für Oberstufe anzeigen */
-
-          if (UserSettings.isOberstufe)
-            NavigationDestination(
-              icon: PhosphorIcon(PhosphorIcons.duotone.exam,
-                  color: Theme.of(context).colorScheme.onBackground),
-              label: 'Klausurplan',
-            ),
-          NavigationDestination(
-            icon: PhosphorIcon(PhosphorIcons.duotone.dotsThreeOutline,
-                color: Theme.of(context).colorScheme.onBackground),
-            label: 'Sonstiges',
-          ),
-          //spacer for FAB
-          if (!UserSettings.isOberstufe)
-            const NavigationDestination(
-              icon: SizedBox(),
-              label: '',
-            ),
-        ],
+        destinations: navigationDestinations(context),
       ),
       body: Stack(
         children: [
@@ -276,6 +194,96 @@ class _MyHomePageState extends State<MyHomePage> {
             color: Theme.of(context).colorScheme.onBackground),
       ),
     );
+  }
+
+  _Destination getDestination(int value) {
+    _Destination selectedDestination = _Destination.stundenplan;
+    //sehr komischer Code, um den Klausurplan nur für Oberstufe anzuzeigen
+    //NICHT ANFASSEN
+    //ES FUNKTIONIERT OK?
+    if (UserSettings.isOberstufe) {
+      switch (value) {
+        case 0:
+          selectedDestination = _Destination.vertretung;
+          break;
+        case 1:
+          selectedDestination = _Destination.stundenplan;
+          break;
+        case 2:
+          selectedDestination = _Destination.has;
+          break;
+        case 3:
+          selectedDestination = _Destination.sonstiges;
+          break;
+        case 4:
+          selectedDestination = _Destination.klausurplan;
+          break;
+      }
+    } else {
+      switch (value) {
+        case 0:
+          selectedDestination = _Destination.vertretung;
+          break;
+        case 1:
+          selectedDestination = _Destination.stundenplan;
+          break;
+        case 2:
+          selectedDestination = _Destination.has;
+          break;
+        case 3:
+          selectedDestination = _Destination.sonstiges;
+          break;
+      }
+    }
+    return selectedDestination;
+  }
+
+  List<Widget> navigationDestinations(BuildContext context) {
+    return [
+      NavigationDestination(
+        icon: Badge(
+          label: const Text("4"),
+          child: PhosphorIcon(PhosphorIcons.duotone.rows,
+              color: Theme.of(context).colorScheme.onBackground),
+        ),
+        label: 'Vertretung',
+      ),
+      NavigationDestination(
+        icon: PhosphorIcon(PhosphorIcons.duotone.calendar,
+            color: Theme.of(context).colorScheme.onBackground),
+        label: 'Stundenplan',
+      ),
+      NavigationDestination(
+        icon: HomeworkManager.hasHomework()
+            ? Badge(
+                label: Text((_homeworkCount).toString()),
+                child: PhosphorIcon(PhosphorIcons.duotone.checkFat,
+                    color: Theme.of(context).colorScheme.onBackground))
+            : PhosphorIcon(PhosphorIcons.duotone.smileyWink,
+                color: Theme.of(context).colorScheme.onBackground),
+        label: 'HAs',
+      ),
+
+      /* Klausurplan nur für Oberstufe anzeigen */
+
+      if (UserSettings.isOberstufe)
+        NavigationDestination(
+          icon: PhosphorIcon(PhosphorIcons.duotone.exam,
+              color: Theme.of(context).colorScheme.onBackground),
+          label: 'Klausurplan',
+        ),
+      NavigationDestination(
+        icon: PhosphorIcon(PhosphorIcons.duotone.dotsThreeOutline,
+            color: Theme.of(context).colorScheme.onBackground),
+        label: 'Sonstiges',
+      ),
+      //spacer for FAB
+      if (!UserSettings.isOberstufe)
+        const NavigationDestination(
+          icon: SizedBox(),
+          label: '',
+        ),
+    ];
   }
 
   ///Callback-Funktion, die die Seite neulädt, etwa bei neuen Vertretungen oder Hausaufgaben, die hinzugefügt wurden (-> Badges)
