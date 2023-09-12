@@ -52,11 +52,11 @@ class _HomeworkWidgetState extends State<HomeworkWidget> {
 
   List<Widget> homeworkTrailingButtons() {
     return [
-      IconButton(
+      /*IconButton(
           visualDensity: const VisualDensity(horizontal: -1, vertical: -1),
           iconSize: 20,
           onPressed: () => HomeworkSharer.shareHomework(widget.entry),
-          icon: PhosphorIcon(PhosphorIcons.duotone.arrowArcRight)),
+          icon: PhosphorIcon(PhosphorIcons.duotone.arrowArcRight)),*/
       Checkbox(
         visualDensity: const VisualDensity(horizontal: -4, vertical: 4),
         shape: const CircleBorder(),
