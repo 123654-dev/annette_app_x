@@ -63,6 +63,8 @@ class UserSettings {
 
     _saveSubjectNames(allSubjects);
 
+    subjectFullNames = subjectNames + ["Sonstiges"];
+
     print(subjectNames);
     subjects = allSubjects;
   }
@@ -137,7 +139,25 @@ class UserSettings {
     _config.put('subjectNames', value);
   }
 
+  static List<String> get subjectFullNames {
+    var namesDynamic = _config.get('subjectFullNames', defaultValue: []);
+    List<String> namesStrings = List<String>.from(namesDynamic);
+    return namesStrings;
+  }
+
+  static set subjectFullNames(List<dynamic> value) {
+    _config.put('subjectFullNames', value);
+  }
+
   static set shouldPerformOnboarding(bool value) {
     _config.put('shouldPerformOnboarding', value);
+  }
+
+  static bool get useMobileData{
+    return _appSettings.get('use_mobile_data', defaultValue: false);
+  }
+
+  static set useMobileData(bool value){
+    _appSettings.put('use_mobile_data', value);
   }
 }
