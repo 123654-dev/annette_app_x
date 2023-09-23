@@ -7,10 +7,31 @@ import 'api/api_provider.dart';
 
 class TimetableProvider {
   static String getCurrentSubjectAsString() {
-    return "Bubatz";
+    String name = "Kein Unterricht";
+    var today = getTableForDay(DateTime.now().weekday);
+    if (today == null || today.isEmpty) return name;
+    today.forEach((element) {
+      if (element["startTime"] != null) {
+        var startTime = int.parse(element["startTime"].toString());
+        var endTime = int.parse(element["endTime"].toString());
+        if (startTime <= DateTime.now().hour &&
+            DateTime.now().hour <= endTime) {
+          name = element["name"];
+        }
+      }
+    });
+    return name;
   }
 
-  //Returns the next day within Mon-Fri range
+  ///Returns all lessons of the next schoolday
+  static List<dynamic>? getTableForNextSchoolday() {
+    return getTableForDay(_nextSchoolday());
+  }
+
+  static List<dynamic>? getTableForDay(int day) {
+    return Hive.box("timetable").get(day);
+  }
+
   ///0: Sunday, 1: Monday, 2: Tuesday, 3: Wednesday, 4: Thursday, 5: Friday, 6: Saturday
   ///
   ///Returns the next schoolday if it's a weekend
@@ -24,10 +45,17 @@ class TimetableProvider {
   }
 
   static Future<List<dynamic>> getTimetable() async {
-    // ignore: dead_code
-    if (true ||
-        Hive.box('timetable').get("classId") != UserSettings.classIdString) {
+    final isTimetableExpired = Hive.box('timetable').get("lastUpdate") ==
+            null ||
+        ((Hive.box("timetable").get("lastUpdate") ?? DateTime(0)) as DateTime)
+            .isBefore(DateTime.now().subtract(const Duration(days: 7)));
+
+    final classIdChanged =
+        Hive.box('timetable').get("classId") != UserSettings.classIdString;
+
+    if (classIdChanged || isTimetableExpired) {
       await _processTimetable();
+      Hive.box('timetable').put("lastUpdate", DateTime.now());
       // ignore: dead_code
     } else {
       print("Timetable is up to date");
@@ -58,7 +86,6 @@ class TimetableProvider {
 
       for (var t in timetable) {
         if (t["weekday"] == i && t["startTime"] != null) {
-          print("Subjects: ${UserSettings.subjects}");
           if (UserSettings.subjects.firstWhere(
                   (element) =>
                       t["lessonid"] == element["lessons"]?[0]["internal_id"] ||
@@ -70,6 +97,7 @@ class TimetableProvider {
           deleteBeforeNextPass.add(t);
         }
       }
+
       for (var t in deleteBeforeNextPass) {
         timetable.remove(t);
       }
