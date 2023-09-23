@@ -159,7 +159,7 @@ class _OnboardingState extends State<Onboarding> {
 
 void showConfigurationScreen(BuildContext context) {
   Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => AppConfigScreen(),
+      builder: (context) => const AppConfigScreen(),
       settings: const RouteSettings()));
 }
 

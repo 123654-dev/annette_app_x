@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:annette_app_x/consts/default_color_schemes.dart';
-import 'package:annette_app_x/models/theme_mode.dart';
 import 'package:annette_app_x/providers/user_settings.dart';
 import 'package:annette_app_x/screens/exam_screen.dart';
 import 'package:annette_app_x/screens/homework_screen.dart';
@@ -154,10 +153,10 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text("Annette App X"),
-        actions: [
+        actions: const [
           // hiermit wird eine oben rechts positionierte Notifikation für Nachrichten angezeigt.
           Padding(
-            padding: const EdgeInsets.only(right: 20),
+            padding: EdgeInsets.only(right: 20),
             child: NewsNotification(),
           ),
         ],

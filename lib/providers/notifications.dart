@@ -1,7 +1,5 @@
-import 'package:annette_app_x/utilities/homework_manager.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:nanoid/nanoid.dart';
-import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 class NotificationProvider {

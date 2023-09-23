@@ -11,23 +11,28 @@ class TimetableProvider {
   }
 
   //Returns the next day within Mon-Fri range
+  ///0: Sunday, 1: Monday, 2: Tuesday, 3: Wednesday, 4: Thursday, 5: Friday, 6: Saturday
+  ///
+  ///Returns the next schoolday if it's a weekend
   static int _nextSchoolday() {
     var day = DateTime.now().weekday;
-    if (day < 5) {
+    if (day <= 5) {
       return day;
     } else {
-      return 0;
+      return 1; //0: Sunday, 1: Monday
     }
   }
 
   static Future<List<dynamic>> getTimetable() async {
+    // ignore: dead_code
     if (true ||
         Hive.box('timetable').get("classId") != UserSettings.classIdString) {
       await _processTimetable();
+      // ignore: dead_code
     } else {
       print("Timetable is up to date");
     }
-    print(Hive.box('timetable').get(_nextSchoolday()));
+    print("Next schoolday: ${Hive.box('timetable').get(_nextSchoolday())}");
     return Hive.box('timetable').get(_nextSchoolday());
   }
 
@@ -53,9 +58,11 @@ class TimetableProvider {
 
       for (var t in timetable) {
         if (t["weekday"] == i && t["startTime"] != null) {
+          print("Subjects: ${UserSettings.subjects}");
           if (UserSettings.subjects.firstWhere(
                   (element) =>
-                      t["internal_id"] == element["lessons"]?[0]["internal_id"],
+                      t["lessonid"] == element["lessons"]?[0]["internal_id"] ||
+                      t["lessonid"] == element["internal_id"],
                   orElse: () => null) !=
               null) {
             day.add(t);
@@ -67,11 +74,11 @@ class TimetableProvider {
         timetable.remove(t);
       }
 
+      print(day);
+
       day.sort((a, b) => a["startTime"].compareTo(b["startTime"]));
       timetableBox.put(i, day);
     }
     timetableBox.put("classId", UserSettings.classIdString);
-
-    print(timetable);
   }
 }

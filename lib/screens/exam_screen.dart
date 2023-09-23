@@ -1,9 +1,7 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:annette_app_x/models/class_ids.dart';
 import 'package:annette_app_x/models/file_format.dart';
-import 'package:annette_app_x/providers/storage.dart';
 import 'package:annette_app_x/providers/user_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
@@ -11,7 +9,6 @@ import 'package:annette_app_x/providers/api/files_provider.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:cross_file/cross_file.dart';
-import 'package:annette_app_x/providers/api/files_provider.dart';
 
 import 'package:pdfx/pdfx.dart';
 
@@ -30,7 +27,7 @@ class _ExamScreenState extends State<ExamScreen> {
   Key _pdfViewerKey = UniqueKey();
 
   //Bei Fehlschlagen des Downloads (_catastrophicFailure == true) wird ein Fehler angezeigt.
-  bool _catastrophicFailure = false;
+  final bool _catastrophicFailure = false;
 
   //Klassen-ID aus der User Config (siehe lib/providers/user_config.dart) laden
   var _classId = UserSettings.classId;
@@ -97,11 +94,11 @@ class _ExamScreenState extends State<ExamScreen> {
                 _shareExamPlan(value);
               },
               itemBuilder: (context) => [
-                PopupMenuItem(
+                const PopupMenuItem(
                   value: FileFormat.PDF,
                   child: Text("als PDF teilen"),
                 ),
-                PopupMenuItem(
+                const PopupMenuItem(
                   value: FileFormat.PNG,
                   child: Text("als Bilder teilen"),
                 ),

@@ -1,7 +1,5 @@
-import 'dart:math';
 
 import 'package:annette_app_x/models/homework_entry.dart';
-import 'package:annette_app_x/models/sorting_types.dart';
 import 'package:annette_app_x/providers/notifications.dart';
 import 'package:annette_app_x/screens/homework/homework_dialog.dart';
 import 'package:annette_app_x/screens/homework/homework_info.dart';

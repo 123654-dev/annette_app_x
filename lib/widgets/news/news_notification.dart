@@ -1,7 +1,6 @@
 import 'package:annette_app_x/api/news_provider.dart';
 import 'package:annette_app_x/screens/news/news_collection_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:graphql/client.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 ///
@@ -10,6 +9,8 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 ///
 
 class NewsNotification extends StatefulWidget {
+  const NewsNotification({super.key});
+
   @override
   State<StatefulWidget> createState() => _NewsNotificationState();
 }
@@ -53,7 +54,7 @@ class _NewsNotificationState extends State<NewsNotification> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => NewsCollectionScreen()));
+                        builder: (context) => const NewsCollectionScreen()));
               },
             ))
         : Container();

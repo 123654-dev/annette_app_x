@@ -44,7 +44,7 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
   bool _secondStep = false;
 
   //TODO: Type erstellen
-  Map<String, dynamic> _selectedOptions = new Map();
+  Map<String, dynamic> _selectedOptions = {};
 
   @override
   void initState() {
@@ -216,10 +216,9 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                                         lesson["name"] =
                                             "${lesson["name"]} $index";
                                         roomInfo[
-                                            block["block_title"]] = (roomInfo[
+                                            block["block_title"]] = "${roomInfo[
                                                     block["block_title"]] ??
-                                                "Mehrere Kurse erkannt.\nInformationen zur Unterscheidung:\n") +
-                                            "${lesson["name"]}: ${weekdayName[lesson["day"]]} in ${lesson["room"]}\n";
+                                                "Mehrere Kurse erkannt.\nInformationen zur Unterscheidung:\n"}${lesson["name"]}: ${weekdayName[lesson["day"]]} in ${lesson["room"]}\n";
                                         index++;
                                       }
                                     }
@@ -298,7 +297,7 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                   width: 200,
                   height: 50,
                   child: FilledButton(
-                    child: Text("Weiter"),
+                    child: const Text("Weiter"),
                     onPressed: () {
                       if (!_secondStep) {
                         loadOptions();
@@ -389,11 +388,11 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
       print("Preparing previous selection...");
       var previousSelection = UserSettings.selectedSubjects;
       if (previousSelection.isNotEmpty) {
-        previousSelection.forEach((element) {
+        for (var element in previousSelection) {
           _selectedOptions[element["block_title"]] =
               element["selection"][0]["name"];
           print(element["selection"][0]["name"]);
-        });
+        }
       }
     } else {
       _selectedOptions = {};

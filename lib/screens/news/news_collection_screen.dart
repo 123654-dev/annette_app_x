@@ -13,6 +13,8 @@ class NewsCollectionScreen extends StatefulWidget {
   /// gibt an, wie viele Einträge pro Seite vorhanden sein sollten.
   final entriesPerPage = 5;
 
+  const NewsCollectionScreen({super.key});
+
   @override
   State<StatefulWidget> createState() => _NewsCollectionScreenState();
 
@@ -26,7 +28,7 @@ class _NewsCollectionScreenState extends State<NewsCollectionScreen> {
   /// _page = 0 -> Seite 1
   /// _page = 1 -> Seite 2
   /// ...
-  int _page = 0;
+  final int _page = 0;
 
   /// das braucht man für die "Seiten-Bar" unten
   int _totalPages = 0;

@@ -45,7 +45,7 @@ class HomeworkScreenState extends State<HomeworkScreen> {
     int pendingHomeworkCount = pendingHomework.length;
 
     return Column(children: [
-      Container(
+      SizedBox(
         height: 40,
         child: Expanded(
           child: Row(

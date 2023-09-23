@@ -23,8 +23,8 @@ class MiscScreen extends StatelessWidget {
               shrinkWrap: true,
               children: [
                 ListTile(
-                  title: Text("Über die App"),
-                  subtitle: Text("Version 1.0.0"),
+                  title: const Text("Über die App"),
+                  subtitle: const Text("Version 1.0.0"),
                   trailing: PhosphorIcon(
                     PhosphorIcons.duotone.info,
                     color: Theme.of(context).colorScheme.primary,
@@ -33,17 +33,17 @@ class MiscScreen extends StatelessWidget {
                       builder: (context) => AboutAppScreen())),
                 ),
                 ListTile(
-                  title: Text("Klasse oder Kurse ändern"),
+                  title: const Text("Klasse oder Kurse ändern"),
                   subtitle: Text("Aktuell: $id"),
                   trailing: PhosphorIcon(
                     PhosphorIcons.duotone.pencil,
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => AppConfigScreen())),
+                      builder: (context) => const AppConfigScreen())),
                 ),
                 ListTile(
-                  title: Text("Appeinstellungen"),
+                  title: const Text("Appeinstellungen"),
                   trailing: PhosphorIcon(
                     PhosphorIcons.duotone.gearFine,
                     color: Theme.of(context).colorScheme.primary,
@@ -53,7 +53,7 @@ class MiscScreen extends StatelessWidget {
                           builder: (context) => const SettingsPage())),
                 ),
                 ListTile(
-                  title: Text("Hilfe, Feedback und Kontakt"),
+                  title: const Text("Hilfe, Feedback und Kontakt"),
                   trailing: PhosphorIcon(
                     PhosphorIcons.duotone.lifebuoy,
                     color: Theme.of(context).colorScheme.primary,
@@ -63,7 +63,7 @@ class MiscScreen extends StatelessWidget {
                       Uri.parse("mailto:annettesoftware@gmail.com")),
                 ),
                 ListTile(
-                    title: Text("Lizenzen"),
+                    title: const Text("Lizenzen"),
                     trailing: PhosphorIcon(
                       PhosphorIcons.duotone.scales,
                       color: Theme.of(context).colorScheme.primary,

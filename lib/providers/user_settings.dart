@@ -1,6 +1,5 @@
 import 'package:annette_app_x/models/class_ids.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'api/subjects_provider.dart';
@@ -75,6 +74,7 @@ class UserSettings {
     List<String> names = [];
     for (var subject in subjects) {
       print(subject["lessons"][0]["name"]);
+      print(subject["lessons"][0]["longname"]);
       names.add(subject["lessons"][0]["longname"]);
     }
     subjectNames = names;

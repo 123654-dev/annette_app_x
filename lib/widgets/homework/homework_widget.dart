@@ -28,7 +28,7 @@ class _HomeworkWidgetState extends State<HomeworkWidget> {
             context, widget.entry, HomeworkManager.editHomeworkEntry)
       },
       child: Card(
-        color: Theme.of(context).colorScheme.tertiary,
+        color: Theme.of(context).colorScheme.secondaryContainer,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: ListTile(
@@ -38,13 +38,13 @@ class _HomeworkWidgetState extends State<HomeworkWidget> {
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.tertiaryContainer)),
+                    color: Theme.of(context).colorScheme.onSecondaryContainer)),
             subtitle: Text(
                 "${widget.entry.notes}\n${DateFormat("'Bis': EEEE, dd.MM. (kk:mm)", "de_DE").format(widget.entry.dueDate)}",
                 style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
-                    color: Theme.of(context).colorScheme.tertiaryContainer)),
+                    color: Theme.of(context).colorScheme.onSecondaryContainer)),
             trailing: Container(
               constraints: const BoxConstraints(maxWidth: 35, minWidth: 35),
               height: double.infinity,
@@ -52,15 +52,15 @@ class _HomeworkWidgetState extends State<HomeworkWidget> {
                 alignment: Alignment.centerRight,
                 child: Ink(
                   decoration: ShapeDecoration(
-                    color: Theme.of(context).colorScheme.tertiaryContainer,
-                    shape: CircleBorder(),
+                    color: Theme.of(context).colorScheme.onSecondaryContainer,
+                    shape: const CircleBorder(),
                   ),
                   child: IconButton(
                     //shape: const CircleBorder(),
                     iconSize: 15,
                     icon: PhosphorIcon(
                       PhosphorIcons.bold.check,
-                      color: Theme.of(context).colorScheme.tertiary,
+                      color: Theme.of(context).colorScheme.secondaryContainer,
                     ),
                     onPressed: () {
                       setState(() {

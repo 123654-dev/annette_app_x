@@ -1,5 +1,4 @@
 import 'package:annette_app_x/providers/timetable_provider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -59,9 +58,9 @@ class _dialogSheetState extends State<_dialogSheet> {
   //Soll der Erinnerungszeitpunkt automatisch gewählt werden?
   bool _autoRemind = true;
   DateTime _selectedDate = DateTime.now();
-  TimeOfDay _selectedTime = TimeOfDay(hour: 16, minute: 30);
+  TimeOfDay _selectedTime = const TimeOfDay(hour: 16, minute: 30);
 
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   void _scrollToEnd() {
     _scrollController.animateTo(
