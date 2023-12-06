@@ -163,7 +163,7 @@ class _MyHomePageState extends State<MyHomePage> {
           <Widget>[
             Container(
               alignment: Alignment.center,
-              child: const SubstitutionScreen(),
+              child: SubstitutionScreen(),
             ),
             Container(
               alignment: Alignment.center,
