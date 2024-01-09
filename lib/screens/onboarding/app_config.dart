@@ -29,6 +29,20 @@ class AppConfigScreen extends StatefulWidget {
   State<AppConfigScreen> createState() => _AppConfigScreenState();
 }
 
+var widgetWhileLoading = (context, String? toast) =>
+    Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      Text(toast ?? "Lade..."),
+      const SizedBox(height: 10),
+      SizedBox(
+        width: 100,
+        height: 2,
+        child: LinearProgressIndicator(
+          color: Theme.of(context).colorScheme.secondary,
+        ),
+      ),
+      const SizedBox(height: 10),
+    ]);
+
 class _AppConfigScreenState extends State<AppConfigScreen> {
   bool _hasClassesResponseYet = false;
   bool _hasOptionsResponseYet = false;
@@ -63,20 +77,6 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
   3. Daten anzeigen
   */
 
-  var widgetWhileLoading = (context, String? toast) =>
-      Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text(toast ?? "Lade..."),
-        const SizedBox(height: 10),
-        SizedBox(
-          width: 100,
-          height: 2,
-          child: LinearProgressIndicator(
-            color: Theme.of(context).colorScheme.secondary,
-          ),
-        ),
-        const SizedBox(height: 10),
-      ]);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,7 +94,7 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
                         if (snapshot.hasError) {
-                          print(snapshot.error); 
+                          print(snapshot.error);
                           return Center(
                             child: ConnectionProvider.hasConnection()
                                 ? BadRequestError(onPressed: () {
@@ -118,19 +118,25 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                           //Für Schritt 1 (Auswahl der Klasse)
                           if (!_secondStep) {
                             _classes = jsonDecode(snapshot.data.toString());
-                            return Center(
+                            return Align(
+                              alignment: Alignment.centerLeft,
                               child: ListWheelScrollView(
                                 useMagnifier: true,
-                                magnification: 2,
+                                magnification: 1.7,
                                 perspective: 0.01,
-                                squeeze: 0.8,
+                                squeeze: .6,
                                 physics: const FixedExtentScrollPhysics(),
-                                itemExtent: 50,
+                                itemExtent: 130,
                                 onSelectedItemChanged: (value) => setState(() {
                                   _selectedClass = _classes[value];
                                   print(_selectedClass);
                                 }),
-                                children: _classes.map((e) => Text(e)).toList(),
+                                children: _classes
+                                    .map((e) => Text(
+                                          e,
+                                          style: TextStyle(fontSize: 90),
+                                        ))
+                                    .toList(),
                               ),
                             );
                           } else {
@@ -145,8 +151,6 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                                 _selectedClass == "Q1" ||
                                 _selectedClass == "Q2") {
                               print(_options);
-                              print("wenomechainsama");
-                              stderr.writeln('print me');
                               return Center(
                                   child: ListView(
                                 children: [
@@ -215,10 +219,8 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                                       for (var lesson in lessonsWithSameName) {
                                         lesson["name"] =
                                             "${lesson["name"]} $index";
-                                        roomInfo[
-                                            block["block_title"]] = "${roomInfo[
-                                                    block["block_title"]] ??
-                                                "Mehrere Kurse erkannt.\nInformationen zur Unterscheidung:\n"}${lesson["name"]}: ${weekdayName[lesson["day"]]} in ${lesson["room"]}\n";
+                                        roomInfo[block["block_title"]] =
+                                            "${roomInfo[block["block_title"]] ?? "Mehrere Kurse erkannt.\nInformationen zur Unterscheidung:\n"}${lesson["name"]}: ${weekdayName[lesson["day"]]} in ${lesson["room"]}\n";
                                         index++;
                                       }
                                     }
@@ -366,6 +368,7 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
           element.fmtName.toUpperCase() == _selectedClass.toUpperCase(),
     );
 
+    print("Saving subjects");
     UserSettings.saveSubjects(opt);
     UserSettings.subjectLastClassId = _selectedClass;
     UserSettings.shouldPerformOnboarding = false;

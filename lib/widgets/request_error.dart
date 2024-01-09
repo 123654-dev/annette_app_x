@@ -1,11 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class BadRequestError extends StatelessWidget {
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
-  const BadRequestError({super.key, required this.onPressed});
+  const BadRequestError({super.key, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -35,14 +34,15 @@ class BadRequestError extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 10),
-                ElevatedButton(
-                    onPressed: onPressed,
-                    child: Text("Erneut versuchen",
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelMedium
-                            ?.copyWith(
-                                color: Theme.of(context).colorScheme.error)))
+                if (onPressed != null)
+                  ElevatedButton(
+                      onPressed: onPressed,
+                      child: Text("Erneut versuchen",
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelMedium
+                              ?.copyWith(
+                                  color: Theme.of(context).colorScheme.error)))
               ],
             ),
           ),

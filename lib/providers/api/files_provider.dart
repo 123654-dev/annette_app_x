@@ -3,6 +3,7 @@ library files_provider;
 import 'dart:async';
 import 'dart:io';
 import 'package:annette_app_x/models/class_ids.dart';
+import 'package:annette_app_x/providers/api/api_provider.dart';
 import 'package:annette_app_x/providers/storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
@@ -13,6 +14,31 @@ import '../../models/file_format.dart';
 /// Enthält Methoden zum Herunterladen von Dateien aus dem Backend
 ///
 class FilesProvider {
+  static Future<String> fetchTimetable() async {
+    // Get the URL from the ApiProvider (replace with your actual implementation)
+    String url = await ApiProvider.getTimetableUrl();
+
+    // Get the directory where the file will be saved
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String filePath = '${appDocDir.path}/saved_html.html';
+
+    // Check if the file already exists
+    File file = File(filePath);
+    if (file.existsSync()) {
+      return file.path; // Return the previously saved file
+    } else {
+      // If the file doesn't exist, fetch it from the URL
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        // Save the HTML content to the file
+        await file.writeAsString(response.body);
+        return file.path;
+      } else {
+        throw Exception('Failed to fetch HTML from the URL');
+      }
+    }
+  }
+
   /// Lädt den Stundenplan für die Klasse [id] aus dem Backend herunter und gibt ihn als File-Objekt zurück.
   /// Das File-Objekt kann dann z.B. mit dem PDFView-Widget angezeigt werden.
   /// Speichert den Stundenplan lokal unter [id.name].pdf

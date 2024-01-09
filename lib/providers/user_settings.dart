@@ -55,13 +55,16 @@ class UserSettings {
             orElse: () => null);
         if (lesson != null) {
           subject["lessons"] = [lesson];
+          print(lesson);
           allSubjects.add(subject);
+          print(subject);
         }
       }
     }
 
     allSubjects.addAll(nonParallelSubjects);
 
+    print("All subjects: ");
     print(allSubjects);
 
     _saveSubjectNames(allSubjects);
@@ -74,9 +77,11 @@ class UserSettings {
     List<String> names = [];
     for (var subject in subjects) {
       print(subject["lessons"][0]["name"]);
-      print(subject["lessons"][0]["longname"]);
-      names.add(subject["lessons"][0]["longname"]);
+      var longName = subject["lessons"][0]["longname"];
+      print(longName);
+      if (!names.contains(longName)) names.add(longName);
     }
+    names.sort((a, b) => a.compareTo(b));
     subjectNames = names;
   }
 

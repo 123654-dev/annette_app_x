@@ -46,6 +46,8 @@ class AppInitializer {
     //ConnectionProvider initialisieren
     ConnectionProvider.init();
 
+    //Request permission to load files from the internet
+
     //Zeitzonen initialisieren (für Notifications)
     tz.initializeTimeZones();
   }

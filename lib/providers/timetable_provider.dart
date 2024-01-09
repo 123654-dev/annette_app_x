@@ -1,6 +1,9 @@
 import 'dart:convert';
 
+import 'package:annette_app_x/models/lesson_block.dart';
 import 'package:annette_app_x/providers/user_settings.dart';
+import 'package:annette_app_x/screens/timetable_screen.dart';
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 import 'api/api_provider.dart';
@@ -10,32 +13,38 @@ class TimetableProvider {
     String name = "Kein Unterricht";
     var today = getTableForDay(DateTime.now().weekday);
     if (today == null || today.isEmpty) return name;
-    today.forEach((element) {
-      if (element["startTime"] != null) {
-        var startTime = int.parse(element["startTime"].toString());
-        var endTime = int.parse(element["endTime"].toString());
-        if (startTime <= DateTime.now().hour &&
-            DateTime.now().hour <= endTime) {
-          name = element["name"];
-        }
+    for (var element in today) {
+      var lb = element as LessonBlock;
+
+      if (lb.startTime.hour * 60 + lb.startTime.minute <
+              TimeOfDay.now().hour * 60 + TimeOfDay.now().minute &&
+          lb.endTime.hour * 60 + lb.endTime.minute >
+              TimeOfDay.now().hour * 60 + TimeOfDay.now().minute) {
+        name = lb.subject;
       }
-    });
+    }
     return name;
   }
 
   ///Returns all lessons of the next schoolday
   static List<dynamic>? getTableForNextSchoolday() {
-    return getTableForDay(_nextSchoolday());
+    return getTableForDay(nextSchoolday());
   }
 
   static List<dynamic>? getTableForDay(int day) {
-    return Hive.box("timetable").get(day);
+    print(weekdays[day]);
+    if (day == 0 || day == 6) return [];
+    if (Hive.box("timetable").get(day) == null) return [];
+
+    return Hive.box("timetable").get(day).cast<Map>()?.map((e) {
+      return LessonBlock.fromJson(e);
+    }).toList();
   }
 
   ///0: Sunday, 1: Monday, 2: Tuesday, 3: Wednesday, 4: Thursday, 5: Friday, 6: Saturday
   ///
   ///Returns the next schoolday if it's a weekend
-  static int _nextSchoolday() {
+  static int nextSchoolday() {
     var day = DateTime.now().weekday;
     if (day <= 5) {
       return day;
@@ -44,7 +53,7 @@ class TimetableProvider {
     }
   }
 
-  static Future<List<dynamic>> getTimetable() async {
+  static Future<bool> getTimetable() async {
     final isTimetableExpired = Hive.box('timetable').get("lastUpdate") ==
             null ||
         ((Hive.box("timetable").get("lastUpdate") ?? DateTime(0)) as DateTime)
@@ -60,8 +69,8 @@ class TimetableProvider {
     } else {
       print("Timetable is up to date");
     }
-    print("Next schoolday: ${Hive.box('timetable').get(_nextSchoolday())}");
-    return Hive.box('timetable').get(_nextSchoolday());
+    print("Next schoolday: ${Hive.box('timetable').get(nextSchoolday())}");
+    return true;
   }
 
   static Future<void> _processTimetable() async {
@@ -72,9 +81,10 @@ class TimetableProvider {
 
     var timetable = jsonDecode(timetableString);
 
-    const daysPerWeek = 5;
+    const weekDaysPerWeek = 5;
 
-    for (int i = 0; i < daysPerWeek; i++) {
+    //Anfangen bei Montag (Tag "1" statt Sonntag ("0"))
+    for (int i = 1; i <= weekDaysPerWeek; i++) {
       List<dynamic> day = [];
       List<dynamic> deleteBeforeNextPass = [];
 
@@ -86,17 +96,21 @@ class TimetableProvider {
 
       for (var t in timetable) {
         if (t["weekday"] == i && t["startTime"] != null) {
-          if (UserSettings.subjects.firstWhere(
-                  (element) =>
-                      t["lessonid"] == element["lessons"]?[0]["internal_id"] ||
-                      t["lessonid"] == element["internal_id"],
-                  orElse: () => null) !=
-              null) {
-            day.add(t);
+          for (var sub in UserSettings.subjects) {
+            if (t["lessonid"] == sub["lessons"]?[0]["internal_id"] ||
+                t["lessonid"] == sub["internal_id"] ||
+                t["name"] == sub["name"] ||
+                t["name"] == sub["lessons"]?[0]["name"]) {
+              print("☺️ Added ${t["name"]} to timetable");
+              day.add(t);
+              deleteBeforeNextPass.add(t);
+            }
           }
-          deleteBeforeNextPass.add(t);
         }
       }
+      print("------------ Subjects!!! ------------");
+      print(UserSettings.subjects);
+      print(UserSettings.subjectNames);
 
       for (var t in deleteBeforeNextPass) {
         timetable.remove(t);
