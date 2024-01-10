@@ -7,9 +7,8 @@ import 'package:intl/intl.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class HomeworkInfo {
-  static void show(HomeworkEntry entry) {
+  static void show(BuildContext context, HomeworkEntry entry) {
     initializeDateFormatting("de_DE", null);
-    BuildContext context = NavigationService.navigatorKey.currentContext!;
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -284,7 +283,9 @@ class _HomeworkInfoWidgetState extends State<HomeworkInfoWidget> {
                     child: FilledButton(
                       onPressed: () async {
                         await HomeworkManager.editHomeworkEntry(
-                            HomeworkManager.doesHomeworkEntryExist(widget.entry) ? widget.entry : await HomeworkManager.addEmptyHomeworkEntry(),
+                            HomeworkManager.doesHomeworkEntryExist(widget.entry)
+                                ? widget.entry
+                                : await HomeworkManager.addEmptyHomeworkEntry(),
                             HomeworkEntry(
                                 id: widget.entry.id,
                                 done: widget.entry.done,

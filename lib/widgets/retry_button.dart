@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 class RetryButton extends StatelessWidget {
   const RetryButton({
     super.key,
-    required this.onPressed,
+    this.onPressed,
   });
 
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,6 @@ class RetryButton extends StatelessWidget {
             style: Theme.of(context)
                 .textTheme
                 .labelMedium
-                ?.copyWith(
-                    color: Theme.of(context).colorScheme.error)));
+                ?.copyWith(color: Theme.of(context).colorScheme.error)));
   }
 }

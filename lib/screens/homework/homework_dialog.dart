@@ -12,7 +12,8 @@ import '../../providers/user_settings.dart';
 
 class HomeworkDialog {
   static void show(
-      {bool? editOnly = false,
+      {BuildContext? context,
+      bool? editOnly = false,
       required Function({
         required int id,
         required String subject,
@@ -22,7 +23,7 @@ class HomeworkDialog {
       }) onClose}) {
     var subjects = UserSettings.subjectNames;
 
-    BuildContext context = NavigationService.navigatorKey.currentContext!;
+    context ??= NavigationService.navigatorKey.currentContext!;
 
     //Der Dialog wird mit showDialog() erzeugt
     showModalBottomSheet(
