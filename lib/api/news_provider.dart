@@ -58,8 +58,8 @@ class NewsProvider {
 
 
   // contentful schema:
-  static final newsContentTypeId = "newsEntry";
-  static final newsCollectionContentTypeId = newsContentTypeId + "Collection";
+  static const newsContentTypeId = "newsEntry";
+  static const newsCollectionContentTypeId = "${newsContentTypeId}Collection";
 
 
 
@@ -190,7 +190,7 @@ class NewsProvider {
         document: gql(
           """
             query {
-              $newsCollectionContentTypeId (skip: ${skip}, limit: ${count}, order: sys_firstPublishedAt_DESC) {
+              $newsCollectionContentTypeId (skip: $skip, limit: $count, order: sys_firstPublishedAt_DESC) {
                 total
                 items {
                   title

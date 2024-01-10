@@ -1,7 +1,6 @@
 import 'package:annette_app_x/api/news_provider.dart';
 import 'package:annette_app_x/screens/news/news_collection_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:graphql/client.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 ///
@@ -10,6 +9,8 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 ///
 
 class NewsNotification extends StatefulWidget {
+  const NewsNotification({super.key});
+
   @override
   State<StatefulWidget> createState() => _NewsNotificationState();
 }
@@ -38,18 +39,24 @@ class _NewsNotificationState extends State<NewsNotification> {
             height: 40,
             width: 40,
             child: IconButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.red),
-                ),
-                color: Colors.white,
-                onPressed: () {
-                  // redirect to newspage
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => NewsCollectionScreen()));
-                },
-                icon: PhosphorIcon(PhosphorIcons.duotone.newspaper, size: 20)))
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                    Theme.of(context).colorScheme.error),
+              ),
+              icon: PhosphorIcon(
+                PhosphorIcons.duotone.newspaper,
+                size: 20,
+                color: Theme.of(context).colorScheme.onError,
+              ),
+              color: Colors.white,
+              onPressed: () {
+                // redirect to newspage
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const NewsCollectionScreen()));
+              },
+            ))
         : Container();
   }
 }

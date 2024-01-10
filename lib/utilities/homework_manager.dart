@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:annette_app_x/models/homework_entry.dart';
-import 'package:annette_app_x/models/sorting_types.dart';
 import 'package:annette_app_x/providers/notifications.dart';
 import 'package:annette_app_x/screens/homework/homework_dialog.dart';
 import 'package:annette_app_x/screens/homework/homework_import.dart';
@@ -33,12 +32,13 @@ class HomeworkManager {
     return entries().any((element) => element.id == entry.id);
   }
 
-  static Future<HomeworkEntry> addEmptyHomeworkEntry() async{
+  static Future<HomeworkEntry> addEmptyHomeworkEntry() async {
     initializeDateFormatting("de_DE", null);
     var entry = HomeworkEntry(
         id: Random().nextInt(1000000),
         subject: "Sonstiges",
-        notes: "Wenn du das in der App siehst, ist etwas schief gelaufen. Bitte melde das!",
+        notes:
+            "Wenn du das in der App siehst, ist etwas schief gelaufen. Bitte melde das!",
         dueDate: DateTime.now().add(Duration(days: 1)),
         lastUpdated: DateTime.now());
     await Hive.box('homework').add(entry);
@@ -53,26 +53,33 @@ class HomeworkManager {
         entry.reminderDateTime!.isBefore(DateTime.now())) {
       return;
     }
-    entry.scheduledNotificationId = await NotificationProvider()
-        .scheduleNotification(
-            date: entry.reminderDateTime!,
-            title: "Hausaufgaben in ${entry.subject}!",
-            body: generateRemainingTimeToast(entry.dueDate),
-            payload: entry.toJson().toString());
+    try {
+      entry.scheduledNotificationId = await NotificationProvider()
+          .scheduleNotification(
+              date: entry.reminderDateTime!,
+              title: "Hausaufgaben in ${entry.subject}!",
+              body: generateRemainingTimeToast(entry.dueDate),
+              payload: entry.toJson().toString());
+    } catch (e) {
+      print(e);
+    }
+
     Hive.box('homework').add(entry);
     print((entries().first.toJson().toString()));
   }
 
   static Future<void> editHomeworkEntry(
       HomeworkEntry oldEntry, HomeworkEntry newEntry) async {
-    if(oldEntry.scheduledNotificationId != null){
+    if (oldEntry.scheduledNotificationId != null) {
       NotificationProvider()
-        .cancelNotification(oldEntry.scheduledNotificationId!);
+          .cancelNotification(oldEntry.scheduledNotificationId!);
     }
     newEntry.scheduledNotificationId = oldEntry.scheduledNotificationId;
     if (newEntry.reminderDateTime!.isAfter(DateTime.now())) {
       NotificationProvider().scheduleNotification(
-          id: newEntry.scheduledNotificationId == null ? await NotificationProvider() : newEntry.scheduledNotificationId!,
+          id: newEntry.scheduledNotificationId == null
+              ? await NotificationProvider()
+              : newEntry.scheduledNotificationId!,
           date: newEntry.reminderDateTime!,
           title: "Hausaufgaben in ${newEntry.subject}!",
           body: generateRemainingTimeToast(newEntry.dueDate),
@@ -87,7 +94,8 @@ class HomeworkManager {
   }
 
   static void _dialogCallback(
-      {required int id,required String subject,
+      {required int id,
+      required String subject,
       required String annotations,
       required bool autoRemind,
       required DateTime remindDT}) async {
@@ -105,13 +113,14 @@ class HomeworkManager {
     await addHomeworkEntry(entry);
   }
 
-  static void showHomeworkDialog(Function() refresh) {
-    HomeworkDialog.show(onClose: _dialogCallback);
+  static void showHomeworkDialog(BuildContext context, Function() refresh) {
+    debugPrint("Showing homework dialog");
+    HomeworkDialog.show(context: context, onClose: _dialogCallback);
   }
 
-  static void showHomeworkEditDialog(HomeworkEntry entry,
+  static void showHomeworkEditDialog(BuildContext context, HomeworkEntry entry,
       Function(HomeworkEntry, HomeworkEntry) onClose) {
-    HomeworkInfo.show(entry);
+    HomeworkInfo.show(context, entry);
   }
 
   static bool hasHomework() {
@@ -123,7 +132,7 @@ class HomeworkManager {
   static int howManyEntries() => entries().length;
 
   static void moveToBin(HomeworkEntry entry) {
-    if (entry.scheduledNotificationId != null){
+    if (entry.scheduledNotificationId != null) {
       NotificationProvider().cancelNotification(entry.scheduledNotificationId!);
     }
     entries().elementAt(entries().indexOf(entry)).done = true;
@@ -145,7 +154,7 @@ class HomeworkManager {
   }
 
   static void deleteFromBin(HomeworkEntry entry) {
-    if(entry.scheduledNotificationId != null){
+    if (entry.scheduledNotificationId != null) {
       NotificationProvider().cancelNotification(entry.scheduledNotificationId!);
     }
     Hive.box('homework').deleteAt(entries().indexOf(entry));

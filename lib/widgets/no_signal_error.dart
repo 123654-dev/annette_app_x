@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:annette_app_x/providers/connection_provider.dart';
 import 'package:annette_app_x/widgets/retry_button.dart';

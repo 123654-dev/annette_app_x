@@ -29,6 +29,20 @@ class AppConfigScreen extends StatefulWidget {
   State<AppConfigScreen> createState() => _AppConfigScreenState();
 }
 
+var widgetWhileLoading = (context, String? toast) =>
+    Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      Text(toast ?? "Lade..."),
+      const SizedBox(height: 10),
+      SizedBox(
+        width: 100,
+        height: 2,
+        child: LinearProgressIndicator(
+          color: Theme.of(context).colorScheme.secondary,
+        ),
+      ),
+      const SizedBox(height: 10),
+    ]);
+
 class _AppConfigScreenState extends State<AppConfigScreen> {
   bool _hasClassesResponseYet = false;
   bool _hasOptionsResponseYet = false;
@@ -44,7 +58,7 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
   bool _secondStep = false;
 
   //TODO: Type erstellen
-  Map<String, dynamic> _selectedOptions = new Map();
+  Map<String, dynamic> _selectedOptions = {};
 
   @override
   void initState() {
@@ -63,19 +77,7 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
   3. Daten anzeigen
   */
 
-  var widgetWhileLoading = (context, String? toast) =>
-      Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text(toast ?? "Lade..."),
-        const SizedBox(height: 10),
-        SizedBox(
-          width: 100,
-          height: 2,
-          child: LinearProgressIndicator(
-            color: Theme.of(context).colorScheme.secondary,
-          ),
-        ),
-        const SizedBox(height: 10),
-      ]);
+  Map<String, String> roomInfo = {};
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +96,7 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
                         if (snapshot.hasError) {
-                          print(snapshot.error); 
+                          print(snapshot.error);
                           return Center(
                             child: ConnectionProvider.hasDownloadConnection()
                                 ? BadRequestError(onPressed: () {
@@ -118,19 +120,25 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                           //Für Schritt 1 (Auswahl der Klasse)
                           if (!_secondStep) {
                             _classes = jsonDecode(snapshot.data.toString());
-                            return Center(
+                            return Align(
+                              alignment: Alignment.centerLeft,
                               child: ListWheelScrollView(
                                 useMagnifier: true,
-                                magnification: 2,
+                                magnification: 1.7,
                                 perspective: 0.01,
-                                squeeze: 0.8,
+                                squeeze: .6,
                                 physics: const FixedExtentScrollPhysics(),
-                                itemExtent: 50,
+                                itemExtent: 130,
                                 onSelectedItemChanged: (value) => setState(() {
                                   _selectedClass = _classes[value];
                                   print(_selectedClass);
                                 }),
-                                children: _classes.map((e) => Text(e)).toList(),
+                                children: _classes
+                                    .map((e) => Text(
+                                          e,
+                                          style: const TextStyle(fontSize: 90),
+                                        ))
+                                    .toList(),
                               ),
                             );
                           } else {
@@ -145,8 +153,6 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                                 _selectedClass == "Q1" ||
                                 _selectedClass == "Q2") {
                               print(_options);
-                              print("wenomechainsama");
-                              stderr.writeln('print me');
                               return Center(
                                   child: ListView(
                                 children: [
@@ -157,27 +163,27 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                                       children: [
                                         Text(block["block_title"] as String),
                                         DropdownButton(
-                                            //Inhalt der Map unter dem Wert von block["block_title"] (z.B. GK-Schiene 1)
-                                            value: _selectedOptions[
-                                                block["block_title"] as String],
-                                            hint: const Text("Kurs auswählen"),
-                                            items: (block["lessons"]
-                                                    as List<dynamic>)
-                                                .map((e) {
-                                              return DropdownMenuItem(
-                                                value: e["name"],
-                                                child: Text(e["name"]),
-                                              );
-                                            }).toList(),
-                                            onChanged: (value) {
-                                              setState(() {
-                                                _selectedOptions[
-                                                        block["block_title"]] =
-                                                    value;
-                                                print(value);
-                                                print(_selectedOptions);
-                                              });
-                                            }),
+                                          //Inhalt der Map unter dem Wert von block["block_title"] (z.B. GK-Schiene 1)
+                                          value: _selectedOptions[
+                                              block["block_title"] as String],
+                                          hint: const Text("Kurs auswählen"),
+                                          items: (block["lessons"]
+                                                  as List<dynamic>)
+                                              .map((e) {
+                                            return DropdownMenuItem(
+                                              value: e["name"],
+                                              child: Text(e["name"]),
+                                            );
+                                          }).toList(),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _selectedOptions[
+                                                  block["block_title"]] = value;
+                                              print(value);
+                                              print(_selectedOptions);
+                                            });
+                                          },
+                                        ),
                                       ],
                                     )
                                 ],
@@ -193,9 +199,8 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                                       (i) => (i["lessons"].length > 1) as bool)
                                   .toList();
 
-                              Map<String, String> roomInfo = {};
-
                               for (var block in _options) {
+                                print(block["lessons"]);
                                 var lessons = block["lessons"] as List<dynamic>;
                                 var lessonNames = lessons
                                     .map((e) => e["name"] as String)
@@ -215,11 +220,8 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                                       for (var lesson in lessonsWithSameName) {
                                         lesson["name"] =
                                             "${lesson["name"]} $index";
-                                        roomInfo[
-                                            block["block_title"]] = (roomInfo[
-                                                    block["block_title"]] ??
-                                                "Mehrere Kurse erkannt.\nInformationen zur Unterscheidung:\n") +
-                                            "${lesson["name"]}: ${weekdayName[lesson["day"]]} in ${lesson["room"]}\n";
+                                        roomInfo[block["block_title"]] =
+                                            "${roomInfo[block["block_title"]] ?? "Mehrere mögliche Kurse erkannt.\nIn welchem Raum hast du Unterricht?\n"}${lesson["name"]}: ${weekdayName[lesson["day"]]} in ${lesson["room"]}\n";
                                         index++;
                                       }
                                     }
@@ -228,15 +230,15 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                               }
 
                               return Center(
-                                  child: ListView(
-                                children: [
-                                  for (var block in _options)
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Text(block["block_title"] as String),
-                                        DropdownButton(
+                                child: ListView(
+                                  children: [
+                                    for (var block in _options)
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Text(block["block_title"] as String),
+                                          DropdownButton(
                                             //Inhalt der Map unter dem Wert von block["block_title"] (z.B. GK-Schiene 1)
                                             value: _selectedOptions[
                                                 block["block_title"] as String],
@@ -250,34 +252,38 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                                               );
                                             }).toList(),
                                             onChanged: (value) {
-                                              setState(() {
-                                                _selectedOptions[
-                                                        block["block_title"]] =
-                                                    value;
-                                                print(value);
-                                                print(_selectedOptions);
-                                              });
-                                            }),
-                                        if (roomInfo.containsKey(
-                                            block["block_title"] as String))
-                                          Tooltip(
-                                            triggerMode: TooltipTriggerMode.tap,
-                                            showDuration:
-                                                const Duration(seconds: 20),
-                                            message:
-                                                roomInfo[block["block_title"]]!,
-                                            child: PhosphorIcon(
-                                              PhosphorIcons
-                                                  .duotone.sealQuestion,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .primary,
-                                            ),
+                                              setState(
+                                                () {
+                                                  _selectedOptions[block[
+                                                      "block_title"]] = value;
+                                                  print(value);
+                                                  print(_selectedOptions);
+                                                },
+                                              );
+                                            },
                                           ),
-                                      ],
-                                    )
-                                ],
-                              ));
+                                          if (roomInfo.containsKey(
+                                              block["block_title"] as String))
+                                            Tooltip(
+                                              triggerMode:
+                                                  TooltipTriggerMode.tap,
+                                              showDuration:
+                                                  const Duration(seconds: 20),
+                                              message: roomInfo[
+                                                  block["block_title"]]!,
+                                              child: PhosphorIcon(
+                                                PhosphorIcons
+                                                    .duotone.sealQuestion,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .primary,
+                                              ),
+                                            ),
+                                        ],
+                                      )
+                                  ],
+                                ),
+                              );
                             }
                           }
                         }
@@ -298,7 +304,7 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                   width: 200,
                   height: 50,
                   child: FilledButton(
-                    child: Text("Weiter"),
+                    child: const Text("Weiter"),
                     onPressed: () {
                       if (!_secondStep) {
                         loadOptions();
@@ -367,6 +373,7 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
           element.fmtName.toUpperCase() == _selectedClass.toUpperCase(),
     );
 
+    print("Saving subjects");
     UserSettings.saveSubjects(opt);
     UserSettings.subjectLastClassId = _selectedClass;
     UserSettings.shouldPerformOnboarding = false;
@@ -389,11 +396,11 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
       print("Preparing previous selection...");
       var previousSelection = UserSettings.selectedSubjects;
       if (previousSelection.isNotEmpty) {
-        previousSelection.forEach((element) {
+        for (var element in previousSelection) {
           _selectedOptions[element["block_title"]] =
               element["selection"][0]["name"];
           print(element["selection"][0]["name"]);
-        });
+        }
       }
     } else {
       _selectedOptions = {};
