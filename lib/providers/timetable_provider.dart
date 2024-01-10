@@ -98,9 +98,9 @@ class TimetableProvider {
         if (t["weekday"] == i && t["startTime"] != null) {
           for (var sub in UserSettings.subjects) {
             if (t["lessonid"] == sub["lessons"]?[0]["internal_id"] ||
-                t["lessonid"] == sub["internal_id"] ||
-                t["name"] == sub["name"] ||
-                t["name"] == sub["lessons"]?[0]["name"]) {
+                    t["lessonid"] == sub["internal_id"]
+                //||t["name"] == sub["name"] || t["name"] == sub["lessons"]?[0]["name"]
+                ) {
               print("☺️ Added ${t["name"]} to timetable");
               day.add(t);
               deleteBeforeNextPass.add(t);

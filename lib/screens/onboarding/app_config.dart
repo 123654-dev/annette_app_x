@@ -77,6 +77,8 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
   3. Daten anzeigen
   */
 
+  Map<String, String> roomInfo = {};
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,7 +136,7 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                                 children: _classes
                                     .map((e) => Text(
                                           e,
-                                          style: TextStyle(fontSize: 90),
+                                          style: const TextStyle(fontSize: 90),
                                         ))
                                     .toList(),
                               ),
@@ -161,27 +163,27 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                                       children: [
                                         Text(block["block_title"] as String),
                                         DropdownButton(
-                                            //Inhalt der Map unter dem Wert von block["block_title"] (z.B. GK-Schiene 1)
-                                            value: _selectedOptions[
-                                                block["block_title"] as String],
-                                            hint: const Text("Kurs auswählen"),
-                                            items: (block["lessons"]
-                                                    as List<dynamic>)
-                                                .map((e) {
-                                              return DropdownMenuItem(
-                                                value: e["name"],
-                                                child: Text(e["name"]),
-                                              );
-                                            }).toList(),
-                                            onChanged: (value) {
-                                              setState(() {
-                                                _selectedOptions[
-                                                        block["block_title"]] =
-                                                    value;
-                                                print(value);
-                                                print(_selectedOptions);
-                                              });
-                                            }),
+                                          //Inhalt der Map unter dem Wert von block["block_title"] (z.B. GK-Schiene 1)
+                                          value: _selectedOptions[
+                                              block["block_title"] as String],
+                                          hint: const Text("Kurs auswählen"),
+                                          items: (block["lessons"]
+                                                  as List<dynamic>)
+                                              .map((e) {
+                                            return DropdownMenuItem(
+                                              value: e["name"],
+                                              child: Text(e["name"]),
+                                            );
+                                          }).toList(),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _selectedOptions[
+                                                  block["block_title"]] = value;
+                                              print(value);
+                                              print(_selectedOptions);
+                                            });
+                                          },
+                                        ),
                                       ],
                                     )
                                 ],
@@ -197,9 +199,8 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                                       (i) => (i["lessons"].length > 1) as bool)
                                   .toList();
 
-                              Map<String, String> roomInfo = {};
-
                               for (var block in _options) {
+                                print(block["lessons"]);
                                 var lessons = block["lessons"] as List<dynamic>;
                                 var lessonNames = lessons
                                     .map((e) => e["name"] as String)
@@ -220,7 +221,7 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                                         lesson["name"] =
                                             "${lesson["name"]} $index";
                                         roomInfo[block["block_title"]] =
-                                            "${roomInfo[block["block_title"]] ?? "Mehrere Kurse erkannt.\nInformationen zur Unterscheidung:\n"}${lesson["name"]}: ${weekdayName[lesson["day"]]} in ${lesson["room"]}\n";
+                                            "${roomInfo[block["block_title"]] ?? "Mehrere mögliche Kurse erkannt.\nIn welchem Raum hast du Unterricht?\n"}${lesson["name"]}: ${weekdayName[lesson["day"]]} in ${lesson["room"]}\n";
                                         index++;
                                       }
                                     }
@@ -229,15 +230,15 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                               }
 
                               return Center(
-                                  child: ListView(
-                                children: [
-                                  for (var block in _options)
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Text(block["block_title"] as String),
-                                        DropdownButton(
+                                child: ListView(
+                                  children: [
+                                    for (var block in _options)
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Text(block["block_title"] as String),
+                                          DropdownButton(
                                             //Inhalt der Map unter dem Wert von block["block_title"] (z.B. GK-Schiene 1)
                                             value: _selectedOptions[
                                                 block["block_title"] as String],
@@ -251,34 +252,38 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                                               );
                                             }).toList(),
                                             onChanged: (value) {
-                                              setState(() {
-                                                _selectedOptions[
-                                                        block["block_title"]] =
-                                                    value;
-                                                print(value);
-                                                print(_selectedOptions);
-                                              });
-                                            }),
-                                        if (roomInfo.containsKey(
-                                            block["block_title"] as String))
-                                          Tooltip(
-                                            triggerMode: TooltipTriggerMode.tap,
-                                            showDuration:
-                                                const Duration(seconds: 20),
-                                            message:
-                                                roomInfo[block["block_title"]]!,
-                                            child: PhosphorIcon(
-                                              PhosphorIcons
-                                                  .duotone.sealQuestion,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .primary,
-                                            ),
+                                              setState(
+                                                () {
+                                                  _selectedOptions[block[
+                                                      "block_title"]] = value;
+                                                  print(value);
+                                                  print(_selectedOptions);
+                                                },
+                                              );
+                                            },
                                           ),
-                                      ],
-                                    )
-                                ],
-                              ));
+                                          if (roomInfo.containsKey(
+                                              block["block_title"] as String))
+                                            Tooltip(
+                                              triggerMode:
+                                                  TooltipTriggerMode.tap,
+                                              showDuration:
+                                                  const Duration(seconds: 20),
+                                              message: roomInfo[
+                                                  block["block_title"]]!,
+                                              child: PhosphorIcon(
+                                                PhosphorIcons
+                                                    .duotone.sealQuestion,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .primary,
+                                              ),
+                                            ),
+                                        ],
+                                      )
+                                  ],
+                                ),
+                              );
                             }
                           }
                         }
