@@ -6,5 +6,5 @@ enum FileFormat {
   PNG,
   JPG,
   JSON,
-  HTML,
+  HOMEWORK
 }

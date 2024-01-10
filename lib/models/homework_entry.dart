@@ -3,27 +3,31 @@ import 'package:hive_flutter/hive_flutter.dart';
 @HiveType(typeId: 0)
 class HomeworkEntry {
   @HiveField(0)
-  String subject;
+  int id;
 
   @HiveField(1)
-  String notes;
+  String subject;
 
   @HiveField(2)
-  DateTime dueDate;
+  String notes;
 
   @HiveField(3)
-  bool done = false;
+  DateTime dueDate;
 
   @HiveField(4)
-  DateTime lastUpdated;
+  bool done = false;
 
   @HiveField(5)
-  DateTime? reminderDateTime;
+  DateTime lastUpdated;
 
   @HiveField(6)
+  DateTime? reminderDateTime;
+
+  @HiveField(7)
   int? scheduledNotificationId;
 
   HomeworkEntry({
+    required this.id,
     required this.subject,
     required this.notes,
     required this.dueDate,
@@ -41,7 +45,8 @@ class HomeworkEntry {
   }
 
   HomeworkEntry.fromJson(Map<String, dynamic> json)
-      : subject = json['subject'],
+      : id = json['id'],
+        subject = json['subject'],
         notes = json['notes'],
         dueDate = DateTime.parse(json['dueDate']),
         lastUpdated = DateTime.parse(json['lastUpdated']),
@@ -52,6 +57,7 @@ class HomeworkEntry {
         done = json['done'];
 
   Map<String, dynamic> toJson() => {
+        'id': id,
         'subject': subject,
         'notes': notes,
         'dueDate': dueDate.toIso8601String(),
@@ -70,13 +76,14 @@ class HomeworkEntryAdapter extends TypeAdapter<HomeworkEntry> {
   @override
   HomeworkEntry read(BinaryReader reader) {
     return HomeworkEntry(
-      subject: reader.read(),
-      notes: reader.read(),
-      dueDate: reader.read(),
-      lastUpdated: reader.read(),
-      done: reader.read(),
-      reminderDateTime: reader.read(),
-      scheduledNotificationId: reader.read(),
+      id: reader.read() as int,
+      subject: reader.read() as String,
+      notes: reader.read() as String,
+      dueDate: reader.read() as DateTime,
+      done: reader.read() as bool,
+      lastUpdated: reader.read() as DateTime,
+      reminderDateTime: reader.read() as DateTime?, 
+      scheduledNotificationId: reader.read() as int?,
     );
   }
 
@@ -85,11 +92,14 @@ class HomeworkEntryAdapter extends TypeAdapter<HomeworkEntry> {
 
   @override
   void write(BinaryWriter writer, HomeworkEntry obj) {
+    print("Writing HomeworkEntry");
+    print(obj.id);
+    writer.write(obj.id);
     writer.write(obj.subject);
     writer.write(obj.notes);
     writer.write(obj.dueDate);
-    writer.write(obj.lastUpdated);
     writer.write(obj.done);
+    writer.write(obj.lastUpdated);
     writer.write(obj.reminderDateTime);
     writer.write(obj.scheduledNotificationId);
   }

@@ -145,7 +145,7 @@ class _ExamScreenState extends State<ExamScreen> {
   ///Sie teilt die PDF-Datei mit anderen Apps
   void _shareExamPlan(FileFormat fileFormat) async {
     print(
-        "sharing exam plan for ${_classId.fmtName} as ${fileFormat == FileFormat.JPG ? "image" : "pdf"}");
+        "sharing exam plan for ${_classId.fmtName} as ${fileFormat == FileFormat.PDF ? "pdf" : "image"}");
     if (fileFormat == FileFormat.PDF) {
       Share.shareXFiles([XFile(_file.path)],
           text: 'Klausurplan ${_classId.fmtName}');
@@ -162,13 +162,15 @@ class _ExamScreenState extends State<ExamScreen> {
         var page = await document.getPage(i);
         var pageImage = await page.render(
             width: page.width, height: page.height, backgroundColor: '#FFFFFF');
-        //Speichert die Datei lokal zwischen, damit sie anschließend zu einer XFile konvertiert werden kann
-        //Dies ist als PNG und als JPG möglich, obwohl momentan nur JPG verwendet wird
-        var file = await FilesProvider.storeFile(
-            "examPlan$_classId;page$i", pageImage!.bytes, fileFormat);
+        File file = await FilesProvider.storeFile("examPlan${_classId.name}_page$i", pageImage!.bytes, FileFormat.JPG);
         pages.add(XFile(file.path));
       }
-      Share.shareXFiles(pages, text: 'Klausurplan ${_classId.fmtName}');
+      await Share.shareXFiles(pages, text: 'Klausurplan ${_classId.fmtName}');
+
+      //Löscht die temporär gespeicherten JPG-Dateien
+      for (XFile file in pages) {
+        await File(file.path).delete();
+      }
     }
   }
 }

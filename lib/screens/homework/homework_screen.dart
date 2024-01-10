@@ -47,71 +47,15 @@ class HomeworkScreenState extends State<HomeworkScreen> {
     return Column(children: [
       SizedBox(
         height: 40,
-        child: Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                onPressed: () {
-                  HomeworkTray.show(context, widget.refresh);
-                },
-                icon: PhosphorIcon(PhosphorIcons.duotone.tray,
-                    color: Theme.of(context).colorScheme.primary),
-              ),
-              PopupMenuButton<SortingType>(
-                onSelected: (Object? value) {
-                  setState(() {
-                    sortingType = value as SortingType;
-                    print("New sorting type: $sortingType");
-                  });
-                },
-                icon: PhosphorIcon(PhosphorIcons.duotone.funnel,
-                    color: Theme.of(context).colorScheme.primary),
-                itemBuilder: (context) => const [
-                  PopupMenuItem<SortingType>(
-                    value: SortingType.dueDate_asc,
-                    child: Text("Als nächstes"),
-                  ),
-                  PopupMenuItem<SortingType>(
-                    value: SortingType.dueDate_desc,
-                    child: Text("Als letztes"),
-                  ),
-                  PopupMenuDivider(),
-                  PopupMenuItem<SortingType>(
-                    value: SortingType.lastUpdated_asc,
-                    child: Text("Bearbeitet: Älteste zuerst"),
-                  ),
-                  PopupMenuItem<SortingType>(
-                    value: SortingType.lastUpdated_desc,
-                    child: Text("Bearbeitet: Neueste zuerst"),
-                  ),
-                  PopupMenuDivider(),
-                  PopupMenuItem<SortingType>(
-                    value: SortingType.subject_asc,
-                    child: Text("Fach: A-Z"),
-                  ),
-                  PopupMenuItem<SortingType>(
-                    value: SortingType.subject_desc,
-                    child: Text("Fach: Z-A"),
-                  ),
-                ],
-              ),
-            ],
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            homeworkTrayButton(),
+            sortingTypeMenu(),
+          ],
         ),
       ),
-      Expanded(
-        child: pendingHomeworkCount != 0
-            ? ImplicitlyAnimatedList(
-                items: pendingHomework,
-                itemBuilder: _buildItem,
-                areItemsTheSame: (oldItem, newItem) => oldItem == newItem,
-                updateDuration: const Duration(milliseconds: 200),
-                insertDuration: const Duration(milliseconds: 200),
-                removeDuration: const Duration(milliseconds: 200),
-              )
-            : const Center(child: Text("Keine Hausaufgaben!")),
-      ),
+      homeworkEntryList(pendingHomeworkCount),
     ]);
   }
 
@@ -128,6 +72,72 @@ class HomeworkScreenState extends State<HomeworkScreen> {
             });
             widget.refresh();
           }),
+    );
+  }
+
+  Widget homeworkEntryList(int pendingHomeworkCount) {
+    return Expanded(
+      child: pendingHomeworkCount != 0
+          ? ImplicitlyAnimatedList(
+              items: pendingHomework,
+              itemBuilder: _buildItem,
+              areItemsTheSame: (oldItem, newItem) => oldItem == newItem,
+              updateDuration: const Duration(milliseconds: 200),
+              insertDuration: const Duration(milliseconds: 200),
+              removeDuration: const Duration(milliseconds: 100),
+            )
+          : const Center(child: Text("Keine Hausaufgaben!")),
+    );
+  }
+
+  Widget homeworkTrayButton() {
+    return IconButton(
+      onPressed: () {
+        HomeworkTray.show(widget.refresh);
+      },
+      icon: PhosphorIcon(PhosphorIcons.duotone.tray,
+          color: Theme.of(context).colorScheme.primary),
+    );
+  }
+
+  Widget sortingTypeMenu() {
+    return PopupMenuButton<SortingType>(
+      onSelected: (Object? value) {
+        setState(() {
+          sortingType = value as SortingType;
+          print("New sorting type: $sortingType");
+        });
+      },
+      icon: PhosphorIcon(PhosphorIcons.duotone.funnel,
+          color: Theme.of(context).colorScheme.primary),
+      itemBuilder: (context) => const [
+        PopupMenuItem<SortingType>(
+          value: SortingType.dueDate_asc,
+          child: Text("Als nächstes"),
+        ),
+        PopupMenuItem<SortingType>(
+          value: SortingType.dueDate_desc,
+          child: Text("Als letztes"),
+        ),
+        PopupMenuDivider(),
+        PopupMenuItem<SortingType>(
+          value: SortingType.lastUpdated_asc,
+          child: Text("Bearbeitet: Älteste zuerst"),
+        ),
+        PopupMenuItem<SortingType>(
+          value: SortingType.lastUpdated_desc,
+          child: Text("Bearbeitet: Neueste zuerst"),
+        ),
+        PopupMenuDivider(),
+        PopupMenuItem<SortingType>(
+          value: SortingType.subject_asc,
+          child: Text("Fach: A-Z"),
+        ),
+        PopupMenuItem<SortingType>(
+          value: SortingType.subject_desc,
+          child: Text("Fach: Z-A"),
+        ),
+      ],
     );
   }
 

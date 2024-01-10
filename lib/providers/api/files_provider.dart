@@ -14,6 +14,7 @@ import '../../models/file_format.dart';
 /// Enthält Methoden zum Herunterladen von Dateien aus dem Backend
 ///
 class FilesProvider {
+  /// Lädt den Klausurplan für die Klasse [id] aus dem Backend herunter und gibt ihn als File-Objekt zurück.
   static Future<String> fetchTimetable() async {
     // Get the URL from the ApiProvider (replace with your actual implementation)
     String url = await ApiProvider.getTimetableUrl();
@@ -41,7 +42,7 @@ class FilesProvider {
 
   /// Lädt den Stundenplan für die Klasse [id] aus dem Backend herunter und gibt ihn als File-Objekt zurück.
   /// Das File-Objekt kann dann z.B. mit dem PDFView-Widget angezeigt werden.
-  /// Speichert den Stundenplan lokal unter [id.name].pdf
+  /// Speichert den Klausurplan lokal unter [id.name].pdf
   static Future<File> _loadExamPlansFromNetwork(ClassId id) async {
     var idString = id.fmtName;
     final response = await http
@@ -64,9 +65,9 @@ class FilesProvider {
     return file;
   }
 
-  ///Lädt den Stundenplan für die Klasse [id] herunter und gibt ihn als File-Objekt zurück.
+  ///Lädt den Klausurplan für die Klasse [id] herunter und gibt ihn als File-Objekt zurück.
   static Future<File> getExamPlanFile(ClassId id) async {
-    //Ist der Stundenplan bereits auf dem neuesten Stand?
+    //Ist der Klausurplan bereits auf dem neuesten Stand?
     if (await StorageProvider.isExamPlanUpToDate(id)) {
       //Dateinamen zusammensetzen
       var idString = id.fmtName;
@@ -79,7 +80,7 @@ class FilesProvider {
 
       return file;
     } else {
-      //Der Stundenplan ist veraltet -> herunterladen
+      //Der Klausurplan ist veraltet -> herunterladen
       try {
         File file = await _loadExamPlansFromNetwork(id)
             .timeout(const Duration(seconds: 100), onTimeout: () {

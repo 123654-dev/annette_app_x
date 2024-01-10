@@ -1,6 +1,6 @@
 import 'package:annette_app_x/models/homework_entry.dart';
 import 'package:annette_app_x/api/news_provider.dart';
-import 'package:annette_app_x/providers/connection.dart';
+import 'package:annette_app_x/providers/connection_provider.dart';
 import 'package:annette_app_x/providers/notifications.dart';
 import 'package:annette_app_x/utilities/homework_manager.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -30,7 +30,6 @@ class AppInitializer {
     if (!Hive.isBoxOpen('homework')) await Hive.openBox('homework');
 
     Hive.box("homework").values.toList().forEach((element) {
-      print(element);
 
       if (element.done &&
           (element as HomeworkEntry)

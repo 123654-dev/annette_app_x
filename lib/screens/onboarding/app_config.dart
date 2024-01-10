@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:annette_app_x/models/class_ids.dart';
 import 'package:annette_app_x/providers/api/api_provider.dart';
 import 'package:annette_app_x/providers/api/subjects_provider.dart';
-import 'package:annette_app_x/providers/connection.dart';
+import 'package:annette_app_x/providers/connection_provider.dart';
 import 'package:annette_app_x/providers/user_settings.dart';
 import 'package:annette_app_x/widgets/no_signal_error.dart';
 import 'package:annette_app_x/widgets/request_error.dart';
@@ -85,7 +85,7 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
       appBar: AppBar(
         title: const Text("Konfiguration"),
       ),
-      body: !ConnectionProvider.hasConnection()
+      body: !ConnectionProvider.hasDownloadConnection()
           ? NoSignalError(onPressed: () {
               setState(() {});
             })
@@ -98,7 +98,7 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                         if (snapshot.hasError) {
                           print(snapshot.error);
                           return Center(
-                            child: ConnectionProvider.hasConnection()
+                            child: ConnectionProvider.hasDownloadConnection()
                                 ? BadRequestError(onPressed: () {
                                     setState(() {
                                       _hasError = false;

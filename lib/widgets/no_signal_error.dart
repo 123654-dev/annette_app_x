@@ -1,4 +1,6 @@
 
+import 'package:annette_app_x/providers/connection_provider.dart';
+import 'package:annette_app_x/widgets/retry_button.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -25,27 +27,31 @@ class NoSignalError extends StatelessWidget {
                   color: Theme.of(context).colorScheme.error,
                   size: 100,
                 ),
-                Text(
-                  "Warten auf Internetverbindung...",
-                  style: Theme.of(context)
-                      .textTheme
-                      .labelMedium
-                      ?.copyWith(color: Theme.of(context).colorScheme.error),
-                ),
+                const _SignalConnectingText(),
                 const SizedBox(height: 10),
-                ElevatedButton(
-                    onPressed: onPressed,
-                    child: Text("Erneut versuchen",
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelMedium
-                            ?.copyWith(
-                                color: Theme.of(context).colorScheme.error)))
+                RetryButton(onPressed: onPressed)
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class _SignalConnectingText extends StatelessWidget {
+  const _SignalConnectingText({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      "Warten auf Internetverbindung...",
+      style: Theme.of(context)
+          .textTheme
+          .labelMedium
+          ?.copyWith(color: Theme.of(context).colorScheme.error),
     );
   }
 }
