@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class BreakTile extends StatelessWidget {
   final int duration;
@@ -31,10 +32,10 @@ class BreakTile extends StatelessWidget {
         ),
         child: Text("$duration Minuten Pause",
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: GoogleFonts.inter(
+              color: Theme.of(context).colorScheme.onBackground,
+              fontWeight: FontWeight.w600,
               fontSize: 20,
-              color: Theme.of(context).colorScheme.secondary,
-              fontWeight: FontWeight.w300,
             )),
       ),
     );

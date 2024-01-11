@@ -163,11 +163,11 @@ class UserSettings {
     _config.put('shouldPerformOnboarding', value);
   }
 
-  static bool get useMobileData{
+  static bool get useMobileData {
     return _appSettings.get('use_mobile_data', defaultValue: false);
   }
 
-  static set useMobileData(bool value){
+  static set useMobileData(bool value) {
     _appSettings.put('use_mobile_data', value);
   }
 }

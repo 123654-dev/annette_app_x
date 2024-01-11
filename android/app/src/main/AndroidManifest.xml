@@ -1,8 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.annette_app_x">
+    <uses-permission android:name="android.permission.INTERNET" />
    <application
         android:label="annette_app_x"
         android:name="${applicationName}"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -30,7 +32,7 @@
                 <data android:mimeType="application/*" />
                 <data android:pathPattern=".*\\.homework" />
             </intent-filter>
-            
+
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

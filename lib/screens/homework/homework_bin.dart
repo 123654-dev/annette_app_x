@@ -12,8 +12,7 @@ class HomeworkTray extends StatefulWidget {
   final Function refresh;
   const HomeworkTray({super.key, required this.refresh});
 
-  static void show(Function refresh) {
-    BuildContext context = NavigationService.navigatorKey.currentContext!;
+  static void show(BuildContext context, Function refresh) {
     showModalBottomSheet(
         context: context,
         builder: (context) => HomeworkTray(
@@ -72,7 +71,7 @@ class _HomeworkTrayState extends State<HomeworkTray> {
     );
   }
 
-  Widget _buildItem( BuildContext context, Animation<double> animation,
+  Widget _buildItem(BuildContext context, Animation<double> animation,
       HomeworkEntry entry, int index) {
     return FadeTransition(
       opacity: animation,
