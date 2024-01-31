@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class BadRequestError extends StatelessWidget {
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
-  const BadRequestError({super.key, required this.onPressed});
+  const BadRequestError({super.key, this.onPressed});
 
   @override
   Widget build(BuildContext context) {

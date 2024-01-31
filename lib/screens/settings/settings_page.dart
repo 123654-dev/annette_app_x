@@ -1,4 +1,3 @@
-import 'package:annette_app_x/models/theme_mode.dart';
 import 'package:annette_app_x/providers/user_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';

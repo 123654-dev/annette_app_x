@@ -1,6 +1,5 @@
 import 'package:annette_app_x/models/class_ids.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'api/subjects_provider.dart';
@@ -17,6 +16,10 @@ class UserSettings {
         _config.get('class_id', defaultValue: ClassId.Q1.fmtName);
     return ClassId.values.firstWhere(
         (e) => e.fmtName.toUpperCase() == classIdString.toUpperCase());
+  }
+
+  static String get classIdString {
+    return classId.fmtName;
   }
 
   static set classId(ClassId value) {
@@ -52,13 +55,16 @@ class UserSettings {
             orElse: () => null);
         if (lesson != null) {
           subject["lessons"] = [lesson];
+          print(lesson);
           allSubjects.add(subject);
+          print(subject);
         }
       }
     }
 
     allSubjects.addAll(nonParallelSubjects);
 
+    print("All subjects: ");
     print(allSubjects);
 
     _saveSubjectNames(allSubjects);
@@ -72,8 +78,12 @@ class UserSettings {
   static void _saveSubjectNames(List<dynamic> subjects) {
     List<String> names = [];
     for (var subject in subjects) {
-      names.add(subject["lessons"][0]["name"]);
+      print(subject["lessons"][0]["name"]);
+      var longName = subject["lessons"][0]["longname"];
+      print(longName);
+      if (!names.contains(longName)) names.add(longName);
     }
+    names.sort((a, b) => a.compareTo(b));
     subjectNames = names;
   }
 

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:annette_app_x/consts/default_color_schemes.dart';
-import 'package:annette_app_x/models/theme_mode.dart';
 import 'package:annette_app_x/providers/user_settings.dart';
 import 'package:annette_app_x/screens/exam_screen.dart';
 import 'package:annette_app_x/screens/homework/homework_screen.dart';
@@ -18,10 +17,15 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 Future<void> main() async {
   //Initialisierung der App in Gang setzen
-  await AppInitializer.init().then((value) => runApp(const AnnetteApp()));
+  await AppInitializer.init();
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  runApp(const AnnetteApp());
 }
 
 class AnnetteApp extends StatelessWidget {
@@ -40,6 +44,8 @@ class AnnetteApp extends StatelessWidget {
     */
 
     bool shouldPerformOnboarding = AppInitializer.shouldPerformOnboarding();
+    bool isAprilFoolsDay =
+        DateTime.now().month == DateTime.april && DateTime.now().day == 1;
 
     return ValueListenableBuilder<ThemeMode>(
         valueListenable: UserSettings.themeNotifier,
@@ -56,10 +62,16 @@ class AnnetteApp extends StatelessWidget {
                           "/home": (context) => home,
                         },
                         theme: ThemeData(
+                            fontFamily: isAprilFoolsDay
+                                ? GoogleFonts.comicNeue().fontFamily
+                                : null,
                             colorScheme: lightDynamic ??
                                 AnnetteColorSchemes.lightColorScheme,
                             useMaterial3: true),
                         darkTheme: ThemeData(
+                            fontFamily: isAprilFoolsDay
+                                ? GoogleFonts.comicNeue().fontFamily
+                                : null,
                             colorScheme: darkDynamic ??
                                 AnnetteColorSchemes.darkColorScheme,
                             useMaterial3: true),
@@ -76,9 +88,15 @@ class AnnetteApp extends StatelessWidget {
                   },
                   navigatorKey: NavigationService.navigatorKey,
                   theme: ThemeData(
+                      fontFamily: isAprilFoolsDay
+                          ? GoogleFonts.comicNeue().fontFamily
+                          : null,
                       colorScheme: AnnetteColorSchemes.lightColorScheme,
                       useMaterial3: true),
                   darkTheme: ThemeData(
+                      fontFamily: isAprilFoolsDay
+                          ? GoogleFonts.comicNeue().fontFamily
+                          : null,
                       colorScheme: AnnetteColorSchemes.darkColorScheme,
                       useMaterial3: true),
                   initialRoute:
@@ -142,17 +160,20 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text("Annette App X"),
-        actions: [
+        //Nachrichten zunächst deaktiviert
+        /*actions: const [
           // hiermit wird eine oben rechts positionierte Notifikation für Nachrichten angezeigt.
           Padding(
-            padding: const EdgeInsets.only(right: 20),
+            padding: EdgeInsets.only(right: 20),
             child: NewsNotification(),
           ),
-        ],
+        ],*/
       ),
       backgroundColor: Theme.of(context).colorScheme.background,
       bottomNavigationBar: NavigationBar(
-        onDestinationSelected: (value) => setState(() {_selectedDestination = getDestination(value);}),
+        onDestinationSelected: (value) => setState(() {
+          _selectedDestination = getDestination(value);
+        }),
         selectedIndex: _selectedDestination.index,
         labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
         destinations: navigationDestinations(context),
@@ -185,11 +206,9 @@ class _MyHomePageState extends State<MyHomePage> {
           ][_selectedDestination.index],
         ],
       ),
-      floatingActionButtonLocation: UserSettings.isOberstufe
-          ? FloatingActionButtonLocation.endFloat
-          : FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () => HomeworkManager.showHomeworkDialog(refresh),
+        onPressed: () => HomeworkManager.showHomeworkDialog(context, refresh),
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         child: PhosphorIcon(PhosphorIcons.duotone.listPlus,
             color: Theme.of(context).colorScheme.onBackground),
       ),

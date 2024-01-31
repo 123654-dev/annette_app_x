@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:annette_app_x/consts/api_provider_settings.dart';
 import 'package:annette_app_x/models/class_ids.dart';
 import 'package:annette_app_x/providers/connection_provider.dart';
+import 'package:annette_app_x/providers/user_settings.dart';
 import 'package:http/http.dart' as http;
 
 ///Enthält alle Methoden, die mit dem Backend kommunizieren
@@ -19,7 +22,7 @@ class ApiProvider {
     var success = (result.statusCode == 200);
 
     if (!success) {
-      throw Exception('http.get error: statusCode= ${result.statusCode}');
+      throw Exception('‼️ http.get error: statusCode= ${result.statusCode}');
     }
 
     return result.body;
@@ -71,9 +74,54 @@ class ApiProvider {
     var success = (result.statusCode == 200);
 
     if (!success) {
-      throw Exception('http.get error: statusCode= ${result.statusCode}');
+      throw Exception('‼️ http.get error: statusCode= ${result.statusCode}');
     }
 
     return result.stream.bytesToString();
+  }
+
+  static Future<String> fetchClassesAsList() async {
+    var result = await http.get(
+        Uri.http(ApiProviderSettings.baseURL, 'api/annette_app/info/classes'),
+        headers: {
+          "Accept": "application/json;charset=UTF-8",
+          "Content-Encoding": "gzip, deflate, br",
+        });
+
+    var success = (result.statusCode == 200);
+
+    if (!success) {
+      throw Exception('‼️ http.get error: statusCode= ${result.statusCode}');
+    }
+
+    return result.body;
+  }
+
+  static Future<String> fetchTimetable(String id) async {
+    var result = await http.get(
+        Uri.http(ApiProviderSettings.baseURL, 'api/annette_app/timetable/$id'),
+        headers: {
+          "Accept": "application/json;charset=UTF-8",
+          "Content-Encoding": "gzip, deflate, br",
+        });
+
+    var success = (result.statusCode == 200);
+
+    if (!success) {
+      throw Exception(
+          '‼️ http.get error @ fetchTimetable: statusCode= ${result.statusCode}');
+    }
+
+    return utf8.decode(result.bodyBytes);
+  }
+
+  static Future<String> getTimetableUrl() async {
+    print("Getting timetable URL");
+    var classes = jsonDecode(await fetchClassesAsList());
+    print("Classes: $classes");
+    String htmlSuffix =
+        (classes.indexOf(UserSettings.classIdString.toUpperCase())).toString();
+    htmlSuffix = htmlSuffix.padLeft(5, "0");
+    return "plaene.annettegymnasium.de/stundenplan_oL/c/P4/c$htmlSuffix.htm";
   }
 }

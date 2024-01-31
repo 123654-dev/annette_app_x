@@ -12,7 +12,8 @@ import '../../providers/user_settings.dart';
 
 class HomeworkDialog {
   static void show(
-      {bool? editOnly = false,
+      {BuildContext? context,
+      bool? editOnly = false,
       required Function({
         required int id,
         required String subject,
@@ -22,10 +23,13 @@ class HomeworkDialog {
       }) onClose}) {
     var subjects = UserSettings.subjectNames;
 
-    BuildContext context = NavigationService.navigatorKey.currentContext!;
+    context ??= NavigationService.navigatorKey.currentContext!;
 
     //Der Dialog wird mit showDialog() erzeugt
     showModalBottomSheet(
+      constraints: BoxConstraints.expand(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height / 1.5),
       isScrollControlled: true,
       context: context,
       builder: (context) => _dialogSheet(subjects: subjects, onClose: onClose),
@@ -57,9 +61,9 @@ class _dialogSheetState extends State<_dialogSheet> {
   //Soll der Erinnerungszeitpunkt automatisch gewählt werden?
   bool _autoRemind = true;
   DateTime _selectedDate = DateTime.now();
-  TimeOfDay _selectedTime = TimeOfDay(hour: 16, minute: 30);
+  TimeOfDay _selectedTime = const TimeOfDay(hour: 16, minute: 30);
 
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   void _scrollToEnd() {
     _scrollController.animateTo(
@@ -70,11 +74,16 @@ class _dialogSheetState extends State<_dialogSheet> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
     _selectedSubject = widget.subjects.firstWhere(
       (element) => element == TimetableProvider.getCurrentSubjectAsString(),
       orElse: () => widget.subjects.first,
     );
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     initializeDateFormatting("de_DE", null);
 
     if (!_autoRemind) {

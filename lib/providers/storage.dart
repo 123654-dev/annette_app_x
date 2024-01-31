@@ -1,5 +1,4 @@
 import 'package:annette_app_x/models/class_ids.dart';
-import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 
 //? könnten wir nicht hier noch etwas für die Hausaufgaben tun?
