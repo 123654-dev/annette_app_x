@@ -75,7 +75,7 @@ class TimetableProvider {
 
   static Future<void> _processTimetable() async {
     var timetableBox = Hive.box('timetable');
-    var subjectDayBox = Hive.box('subjectDays');
+    var subjectDayBox = Hive.box("subjectDays");
 
     var timetableString =
         await ApiProvider.fetchTimetable(UserSettings.classIdString);
@@ -104,11 +104,13 @@ class TimetableProvider {
                 t["longname"] == sub["longname"]) {
               print("☺️ Added ${t["name"]} to timetable");
               //Add this weekday to the days where the subject is taught
-              var ln = t["longname"];
+              String? ln = t["longname"];
               if (ln != null) {
-                if (!(subjectDayBox.get(ln) ?? []).contains(i)) {
-                  timetableBox.put(ln, [...(subjectDayBox.get(ln) ?? []), i]);
+                if (subjectDayBox.get(ln) == null ||
+                    !subjectDayBox.get(ln).contains(i)) {
+                  subjectDayBox.put(ln, (subjectDayBox.get(ln) ?? [])..add(i));
                   print("Added day $i to ${ln} in timetable");
+                  print("Days: ${subjectDayBox.get(ln)}");
                 }
               }
 
