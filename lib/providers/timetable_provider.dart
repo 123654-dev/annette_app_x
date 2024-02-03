@@ -46,7 +46,7 @@ class TimetableProvider {
   ///Returns the next schoolday if it's a weekend
   static int nextSchoolday() {
     var day = DateTime.now().weekday;
-    if (day <= 5) {
+    if (day <= 5 && day > 0) {
       return day;
     } else {
       return 1; //0: Sunday, 1: Monday
@@ -75,6 +75,7 @@ class TimetableProvider {
 
   static Future<void> _processTimetable() async {
     var timetableBox = Hive.box('timetable');
+    var subjectDayBox = Hive.box('subjectDays');
 
     var timetableString =
         await ApiProvider.fetchTimetable(UserSettings.classIdString);
@@ -98,29 +99,55 @@ class TimetableProvider {
         if (t["weekday"] == i && t["startTime"] != null) {
           for (var sub in UserSettings.subjects) {
             if (t["lessonid"] == sub["lessons"]?[0]["internal_id"] ||
-                    t["lessonid"] == sub["internal_id"]
-                //||t["name"] == sub["name"] || t["name"] == sub["lessons"]?[0]["name"]
-                ) {
+                t["lessonid"] == sub["internal_id"] ||
+                //  t["name"] == sub["name"] ||
+                t["longname"] == sub["longname"]) {
               print("☺️ Added ${t["name"]} to timetable");
+              //Add this weekday to the days where the subject is taught
+              var ln = t["longname"];
+              if (ln != null) {
+                if (!(subjectDayBox.get(ln) ?? []).contains(i)) {
+                  timetableBox.put(ln, [...(subjectDayBox.get(ln) ?? []), i]);
+                  print("Added day $i to ${ln} in timetable");
+                }
+              }
+
               day.add(t);
               deleteBeforeNextPass.add(t);
             }
           }
         }
       }
-      print("------------ Subjects!!! ------------");
-      print(UserSettings.subjects);
-      print(UserSettings.subjectNames);
 
       for (var t in deleteBeforeNextPass) {
         timetable.remove(t);
       }
 
-      print(day);
-
       day.sort((a, b) => a["startTime"].compareTo(b["startTime"]));
       timetableBox.put(i, day);
     }
     timetableBox.put("classId", UserSettings.classIdString);
+  }
+
+  static DateTime getNextClassDay(String subject) {
+    List<dynamic> days = Hive.box("subjectDays").get(subject);
+    //Sort so that the next day is first, not monday
+    days = days.toSet().toList();
+    days.forEach((element) {
+      print(element);
+    });
+    days.sort((a, b) => a.compareTo(b));
+
+    var wd = days.firstWhere((element) => element > DateTime.now().weekday,
+        orElse: () => days.first);
+
+    //Get next date with this weekday:
+    var nextDate = DateTime.now()
+        .add(Duration(days: wd - DateTime.now().weekday))
+        .add(const Duration(days: 7))
+        .copyWith(
+            hour: 8, minute: 0, second: 0, millisecond: 0, microsecond: 0);
+
+    return nextDate;
   }
 }

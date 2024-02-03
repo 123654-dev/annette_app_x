@@ -86,10 +86,6 @@ class _HomeworkTrayState extends State<HomeworkTray> {
                 });
                 widget.refresh();
               }),
-          const Divider(
-            endIndent: 30,
-            indent: 30,
-          )
         ],
       ),
     );

@@ -17,6 +17,7 @@ class AppInitializer {
     await Hive.openBox('cache');
     await Hive.openBox('app_settings');
     await Hive.openBox('timetable');
+    await Hive.openBox("subjectDays");
     await Hive.openBox(NewsProvider.newsBoxName);
 
     // Nachrichten werden initialisiert
@@ -30,7 +31,6 @@ class AppInitializer {
     if (!Hive.isBoxOpen('homework')) await Hive.openBox('homework');
 
     Hive.box("homework").values.toList().forEach((element) {
-
       if (element.done &&
           (element as HomeworkEntry)
               .lastUpdated
@@ -38,9 +38,6 @@ class AppInitializer {
         HomeworkManager.deleteFromBin(element);
       }
     });
-
-    //Notifications initialisieren
-    await NotificationProvider().init();
 
     //ConnectionProvider initialisieren
     ConnectionProvider.init();

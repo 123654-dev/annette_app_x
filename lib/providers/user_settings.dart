@@ -88,12 +88,12 @@ class UserSettings {
   }
 
   static final ValueNotifier<ThemeMode> themeNotifier =
-      ValueNotifier(ThemeMode.dark);
+      ValueNotifier(UserSettings.themeMode);
 
   ///[ThemeMode] ist das Theme, das der User ausgewählt hat
   static ThemeMode get themeMode {
     return ThemeMode.values[_appSettings.get('theme_mode',
-        defaultValue: ThemeMode.values.indexOf(ThemeMode.dark))];
+        defaultValue: ThemeMode.values.indexOf(ThemeMode.light))];
   }
 
   static bool get useMaterial3 {
@@ -142,6 +142,8 @@ class UserSettings {
   static List<String> get subjectNames {
     var namesDynamic = _config.get('subjectNames', defaultValue: []);
     List<String> namesStrings = List<String>.from(namesDynamic);
+    namesStrings.remove("Mittagspause");
+    namesStrings.add("Sonstiges");
     return namesStrings;
   }
 
