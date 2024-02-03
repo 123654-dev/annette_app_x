@@ -93,6 +93,10 @@ DateTime _getNextWeekday(int index) {
       return currentDate.add(Duration(days: index + 4));
     case DateTime.friday:
       return currentDate.add(Duration(days: index + 3));
+    case DateTime.saturday:
+      return currentDate.add(Duration(days: index + 2));
+    case DateTime.sunday:
+      return currentDate.add(Duration(days: index + 1));
     default:
       return currentDate;
   }
