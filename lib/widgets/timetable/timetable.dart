@@ -72,10 +72,8 @@ class Timetable extends StatelessWidget {
 
     return table == null
         ? const BadRequestError()
-        : Expanded(
-            child: ListView(
-              children: children ?? [],
-            ),
+        : ListView(
+            children: children ?? [],
           );
   }
 }

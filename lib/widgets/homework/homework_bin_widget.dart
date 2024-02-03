@@ -36,16 +36,16 @@ class _HomeworkBinWidgetState extends State<HomeworkBinWidget> {
           child: Row(
             children: [
               IconButton(
-                onPressed: () => HomeworkManager.deleteFromBin(widget.entry),
+                onPressed: () => HomeworkManager.restoreFromBin(widget.entry),
                 icon: PhosphorIcon(
-                  PhosphorIcons.duotone.trashSimple,
+                  PhosphorIcons.duotone.arrowCounterClockwise,
                   color: Theme.of(context).colorScheme.primary,
                 ),
               ),
               IconButton(
-                onPressed: () => HomeworkManager.restoreFromBin(widget.entry),
+                onPressed: () => HomeworkManager.deleteFromBin(widget.entry),
                 icon: PhosphorIcon(
-                  PhosphorIcons.duotone.arrowArcLeft,
+                  PhosphorIcons.duotone.trashSimple,
                   color: Theme.of(context).colorScheme.primary,
                 ),
               ),

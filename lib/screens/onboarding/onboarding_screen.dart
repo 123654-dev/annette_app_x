@@ -1,3 +1,4 @@
+import 'package:annette_app_x/providers/notifications.dart';
 import 'package:annette_app_x/screens/onboarding/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -23,6 +24,11 @@ const segments = [
       title: "Wir suchen dich!",
       description:
           "Die Annette App wird momentan von der Annette-Softwareentwicklungs-AG gewartet. Wenn du Lust hast, mitzumachen, melde dich bei uns!"),
+  OnboardingSegment(
+    title: "Berechtigungen",
+    description:
+        "Bitte erlaub uns, dir Benachrichtigungen für Hausaufgaben und Vertretungen zu schicken. Du kannst diese Einstellung später in den Appeinstellungen ändern.",
+  ),
 ];
 
 class Onboarding extends StatefulWidget {
@@ -35,6 +41,11 @@ class Onboarding extends StatefulWidget {
 class _OnboardingState extends State<Onboarding> {
   int _currentPage = 0;
   final PageController _pageController = PageController();
+
+  Future<void> requestPermissions() async {
+    //Notifications initialisieren
+    await NotificationProvider().init();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +143,8 @@ class _OnboardingState extends State<Onboarding> {
               child: OutlinedButton(
                   child: const Text("Überspringen"),
                   onPressed: () {
-                    showConfigurationScreen(context);
+                    requestPermissions()
+                        .then((value) => {showConfigurationScreen(context)});
                   }),
             ),
             const SizedBox(width: 20),
@@ -142,10 +154,11 @@ class _OnboardingState extends State<Onboarding> {
                   onPressed: () {
                     if (_currentPage < segments.length - 1) {
                       _pageController.animateToPage(_currentPage + 1,
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.linear);
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.easeOut);
                     } else {
-                      showConfigurationScreen(context);
+                      requestPermissions()
+                          .then((value) => {showConfigurationScreen(context)});
                     }
                   }),
             ),

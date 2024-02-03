@@ -93,7 +93,7 @@ class HomeworkScreenState extends State<HomeworkScreen> {
   Widget homeworkTrayButton() {
     return IconButton(
       onPressed: () {
-        HomeworkTray.show(widget.refresh);
+        HomeworkTray.show(context, widget.refresh);
       },
       icon: PhosphorIcon(PhosphorIcons.duotone.tray,
           color: Theme.of(context).colorScheme.primary),

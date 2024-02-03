@@ -4,6 +4,7 @@ import 'package:annette_app_x/screens/onboarding/app_config.dart';
 import 'package:annette_app_x/widgets/no_signal_error.dart';
 import 'package:annette_app_x/widgets/request_error.dart';
 import 'package:annette_app_x/widgets/timetable/timetable.dart';
+import 'package:annette_app_x/widgets/timetable/weekday_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -20,7 +21,6 @@ final List<String> weekdays = [
 
 class TimetableScreen extends StatefulWidget {
   const TimetableScreen({super.key});
-
   @override
   State<StatefulWidget> createState() => _TimetableScreenState();
 }
@@ -71,79 +71,27 @@ class _TimetableScreenState extends State<TimetableScreen> {
                   margin: const EdgeInsets.only(left: 25, right: 25, top: 15),
                   child: Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Expanded(
-                              child: OutlinedButton(
-                                  onPressed: () => {},
-                                  child: const Text("Heute"))),
-                          const SizedBox(width: 10),
-                          Expanded(
-                              child: OutlinedButton(
-                                  onPressed: () => {
-                                        setState(() {
-                                          showWebView = true;
-                                        })
-                                      },
-                                  child: const Text("Gesamt")))
-                        ],
+                      const SizedBox(height: 10),
+                      WeekdaySelector(
+                        onChange: (value) {
+                          setState(
+                            () {
+                              _weekday = value;
+                            },
+                          );
+                        },
                       ),
                       const SizedBox(height: 10),
-                      Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .secondary
-                                .withOpacity(0.05),
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          padding: const EdgeInsets.all(7),
-                          child: Row(
-                            children: [
-                              IconButton(
-                                  onPressed: () => setState(() {
-                                        _weekday--;
-                                        if (_weekday < 1) _weekday = 5;
-                                      }),
-                                  icon: PhosphorIcon(
-                                      PhosphorIcons.duotone.caretLeft,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary)),
-                              Expanded(
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    weekdays[_weekday],
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ),
-                              ),
-                              IconButton(
-                                  onPressed: () => setState(() {
-                                        _weekday++;
-                                        if (_weekday > 5) _weekday = 1;
-                                      }),
-                                  icon: PhosphorIcon(
-                                      PhosphorIcons.duotone.caretRight,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary)),
-                            ],
-                          )),
-                      const SizedBox(height: 10),
-                      Timetable(weekday: _weekday),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.62,
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        child: Timetable(weekday: _weekday),
+                      ),
                     ],
                   ),
                 ),
               );
-            });
+            },
+          );
   }
 }

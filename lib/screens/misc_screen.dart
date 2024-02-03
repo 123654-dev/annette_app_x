@@ -34,7 +34,7 @@ class MiscScreen extends StatelessWidget {
                 ),
                 ListTile(
                   title: const Text("Klasse oder Kurse ändern"),
-                  subtitle: Text("Aktuell: $id"),
+                  subtitle: Text("Aktuell: ${id.toUpperCase()}"),
                   trailing: PhosphorIcon(
                     PhosphorIcons.duotone.pencil,
                     color: Theme.of(context).colorScheme.primary,
@@ -55,7 +55,7 @@ class MiscScreen extends StatelessWidget {
                 ListTile(
                   title: const Text("Hilfe, Feedback und Kontakt"),
                   trailing: PhosphorIcon(
-                    PhosphorIcons.duotone.lifebuoy,
+                    PhosphorIcons.duotone.envelope,
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   //Mailto-Link
