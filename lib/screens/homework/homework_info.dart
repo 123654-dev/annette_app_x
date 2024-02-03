@@ -103,6 +103,7 @@ class _HomeworkInfoWidgetState extends State<HomeworkInfoWidget> {
                 width: 190,
                 child: FilledButton.icon(
                     style: ButtonStyle(
+                      alignment: Alignment.center,
                       backgroundColor: MaterialStateProperty.all<Color>(
                           Theme.of(context).colorScheme.tertiary),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -112,7 +113,9 @@ class _HomeworkInfoWidgetState extends State<HomeworkInfoWidget> {
                     ),
                     //Label: Date only
                     label: Text(
-                        "${DateFormat.EEEE('de_DE').format(_selectedDate)}, ${DateFormat.yMd('de_DE').format(_selectedDate)}"),
+                      "${DateFormat.EEEE('de_DE').format(_selectedDate)}, ${DateFormat.yMd('de_DE').format(_selectedDate)}",
+                      textAlign: TextAlign.center,
+                    ),
                     onPressed: () async {
                       var date = await showDatePicker(
                               context: context,
@@ -134,6 +137,7 @@ class _HomeworkInfoWidgetState extends State<HomeworkInfoWidget> {
                 width: 190,
                 child: FilledButton.icon(
                     style: ButtonStyle(
+                      alignment: Alignment.center,
                       backgroundColor: MaterialStateProperty.all<Color>(
                           Theme.of(context).colorScheme.tertiary),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -177,6 +181,7 @@ class _HomeworkInfoWidgetState extends State<HomeworkInfoWidget> {
                 width: 190,
                 child: FilledButton.icon(
                     style: ButtonStyle(
+                      alignment: Alignment.center,
                       backgroundColor: MaterialStateProperty.all<Color>(
                           Theme.of(context).colorScheme.tertiary),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -186,7 +191,9 @@ class _HomeworkInfoWidgetState extends State<HomeworkInfoWidget> {
                     ),
                     //Label: Date only
                     label: Text(
-                        "${DateFormat.EEEE('de_DE').format(_selectedDateR)}, ${DateFormat.yMd('de_DE').format(_selectedDateR)}"),
+                      "${DateFormat.EEEE('de_DE').format(_selectedDateR)}, ${DateFormat.yMd('de_DE').format(_selectedDateR)}",
+                      textAlign: TextAlign.center,
+                    ),
                     onPressed: () async {
                       var date = await showDatePicker(
                               context: context,
@@ -211,6 +218,7 @@ class _HomeworkInfoWidgetState extends State<HomeworkInfoWidget> {
                 width: 190,
                 child: FilledButton.icon(
                     style: ButtonStyle(
+                      alignment: Alignment.center,
                       backgroundColor: MaterialStateProperty.all<Color>(
                           Theme.of(context).colorScheme.tertiary),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(

@@ -5,6 +5,7 @@ import 'package:annette_app_x/models/class_ids.dart';
 import 'package:annette_app_x/providers/api/api_provider.dart';
 import 'package:annette_app_x/providers/api/subjects_provider.dart';
 import 'package:annette_app_x/providers/connection_provider.dart';
+import 'package:annette_app_x/providers/timetable_provider.dart';
 import 'package:annette_app_x/providers/user_settings.dart';
 import 'package:annette_app_x/widgets/no_signal_error.dart';
 import 'package:annette_app_x/widgets/request_error.dart';
@@ -379,7 +380,8 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
     UserSettings.shouldPerformOnboarding = false;
     print("Courses saved.");
 
-    Navigator.of(context).pushNamedAndRemoveUntil("/home", (r) => false);
+    TimetableProvider.getTimetable().then((value) =>
+        Navigator.of(context).pushNamedAndRemoveUntil("/home", (r) => false));
 
     setState(() {});
   }

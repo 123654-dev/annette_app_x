@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 // ignore: must_be_immutable
@@ -31,42 +32,65 @@ class TimetableTile extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Time-related Column with Vertical Line
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
+            //Stundennummer
             Container(
-              margin: const EdgeInsets.only(left: 5, right: 5),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+              ),
+              margin: const EdgeInsets.only(left: 5, right: 10),
+              width: 60,
+              height: 60,
+              alignment: Alignment.centerRight,
+              child: Center(
+                child: Text(lessonIndex.toString(),
+                    textAlign: TextAlign.right,
+                    style: GoogleFonts.roboto(
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 20,
+                    )),
+              ),
+            ),
+
+            const SizedBox(height: 5),
+
+            //Uhrzeit
+            Container(
+              margin: const EdgeInsets.only(left: 5, right: 10),
               width: 50,
               alignment: Alignment.centerRight,
               child: Text(
                 startTime,
                 textAlign: TextAlign.right,
-                style: TextStyle(
+                style: GoogleFonts.roboto(
+                  fontSize: 14,
                   color: Theme.of(context).colorScheme.outline,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w900,
                 ),
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(left: 5, right: 5),
+              margin: const EdgeInsets.only(left: 5, right: 10),
               width: 50,
               alignment: Alignment.centerRight,
               child: Text(
                 "-$endTime",
                 textAlign: TextAlign.right,
-                style: TextStyle(
+                style: GoogleFonts.roboto(
+                  fontSize: 14,
                   color: Theme.of(context).colorScheme.outline,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w900,
                 ),
               ),
             ),
           ],
         ),
-
-        const SizedBox(width: 10),
-
+        //const SizedBox(width: 5),
         Expanded(
           child: Container(
             padding: const EdgeInsets.all(20),
@@ -74,44 +98,36 @@ class TimetableTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (room != null)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      PhosphorIcon(PhosphorIcons.duotone.mapPin,
+                          color: Theme.of(context).colorScheme.secondary,
+                          size: 20),
+                      Text(
+                        " ${room!}",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      lessonIndex.toString(),
-                      style: TextStyle(
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    Text(
                       subject,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.secondary,
-                        fontSize: 25,
-                        fontWeight: FontWeight.w900,
+                      style: GoogleFonts.inter(
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ],
                 ),
-                if (room != null)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        room!,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
-                          fontSize: 25,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      PhosphorIcon(PhosphorIcons.duotone.mapPin,
-                          color: Theme.of(context).colorScheme.secondary,
-                          size: 20),
-                    ],
-                  ),
               ],
             ),
           ),

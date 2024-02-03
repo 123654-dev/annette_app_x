@@ -158,8 +158,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: const Text("Annette App X"),
+        title: const Text("Annette App"),
+        elevation: 4,
         //Nachrichten zunächst deaktiviert
         /*actions: const [
           // hiermit wird eine oben rechts positionierte Notifikation für Nachrichten angezeigt.
@@ -296,12 +296,6 @@ class _MyHomePageState extends State<MyHomePage> {
             color: Theme.of(context).colorScheme.onBackground),
         label: 'Sonstiges',
       ),
-      //spacer for FAB
-      if (!UserSettings.isOberstufe)
-        const NavigationDestination(
-          icon: SizedBox(),
-          label: '',
-        ),
     ];
   }
 

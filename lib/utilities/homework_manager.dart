@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:annette_app_x/models/homework_entry.dart';
 import 'package:annette_app_x/providers/notifications.dart';
+import 'package:annette_app_x/providers/timetable_provider.dart';
 import 'package:annette_app_x/screens/homework/homework_dialog.dart';
 import 'package:annette_app_x/screens/homework/homework_import.dart';
 import 'package:annette_app_x/screens/homework/homework_info.dart';
@@ -107,7 +108,10 @@ class HomeworkManager {
         lastUpdated: DateTime.now());
 
     if (autoRemind) {
-      //TODO: Auto-set due date
+      entry.dueDate = TimetableProvider.getNextClassDay(subject);
+
+      var tmpDT = TimetableProvider.getNextClassDay(subject);
+      entry.reminderDateTime = tmpDT.copyWith(day: tmpDT.day - 1, hour: 16);
     }
 
     await addHomeworkEntry(entry);
@@ -158,5 +162,12 @@ class HomeworkManager {
       NotificationProvider().cancelNotification(entry.scheduledNotificationId!);
     }
     Hive.box('homework').deleteAt(entries().indexOf(entry));
+  }
+
+  static void getNextLessonDay(String subject) {
+    //Return the next day on which the subject is taught
+    for (var i = 0; i < 7; i++) {
+      var day = DateTime.now().add(Duration(days: i));
+    }
   }
 }
