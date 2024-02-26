@@ -92,8 +92,7 @@ class HomeworkEntryAdapter extends TypeAdapter<HomeworkEntry> {
 
   @override
   void write(BinaryWriter writer, HomeworkEntry obj) {
-    print("Writing HomeworkEntry");
-    print(obj.id);
+    print("Writing HomeworkEntry ${obj.id}");
     writer.write(obj.id);
     writer.write(obj.subject);
     writer.write(obj.notes);

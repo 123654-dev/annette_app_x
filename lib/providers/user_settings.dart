@@ -1,3 +1,5 @@
+import 'dart:isolate';
+
 import 'package:annette_app_x/models/class_ids.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -43,8 +45,6 @@ class UserSettings {
         .where((subject) => (subject["lessons"].length == 1))
         .toList();
 
-    print("Parallel subjects: $parallelSubjects");
-
     for (var element in parallelSubjects) {
       for (var subject in allSubjectsFromAPI) {
         if (element["selection"][0]["id"] == -420) {
@@ -55,36 +55,31 @@ class UserSettings {
             orElse: () => null);
         if (lesson != null) {
           subject["lessons"] = [lesson];
-          print(lesson);
           allSubjects.add(subject);
-          print(subject);
         }
       }
     }
 
     allSubjects.addAll(nonParallelSubjects);
 
-    print("All subjects: ");
-    print(allSubjects);
-
     _saveSubjectNames(allSubjects);
 
     subjectFullNames = subjectNames + ["Sonstiges"];
-
-    print(subjectNames);
     subjects = allSubjects;
   }
 
   static void _saveSubjectNames(List<dynamic> subjects) {
     List<String> names = [];
     for (var subject in subjects) {
-      print(subject["lessons"][0]["name"]);
       var longName = subject["lessons"][0]["longname"];
-      print(longName);
       if (!names.contains(longName)) names.add(longName);
     }
     names.sort((a, b) => a.compareTo(b));
     subjectNames = names;
+  }
+  
+  static bool hasSubject(String subject) {
+    return subjects.any((element) => element["lessons"][0]["name"] == subject);
   }
 
   static final ValueNotifier<ThemeMode> themeNotifier =
@@ -113,6 +108,10 @@ class UserSettings {
   ///Vereinfacht das Schreiben von Code (statt [ClassId.EF, ClassId.Q1, ClassId.Q2].contains(classId)) und so
   static bool get isOberstufe {
     return [ClassId.EF, ClassId.Q1, ClassId.Q2].contains(classId);
+  }
+
+  static bool get isDiffOrOberstufe {
+    return ["9", "10"].contains(classId.gradeLevel) || isOberstufe;
   }
 
   static String get subjectLastClassId {

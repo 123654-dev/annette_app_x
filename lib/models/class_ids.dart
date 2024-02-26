@@ -200,4 +200,59 @@ extension ClassExt on ClassId {
         return ClassId.c5A;
     }
   }
+
+  String get gradeLevel {
+    switch (this) {
+      case ClassId.c5A:
+      case ClassId.c5B:
+      case ClassId.c5C:
+      case ClassId.c5D:
+      case ClassId.c5E:
+      case ClassId.c5F:
+        return '5';
+      case ClassId.c6A:
+      case ClassId.c6B:
+      case ClassId.c6C:
+      case ClassId.c6D:
+      case ClassId.c6E:
+      case ClassId.c6F:
+        return '6';
+      case ClassId.c7A:
+      case ClassId.c7B:
+      case ClassId.c7C:
+      case ClassId.c7D:
+      case ClassId.c7E:
+      case ClassId.c7F:
+        return '7';
+      case ClassId.c8A:
+      case ClassId.c8B:
+      case ClassId.c8C:
+      case ClassId.c8D:
+      case ClassId.c8E:
+      case ClassId.c8F:
+        return '8';
+      case ClassId.c9A:
+      case ClassId.c9B:
+      case ClassId.c9C:
+      case ClassId.c9D:
+      case ClassId.c9E:
+      case ClassId.c9F:
+        return '9';
+      case ClassId.c10A:
+      case ClassId.c10B:
+      case ClassId.c10C:
+      case ClassId.c10D:
+      case ClassId.c10E:
+      case ClassId.c10F:
+        return '10';
+      case ClassId.EF:
+        return 'EF';
+      case ClassId.Q1:
+        return 'Q1';
+      case ClassId.Q2:
+        return 'Q2';
+      default:
+        return 'unknown';
+    }
+  }
 }

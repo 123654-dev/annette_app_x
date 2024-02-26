@@ -28,11 +28,10 @@ class TimetableProvider {
 
   ///Returns all lessons of the next schoolday
   static List<dynamic>? getTableForNextSchoolday() {
-    return getTableForDay(nextSchoolday());
+    return getTableForDay(nextSchoolWeekday());
   }
 
   static List<dynamic>? getTableForDay(int day) {
-    print(weekdays[day]);
     if (day == 0 || day == 6) return [];
     if (Hive.box("timetable").get(day) == null) return [];
 
@@ -44,13 +43,40 @@ class TimetableProvider {
   ///0: Sunday, 1: Monday, 2: Tuesday, 3: Wednesday, 4: Thursday, 5: Friday, 6: Saturday
   ///
   ///Returns the next schoolday if it's a weekend
-  static int nextSchoolday() {
+  static int nextSchoolWeekday() {
     var day = DateTime.now().weekday;
     if (day <= 5 && day > 0) {
       return day;
     } else {
       return 1; //0: Sunday, 1: Monday
     }
+  }
+
+  ///Der n-te nächste Schultag (n=0: der nächste/aktuelle n=1: der übernächste/nächste, ...)
+  /// TODO: Zeitbegrenzung einbauen
+  ///0: Sunday, 1: Monday, 2: Tuesday, 3: Wednesday, 4: Thursday, 5: Friday, 6: Saturday
+  static int nthNextSchoolWeekday(int n) {
+    var day = DateTime.now().weekday;
+
+    day = (day + n) % 5;
+    if (day == 0) day = 5;
+    return day;
+  }
+
+  static String nextSchoolWeekdayAsString() {
+    return weekdays[nextSchoolWeekday()];
+  }
+
+  static DateTime nextSchoolDayTime() {
+    return DateTime.now()
+        .add(Duration(days: nextSchoolWeekday() - DateTime.now().weekday));
+  }
+
+  ///Der n-te nächste Schultag (n=0: der nächste/aktuelle n=1: der übernächste/nächste, ...)
+  static DateTime nthNextSchoolDayDateTime(int n){
+    var addDays = nthNextSchoolWeekday(n) - DateTime.now().weekday;
+    if (addDays < 0) addDays += 7;
+    return DateTime.now().add(Duration(days: addDays));
   }
 
   static Future<bool> getTimetable() async {
@@ -69,7 +95,6 @@ class TimetableProvider {
     } else {
       print("Timetable is up to date");
     }
-    print("Next schoolday: ${Hive.box('timetable').get(nextSchoolday())}");
     return true;
   }
 
@@ -102,15 +127,15 @@ class TimetableProvider {
                 t["lessonid"] == sub["internal_id"] ||
                 //  t["name"] == sub["name"] ||
                 t["longname"] == sub["longname"]) {
-              print("☺️ Added ${t["name"]} to timetable");
+              //print("☺️ Added ${t["name"]} to timetable");
               //Add this weekday to the days where the subject is taught
               String? ln = t["longname"];
               if (ln != null) {
                 if (subjectDayBox.get(ln) == null ||
                     !subjectDayBox.get(ln).contains(i)) {
                   subjectDayBox.put(ln, (subjectDayBox.get(ln) ?? [])..add(i));
-                  print("Added day $i to ${ln} in timetable");
-                  print("Days: ${subjectDayBox.get(ln)}");
+                  //print("Added day $i to ${ln} in timetable");
+                  //print("Days: ${subjectDayBox.get(ln)}");
                 }
               }
 
@@ -136,7 +161,7 @@ class TimetableProvider {
     //Sort so that the next day is first, not monday
     days = days.toSet().toList();
     days.forEach((element) {
-      print(element);
+      //print(element);
     });
     days.sort((a, b) => a.compareTo(b));
 

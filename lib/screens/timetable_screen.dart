@@ -26,7 +26,7 @@ class TimetableScreen extends StatefulWidget {
 }
 
 class _TimetableScreenState extends State<TimetableScreen> {
-  int _weekday = TimetableProvider.nextSchoolday();
+  int _weekday = TimetableProvider.nextSchoolWeekday();
   bool showWebView = false;
 
   @override

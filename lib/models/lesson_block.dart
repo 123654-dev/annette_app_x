@@ -19,12 +19,8 @@ class LessonBlock extends TimetableUnit {
 
     startTime =
         "${startTime.substring(0, startTime.length - 2)}:${startTime.substring(startTime.length - 2)}";
-    print("Start Time: $startTime");
     endTime =
         "${endTime.substring(0, endTime.length - 2)}:${endTime.substring(endTime.length - 2)}";
-
-    print("Loading: ${t["longname"]}");
-    print("Loaded Room: ${t["room"]}");
 
     return LessonBlock(
         subject: t["longname"],
