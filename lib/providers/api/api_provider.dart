@@ -31,14 +31,6 @@ class ApiProvider {
     return result.body;
   }
 
-  static Future<String> fetchSubstitutionDayTodayOrTomorrow(
-      bool ofToday, ClassId id) async {
-
-    var dateArg = ofToday ? "today" : "tomorrow";
-
-    return await fetchSubstitutionDay(id, dateArg);
-  }
-
   static Future<String> fetchSubstitutionDayFromDate(
       DateTime date, ClassId id) async {
 
@@ -56,10 +48,6 @@ class ApiProvider {
     }
 
     String className = classId.fmtName;
-    if(className.length != 2){
-      print("‼️ Class name is not 2 characters long: $className");
-      className = className.substring(0, 2);
-    }
 
     final String path = 'api/annette_app/substitution/$className';
     final Map<String, String> queryParameters = <String, String>{

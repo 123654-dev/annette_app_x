@@ -342,7 +342,7 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
   }
 
   void submitSelectedOptions() {
-    if (_selectedOptions.containsValue(null)) {
+    if (_selectedOptions.containsValue(null) || _selectedOptions.isEmpty) {
       //show snack bar
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
