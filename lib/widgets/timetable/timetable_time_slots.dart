@@ -25,7 +25,7 @@ class _TimetableTimeSlotsState extends State<TimetableTimeSlots> {
   
   ///Wenn true, kann man den Zeitplan aktualisieren, indem man nach unten zieht.
   ///Nina hat aber gerechtfertigterweise darauf hingewiesen, dass der Plan in den letzten Jahren nicht geändert wurde 
-  final bool updateable = true;
+  final bool updateable = false;
 
   @override
   Widget build(BuildContext context) {
@@ -54,20 +54,29 @@ class _TimetableTimeSlotsState extends State<TimetableTimeSlots> {
   }
 
   Future<Image> getImage({bool forceReload = false}) async {
+    //Lokale Datei laden (oder es zumindest versuchen)
     File? file = await FilesProvider.getFile("time_slots", FileFormat.JPG);
+
+    //Wenn die Datei existiert und nicht neu geladen werden soll, wird sie zurückgegeben
     if (file != null && await file.exists() && !forceReload) {
       return Image.file(file);
     } else {
+      //Wenn die Datei nicht existiert oder neu geladen werden soll, wird sie heruntergeladen
       if (!ConnectionProvider.hasDownloadConnection()){
         //TODO: Fehlermeldung anzeigen
         throw PlatformException(code: "no_connection", message: "No connection");
       }
+
+      //Die Datei wird in Form von Bytes heruntergeladen
       final ByteData data =
           await NetworkAssetBundle(Uri.parse(address)).load(address);
       final Int8List bytes = data.buffer.asInt8List();
       print("Downloading image");
+
+      //Die Bytes werden in ein Image umgewandelt
       Image image = Image.memory(Uint8List.fromList(bytes));
 
+      //Dieses Image wird lokal gespeichert
       await FilesProvider.storeFile("time_slots", bytes, FileFormat.JPG);
       return image;
     }
