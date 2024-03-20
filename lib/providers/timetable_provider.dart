@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:annette_app_x/models/lesson_block.dart';
 import 'package:annette_app_x/providers/user_settings.dart';
-import 'package:annette_app_x/screens/timetable_screen.dart';
+import 'package:annette_app_x/widgets/timetable/timetable_day.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
