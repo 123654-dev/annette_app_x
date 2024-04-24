@@ -8,6 +8,12 @@ class AboutAppScreen extends StatelessWidget {
   late String _version = "1.0.0";
   late String _buildNumber = "1";
 
+  final String _contributors = "Arwed Walke, Elias Dörr, Jonas Erdmann, Rui Zhang";
+
+  final String _technologies = "Figma, Flutter, Next.JS, GitHub & WebUntis";
+
+  final String _finalDevelopmentYear = "2024";
+
   @override
   Widget build(BuildContext context) {
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
@@ -34,9 +40,9 @@ class AboutAppScreen extends StatelessWidget {
               textAlign: TextAlign.left,
             ),
             const SizedBox(height: 20),
-            const Text(
-              "Die offizielle inoffizielle App für das Annette-von-Droste-Hülshoff-Gymnasium in Düsseldorf-Benrath von der Annette-Softwareentwicklungs-AG.\n\n Planung, Entwicklung und Umsetzung: Arwed Walke, Elias Dörr, Jonas Erdmann, Rui Zhang, 2023",
-              style: TextStyle(fontSize: 14),
+            Text(
+              "Die offizielle inoffizielle App für das Annette-von-Droste-Hülshoff-Gymnasium in Düsseldorf-Benrath von der Annette-Softwareentwicklungs-AG & Moritz.\n\n Planung, Entwicklung und Umsetzung: $_contributors (2023-$_finalDevelopmentYear)",
+              style: const TextStyle(fontSize: 14),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
@@ -46,9 +52,9 @@ class AboutAppScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
-            const Text(
-              "Technologien für Interessierte: Figma, Flutter, Next.JS, GitHub & WebUntis",
-              style: TextStyle(fontSize: 14),
+            Text(
+              "Technologien für Interessierte: $_technologies",
+              style: const TextStyle(fontSize: 14),
               textAlign: TextAlign.center,
             ),
           ],

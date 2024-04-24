@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:annette_app_x/models/class_ids.dart';
+import 'package:annette_app_x/models/error.dart';
+import 'package:annette_app_x/models/error_types.dart';
 import 'package:annette_app_x/models/file_format.dart';
 import 'package:annette_app_x/providers/user_settings.dart';
 import 'package:flutter/material.dart';
@@ -147,6 +149,8 @@ class _ExamScreenState extends State<ExamScreen> {
     print(
         "sharing exam plan for ${_classId.fmtName} as ${fileFormat == FileFormat.PDF ? "pdf" : "image"}");
     if (fileFormat == FileFormat.PDF) {
+      ErrorFactory.createError(ErrorType.externalWarning, "Imagine man nutzt PDFs in ${DateTime.now().year}");
+      ErrorFactory.createError(ErrorType.externalError, "Nein, das geht nicht.");
       Share.shareXFiles([XFile(_file.path)],
           text: 'Klausurplan ${_classId.fmtName}');
     } else {
