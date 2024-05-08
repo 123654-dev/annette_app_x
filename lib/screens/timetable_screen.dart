@@ -1,23 +1,14 @@
-import 'package:annette_app_x/providers/api/files_provider.dart';
-import 'package:annette_app_x/providers/timetable_provider.dart';
-import 'package:annette_app_x/screens/onboarding/app_config.dart';
-import 'package:annette_app_x/widgets/no_signal_error.dart';
-import 'package:annette_app_x/widgets/request_error.dart';
-import 'package:annette_app_x/widgets/timetable/timetable.dart';
-import 'package:annette_app_x/widgets/timetable/weekday_selector.dart';
+import 'package:annette_app_x/widgets/timetable/timetable_day.dart';
+import 'package:annette_app_x/widgets/timetable/timetable_time_slots.dart';
+import 'package:annette_app_x/widgets/timetable/timetable_week_all.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
-final List<String> weekdays = [
-  "Sonntag",
-  "Montag",
-  "Dienstag",
-  "Mittwoch",
-  "Donnerstag",
-  "Freitag",
-  "Samstag"
-];
+enum TimetableType {
+  current,
+  all,
+  timeSlots,
+}
 
 class TimetableScreen extends StatefulWidget {
   const TimetableScreen({super.key});
@@ -26,72 +17,68 @@ class TimetableScreen extends StatefulWidget {
 }
 
 class _TimetableScreenState extends State<TimetableScreen> {
-  int _weekday = TimetableProvider.nextSchoolday();
   bool showWebView = false;
+  TimetableType timetableType = TimetableType.current;
 
   @override
   Widget build(BuildContext context) {
-    return showWebView
-        ? FutureBuilder(
-            future: FilesProvider.fetchTimetable(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return NoSignalError(
-                  onPressed: () => setState(() {}),
-                );
-              }
-              if (snapshot.hasData) {
-                return WebViewWidget(
-                  controller: WebViewController()
-                    ..setJavaScriptMode(JavaScriptMode.disabled)
-                    ..setNavigationDelegate(NavigationDelegate(
-                      onUrlChange: (change) => NavigationDecision.prevent,
-                    ))
-                    ..loadFile(snapshot.data!),
-                );
-              } else if (snapshot.hasError) {
-                print(snapshot.error);
-                return widgetWhileLoading(context, "Lade Stundenplan");
-              } else {
-                return widgetWhileLoading(context, "Lade Stundenplan");
-              }
-            },
-          )
-        : FutureBuilder(
-            future: TimetableProvider.getTimetable(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return widgetWhileLoading(context, "Lade Stundenplan");
-              } else if (snapshot.hasError) {
-                return const BadRequestError();
-              }
+    return Column(children: [
+      buttonRow(),
+      timetableWidget(timetableType),
+    ]);
+  }
 
-              return Center(
-                child: Container(
-                  margin: const EdgeInsets.only(left: 25, right: 25, top: 15),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 10),
-                      WeekdaySelector(
-                        onChange: (value) {
-                          setState(
-                            () {
-                              _weekday = value;
-                            },
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.62,
-                        width: MediaQuery.of(context).size.width * 0.9,
-                        child: Timetable(weekday: _weekday),
-                      ),
-                    ],
-                  ),
-                ),
-              );
+  Widget buttonRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        CupertinoSlidingSegmentedControl(
+            children: {
+              0: Container(
+                child: Text('Aktuell'),
+                padding: EdgeInsets.symmetric(horizontal: 25),
+              ),
+              1: Container(
+                child: Text('Gesamt'),
+                padding: EdgeInsets.symmetric(horizontal: 25),
+              ),
+              2: Container(
+                child: Text('Zeitplan'),
+                padding: EdgeInsets.symmetric(horizontal: 25),
+              ),
             },
-          );
+            onValueChanged: (int? value) {
+              setState(() {
+                timetableType = getTimetableType(value!);
+              });
+            }),
+      ],
+    );
+  }
+
+  TimetableType getTimetableType(int index) {
+    switch (index) {
+      case 0:
+        return TimetableType.current;
+      case 1:
+        return TimetableType.all;
+      case 2:
+        return TimetableType.timeSlots;
+      default:
+        return TimetableType.current;
+    }
+  }
+
+  Widget timetableWidget(TimetableType type) {
+    switch (type) {
+      case TimetableType.current:
+        return const TimetableDay();
+      case TimetableType.all:
+        return const TimetableWeekAll();
+      case TimetableType.timeSlots:
+        return const TimetableTimeSlots();
+      default:
+        return const TimetableDay();
+    }
   }
 }
