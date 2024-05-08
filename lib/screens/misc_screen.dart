@@ -2,6 +2,7 @@ import 'package:annette_app_x/models/class_ids.dart';
 import 'package:annette_app_x/providers/user_settings.dart';
 import 'package:annette_app_x/screens/onboarding/app_config.dart';
 import 'package:annette_app_x/screens/settings/about_app_screen.dart';
+import 'package:annette_app_x/screens/settings/help_screen.dart';
 import 'package:annette_app_x/screens/settings/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -53,14 +54,14 @@ class MiscScreen extends StatelessWidget {
                           builder: (context) => const SettingsPage())),
                 ),
                 ListTile(
-                  title: const Text("Hilfe, Feedback und Kontakt"),
+                  title: const Text("Hilfe"),
+                  //subtitle: const Text("Hier willst du nie sein!"),
                   trailing: PhosphorIcon(
-                    PhosphorIcons.duotone.envelope,
-                    color: Theme.of(context).colorScheme.primary,
+                      PhosphorIcons.duotone.bugBeetle,
+                      color: Theme.of(context).colorScheme.primary,
                   ),
-                  //Mailto-Link
-                  onTap: () async => await launchUrl(
-                      Uri.parse("mailto:annettesoftware@gmail.com")),
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => HelpScreen())),
                 ),
                 ListTile(
                     title: const Text("Lizenzen"),
