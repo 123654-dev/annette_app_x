@@ -32,8 +32,8 @@ class TimetableProvider {
   }
 
   static List<dynamic>? getTableForDay(int day) {
+    if (day == 1 || day == 7) return [];
     print(weekdays[day]);
-    if (day == 0 || day == 6) return [];
     if (Hive.box("timetable").get(day) == null) return [];
 
     return Hive.box("timetable").get(day).cast<Map>()?.map((e) {

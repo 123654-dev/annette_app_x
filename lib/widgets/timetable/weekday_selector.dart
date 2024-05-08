@@ -42,26 +42,27 @@ class _WeekdaySelectorState extends State<WeekdaySelector>
                 widget.onChange(_selectedDate.weekday);
               });
             },
-            child: Container(
-              padding: const EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? Theme.of(context).colorScheme.onSurfaceVariant
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    _getWeekdayAbbreviation(nextWeekday.weekday),
-                    style: TextStyle(
-                      color: isSelected
-                          ? Theme.of(context).colorScheme.surface
-                          : Theme.of(context).colorScheme.onBackground,
-                      fontWeight: FontWeight.bold,
-                    ),
+            child: Column(
+              children: [
+                Text(
+                  _getWeekdayAbbreviation(nextWeekday.weekday),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onBackground,
+                    fontWeight: FontWeight.bold,
                   ),
-                  Text(
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? Theme.of(context).colorScheme.onSurfaceVariant
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Text(
                     '${nextWeekday.day}.${nextWeekday.month}',
                     style: TextStyle(
                       color: isSelected
@@ -69,8 +70,8 @@ class _WeekdaySelectorState extends State<WeekdaySelector>
                           : Theme.of(context).colorScheme.onBackground,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           );
         }),

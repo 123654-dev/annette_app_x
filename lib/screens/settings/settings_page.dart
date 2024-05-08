@@ -72,16 +72,16 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget useMobileDataForUpdates() {
-    return 
-      ListTile(
-          title: const Text("Mobile Daten verwenden\n(für Downloads von Stunden-/Vertretungs-/Klausurplänen)"),
-          trailing: Switch(
-            value: UserSettings.useMobileData,
-            onChanged: (bool value) {
-              setState(() {
-                UserSettings.useMobileData = value;
-              });
-            },
-          ));
-  } 
+    return ListTile(
+        title: const Text(
+            "Mobile Daten verwenden\n(für Downloads von Stunden-/Vertretungs-/Klausurplänen)"),
+        trailing: Switch(
+          value: UserSettings.useMobileData,
+          onChanged: (bool value) {
+            setState(() {
+              UserSettings.useMobileData = value;
+            });
+          },
+        ));
+  }
 }
