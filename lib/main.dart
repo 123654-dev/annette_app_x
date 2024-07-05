@@ -11,7 +11,6 @@ import 'package:annette_app_x/utilities/homework_manager.dart';
 import 'package:annette_app_x/on_init_app.dart';
 import 'package:annette_app_x/utilities/homework_sharing_manager.dart';
 import 'package:annette_app_x/utilities/navigation_service.dart';
-import 'package:annette_app_x/widgets/news/news_notification.dart';
 import 'package:annette_app_x/screens/timetable_screen.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +46,7 @@ class AnnetteApp extends StatelessWidget {
     bool isAprilFoolsDay =
         DateTime.now().month == DateTime.april && DateTime.now().day == 1;
 
+    //Bei Wertänderung aktualisieren (rebuilden)
     return ValueListenableBuilder<ThemeMode>(
         valueListenable: UserSettings.themeNotifier,
         builder: (context, value, child) {
@@ -121,7 +121,6 @@ class MyHomePage extends StatefulWidget {
 
 //? Wieso machen wir nicht aus has -> hausaufgaben
 enum _Destination {
-  vertretung,
   stundenplan,
   has,
   sonstiges,
@@ -129,7 +128,7 @@ enum _Destination {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  _Destination _selectedDestination = _Destination.vertretung;
+  _Destination _selectedDestination = _Destination.stundenplan;
 
   // StreamSubscription für die Hausaufgaben, wird in initState() initialisiert
   late StreamSubscription<BoxEvent>? subscription;
@@ -184,10 +183,6 @@ class _MyHomePageState extends State<MyHomePage> {
           <Widget>[
             Container(
               alignment: Alignment.center,
-              child: const SubstitutionScreen(),
-            ),
-            Container(
-              alignment: Alignment.center,
               child: const TimetableScreen(),
             ),
             Container(
@@ -223,33 +218,27 @@ class _MyHomePageState extends State<MyHomePage> {
     if (UserSettings.isOberstufe) {
       switch (value) {
         case 0:
-          selectedDestination = _Destination.vertretung;
-          break;
-        case 1:
           selectedDestination = _Destination.stundenplan;
           break;
-        case 2:
+        case 1:
           selectedDestination = _Destination.has;
           break;
-        case 3:
+        case 2:
           selectedDestination = _Destination.sonstiges;
           break;
-        case 4:
+        case 3:
           selectedDestination = _Destination.klausurplan;
           break;
       }
     } else {
       switch (value) {
         case 0:
-          selectedDestination = _Destination.vertretung;
-          break;
-        case 1:
           selectedDestination = _Destination.stundenplan;
           break;
-        case 2:
+        case 1:
           selectedDestination = _Destination.has;
           break;
-        case 3:
+        case 2:
           selectedDestination = _Destination.sonstiges;
           break;
       }
@@ -259,14 +248,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<Widget> navigationDestinations(BuildContext context) {
     return [
-      NavigationDestination(
-        icon: Badge(
-          label: const Text("4"),
-          child: PhosphorIcon(PhosphorIcons.duotone.rows,
-              color: Theme.of(context).colorScheme.onBackground),
-        ),
-        label: 'Vertretung',
-      ),
       NavigationDestination(
         icon: PhosphorIcon(PhosphorIcons.duotone.calendar,
             color: Theme.of(context).colorScheme.onBackground),

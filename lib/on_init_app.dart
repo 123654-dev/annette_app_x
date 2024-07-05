@@ -18,6 +18,7 @@ class AppInitializer {
     await Hive.openBox('app_settings');
     await Hive.openBox('timetable');
     await Hive.openBox("subjectDays");
+    await Hive.openBox("holidays");
     await Hive.openBox(NewsProvider.newsBoxName);
 
     // Nachrichten werden initialisiert

@@ -152,4 +152,42 @@ class TimetableProvider {
 
     return nextDate;
   }
+
+  static Future<String> getCurrentHoliday() async {
+    print("Getting current holiday");
+
+    if (Hive.box("cache").get("lastHolidayUpdate") == null ||
+        (Hive.box("cache").get("lastHolidayUpdate") as DateTime)
+            .isBefore(DateTime.now().subtract(const Duration(days: 24)))) {
+      Hive.box("holidays").clear();
+    }
+
+    if (Hive.box("Holidays").isEmpty) {
+      print("Updating holidays");
+      //Fetch holidays
+      var holidays = jsonDecode(await ApiProvider.fetchHolidays());
+      for (var h in holidays) {
+        var startDay = DateTime.parse(h["startDate"]);
+        var endDay = DateTime.parse(h["endDate"]);
+        var diff = endDay.difference(startDay).inDays;
+        do {
+          print(
+              "Adding ${h["name"]} to ${startDay.year}${startDay.month.toString().padLeft(2, "0")}${startDay.day.toString().padLeft(2, "0")}");
+          Hive.box("holidays").put(
+              "${startDay.year}${startDay.month.toString().padLeft(2, "0")}${startDay.day.toString().padLeft(2, "0")}",
+              h["name"]);
+          startDay = startDay.add(const Duration(days: 1));
+          diff--;
+        } while (diff >= 0);
+      }
+      Hive.box("cache").put("lastHolidayUpdate", DateTime.now());
+    }
+
+    String date =
+        "${DateTime.now().year}${DateTime.now().month.toString().padLeft(2, "0")}${DateTime.now().day.toString().padLeft(2, "0")}";
+    var holidays = Hive.box("holidays").get(date);
+    if (holidays == null) return "###";
+
+    return holidays;
+  }
 }

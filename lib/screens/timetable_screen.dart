@@ -32,26 +32,16 @@ class _TimetableScreenState extends State<TimetableScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        CupertinoSlidingSegmentedControl(
-            children: {
-              0: Container(
-                child: Text('Aktuell'),
-                padding: EdgeInsets.symmetric(horizontal: 25),
-              ),
-              1: Container(
-                child: Text('Gesamt'),
-                padding: EdgeInsets.symmetric(horizontal: 25),
-              ),
-              2: Container(
-                child: Text('Zeitplan'),
-                padding: EdgeInsets.symmetric(horizontal: 25),
-              ),
-            },
-            onValueChanged: (int? value) {
-              setState(() {
-                timetableType = getTimetableType(value!);
-              });
-            }),
+        SegmentedButton(
+          selected: Set.from([timetableType.index]),
+          onSelectionChanged: (p0) => setState(() {
+            timetableType = getTimetableType(p0.first);
+          }),
+          segments: const [
+            ButtonSegment(value: 0, label: Text("Heute")),
+            ButtonSegment(value: 1, label: Text("Stundenraster")),
+          ],
+        ),
       ],
     );
   }
@@ -61,8 +51,6 @@ class _TimetableScreenState extends State<TimetableScreen> {
       case 0:
         return TimetableType.current;
       case 1:
-        return TimetableType.all;
-      case 2:
         return TimetableType.timeSlots;
       default:
         return TimetableType.current;
