@@ -1,7 +1,6 @@
 library files_provider;
 
 import 'dart:async';
-import 'dart:ffi';
 import 'dart:io';
 import 'package:annette_app_x/models/class_ids.dart';
 import 'package:annette_app_x/providers/api/api_provider.dart';
@@ -56,7 +55,8 @@ class FilesProvider {
   ///Helper-Methode, die die Datei lokal speichert und ein File-Objekt zurückgibt
   ///Das File-Objekt kann dann z.B. mit dem PDFView-Widget angezeigt werden.
   ///[name] ist der Name. unter dem die Datei gespeichert werden soll
-  static Future<File> storeFile(String name, List<int> bytes, FileFormat fileFormat) async {
+  static Future<File> storeFile(
+      String name, List<int> bytes, FileFormat fileFormat) async {
     final filename = name + '.' + fileFormat.name.toLowerCase();
     final dir = await getApplicationDocumentsDirectory();
 

@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class AboutAppScreen extends StatelessWidget {
+  // ignore: prefer_const_constructors_in_immutables
   AboutAppScreen({super.key});
 
-  late String _version = "1.0.0";
-  late String _buildNumber = "1";
+  late final String _version;
+  late final String _buildNumber;
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:annette_app_x/models/class_ids.dart';
 import 'package:annette_app_x/providers/api/api_provider.dart';
 import 'package:annette_app_x/providers/api/subjects_provider.dart';
