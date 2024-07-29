@@ -87,4 +87,22 @@ class ApiProvider {
     htmlSuffix = htmlSuffix.padLeft(5, "0");
     return "plaene.annettegymnasium.de/stundenplan_oL/c/P4/c$htmlSuffix.htm";
   }
+
+  static Future<String> fetchHolidays() async {
+    var result = await http.get(
+        Uri.http(ApiProviderSettings.baseURL, 'api/annette_app/info/holidays'),
+        headers: {
+          "Accept": "application/json;charset=UTF-8",
+          "Content-Encoding": "gzip, deflate, br",
+        });
+
+    var success = (result.statusCode == 200);
+
+    if (!success) {
+      throw Exception(
+          '‼️ http.get error @ fetchHolidays: statusCode= ${result.statusCode}');
+    }
+
+    return result.body;
+  }
 }
