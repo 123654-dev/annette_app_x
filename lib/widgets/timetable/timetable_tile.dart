@@ -50,7 +50,7 @@ class TimetableTile extends StatelessWidget {
                 child: Text(lessonIndex.toString(),
                     textAlign: TextAlign.right,
                     style: GoogleFonts.roboto(
-                      color: Theme.of(context).colorScheme.onBackground,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.w900,
                       fontSize: 20,
                     )),
@@ -102,7 +102,7 @@ class TimetableTile extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      PhosphorIcon(PhosphorIcons.duotone.mapPin,
+                      PhosphorIcon(PhosphorIcons.mapPin(PhosphorIconsStyle.duotone),
                           color: Theme.of(context).colorScheme.secondary,
                           size: 20),
                       Text(
@@ -121,7 +121,7 @@ class TimetableTile extends StatelessWidget {
                     Text(
                       subject,
                       style: GoogleFonts.inter(
-                        color: Theme.of(context).colorScheme.onBackground,
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 22,
                         fontWeight: FontWeight.w700,
                       ),

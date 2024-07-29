@@ -272,7 +272,7 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                                                   block["block_title"]]!,
                                               child: PhosphorIcon(
                                                 PhosphorIcons
-                                                    .duotone.sealQuestion,
+                                                    .sealQuestion(PhosphorIconsStyle.duotone),
                                                 color: Theme.of(context)
                                                     .colorScheme
                                                     .primary,

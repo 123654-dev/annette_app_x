@@ -11,3 +11,5 @@ Ein brandneues, frisches Rewrite unserer Annette App in Flutter!
 Anders als die alte App wird sie zwar alle alten und beliebten Features beibehalten, allerdings ohne unübersichtlichen
 Code, verwirrende Dateistruktur und merkwürdige Bugs. Außerdem wird sie mit dem neuesten Stand der Technik (WebUntis-API) und einem
 freshen Design ausgestattet.
+
+WICHTIG: Nach dem Klonen des Repositories bitte eine .env-Datei erstellen!! Darin kann die Variable API_URL geändert werden :)

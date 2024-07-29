@@ -55,7 +55,7 @@ class HomeworkScreenState extends State<HomeworkScreen> {
                 onPressed: () {
                   HomeworkTray.show(context, widget.refresh);
                 },
-                icon: PhosphorIcon(PhosphorIcons.duotone.tray,
+                icon: PhosphorIcon(PhosphorIcons.tray(PhosphorIconsStyle.duotone),
                     color: Theme.of(context).colorScheme.primary),
               ),
               PopupMenuButton<SortingType>(
@@ -65,7 +65,7 @@ class HomeworkScreenState extends State<HomeworkScreen> {
                     print("New sorting type: $sortingType");
                   });
                 },
-                icon: PhosphorIcon(PhosphorIcons.duotone.funnel,
+                icon: PhosphorIcon(PhosphorIcons.funnel(PhosphorIconsStyle.duotone),
                     color: Theme.of(context).colorScheme.primary),
                 itemBuilder: (context) => const [
                   PopupMenuItem<SortingType>(

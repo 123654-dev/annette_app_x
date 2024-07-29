@@ -1,17 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:annette_app_x/models/file_format.dart';
 import 'package:annette_app_x/models/homework_entry.dart';
 import 'package:annette_app_x/providers/api/files_provider.dart';
 import 'package:annette_app_x/utilities/homework_manager.dart';
-import 'package:annette_app_x/utilities/navigation_service.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 
-import 'package:cross_file/cross_file.dart';
 
 class HomeworkSharer {
   static const platform =

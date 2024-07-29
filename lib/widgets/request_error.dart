@@ -1,6 +1,4 @@
-import 'dart:async';
 
-import 'package:annette_app_x/providers/connection_provider.dart';
 import 'package:annette_app_x/widgets/retry_button.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -25,7 +23,7 @@ class BadRequestError extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 PhosphorIcon(
-                  PhosphorIcons.duotone.ghost,
+                  PhosphorIcons.ghost(PhosphorIconsStyle.duotone),
                   color: Theme.of(context).colorScheme.error,
                   size: 100,
                 ),

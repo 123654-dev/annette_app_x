@@ -32,7 +32,7 @@ class BreakTile extends StatelessWidget {
       child: Text("$duration Minuten Pause",
           textAlign: TextAlign.center,
           style: GoogleFonts.inter(
-            color: Theme.of(context).colorScheme.onBackground,
+            color: Theme.of(context).colorScheme.onSurface,
             fontWeight: FontWeight.w600,
             fontSize: 20,
           )),

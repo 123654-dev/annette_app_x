@@ -13,7 +13,7 @@ class HolidayIndicator extends StatelessWidget {
         width: MediaQuery.of(context).size.width * 0.9,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: Theme.of(context).colorScheme.surfaceVariant,
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
         ),
         child: Padding(
           padding: const EdgeInsets.all(30),

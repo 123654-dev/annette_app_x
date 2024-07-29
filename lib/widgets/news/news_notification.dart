@@ -40,11 +40,11 @@ class _NewsNotificationState extends State<NewsNotification> {
             width: 40,
             child: IconButton(
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(
+                backgroundColor: WidgetStateProperty.all(
                     Theme.of(context).colorScheme.error),
               ),
               icon: PhosphorIcon(
-                PhosphorIcons.duotone.newspaper,
+                PhosphorIcons.newspaper(PhosphorIconsStyle.duotone),
                 size: 20,
                 color: Theme.of(context).colorScheme.onError,
               ),

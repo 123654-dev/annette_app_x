@@ -1,7 +1,6 @@
 import 'package:annette_app_x/widgets/timetable/timetable_day.dart';
 import 'package:annette_app_x/widgets/timetable/timetable_time_slots.dart';
 import 'package:annette_app_x/widgets/timetable/timetable_week_all.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 enum TimetableType {
@@ -33,7 +32,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         SegmentedButton(
-          selected: Set.from([timetableType.index]),
+          selected: {timetableType.index},
           onSelectionChanged: (p0) => setState(() {
             timetableType = getTimetableType(p0.first);
           }),

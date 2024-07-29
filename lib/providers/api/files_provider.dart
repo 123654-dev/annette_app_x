@@ -57,7 +57,7 @@ class FilesProvider {
   ///[name] ist der Name. unter dem die Datei gespeichert werden soll
   static Future<File> storeFile(
       String name, List<int> bytes, FileFormat fileFormat) async {
-    final filename = name + '.' + fileFormat.name.toLowerCase();
+    final filename = '$name.${fileFormat.name.toLowerCase()}';
     final dir = await getApplicationDocumentsDirectory();
 
     //File lokal speichern

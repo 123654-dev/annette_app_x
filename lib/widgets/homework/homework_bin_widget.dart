@@ -38,14 +38,14 @@ class _HomeworkBinWidgetState extends State<HomeworkBinWidget> {
               IconButton(
                 onPressed: () => HomeworkManager.restoreFromBin(widget.entry),
                 icon: PhosphorIcon(
-                  PhosphorIcons.duotone.arrowCounterClockwise,
+                  PhosphorIcons.arrowCounterClockwise(PhosphorIconsStyle.duotone),
                   color: Theme.of(context).colorScheme.primary,
                 ),
               ),
               IconButton(
                 onPressed: () => HomeworkManager.deleteFromBin(widget.entry),
                 icon: PhosphorIcon(
-                  PhosphorIcons.duotone.trashSimple,
+                  PhosphorIcons.trashSimple(PhosphorIconsStyle.duotone),
                   color: Theme.of(context).colorScheme.primary,
                 ),
               ),

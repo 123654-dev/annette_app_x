@@ -109,7 +109,7 @@ class TimetableProvider {
                 if (subjectDayBox.get(ln) == null ||
                     !subjectDayBox.get(ln).contains(i)) {
                   subjectDayBox.put(ln, (subjectDayBox.get(ln) ?? [])..add(i));
-                  print("Added day $i to ${ln} in timetable");
+                  print("Added day $i to $ln in timetable");
                   print("Days: ${subjectDayBox.get(ln)}");
                 }
               }
@@ -135,9 +135,9 @@ class TimetableProvider {
     List<dynamic> days = Hive.box("subjectDays").get(subject);
     //Sort so that the next day is first, not monday
     days = days.toSet().toList();
-    days.forEach((element) {
+    for (var element in days) {
       print(element);
-    });
+    }
     days.sort((a, b) => a.compareTo(b));
 
     var wd = days.firstWhere((element) => element > DateTime.now().weekday,

@@ -54,11 +54,11 @@ class _SettingsPageState extends State<SettingsPage> {
                   });
                 },
                 children: [
-                  PhosphorIcon(PhosphorIcons.duotone.moonStars,
+                  PhosphorIcon(PhosphorIcons.moonStars(PhosphorIconsStyle.duotone),
                       color: Theme.of(context).colorScheme.secondary),
-                  PhosphorIcon(PhosphorIcons.duotone.sun,
+                  PhosphorIcon(PhosphorIcons.sun(PhosphorIconsStyle.duotone),
                       color: Theme.of(context).colorScheme.secondary),
-                  PhosphorIcon(PhosphorIcons.duotone.deviceMobile,
+                  PhosphorIcon(PhosphorIcons.deviceMobile(PhosphorIconsStyle.duotone),
                       color: Theme.of(context).colorScheme.secondary),
                 ],
               ),

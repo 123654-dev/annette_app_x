@@ -1,13 +1,10 @@
-import 'package:annette_app_x/providers/api/files_provider.dart';
 import 'package:annette_app_x/providers/timetable_provider.dart';
 import 'package:annette_app_x/screens/onboarding/app_config.dart';
-import 'package:annette_app_x/widgets/no_signal_error.dart';
 import 'package:annette_app_x/widgets/request_error.dart';
 import 'package:annette_app_x/widgets/timetable/holiday_indicator.dart';
 import 'package:annette_app_x/widgets/timetable/timetable.dart';
 import 'package:annette_app_x/widgets/timetable/weekday_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 final List<String> weekdays = [
   "Sonntag",

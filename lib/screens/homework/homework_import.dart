@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:annette_app_x/models/homework_entry.dart';
-import 'package:annette_app_x/providers/timetable_provider.dart';
 import 'package:annette_app_x/providers/user_settings.dart';
 import 'package:annette_app_x/utilities/homework_manager.dart';
 import 'package:annette_app_x/utilities/navigation_service.dart';
@@ -35,13 +34,13 @@ class HomeworkImportWidget extends StatefulWidget {
 }
 
 class _HomeworkImportWidgetState extends State<HomeworkImportWidget> {
-  TextEditingController _controller = TextEditingController();
+  final TextEditingController _controller = TextEditingController();
 
   DateTime _selectedDate = DateTime.now();
-  TimeOfDay _selectedTime = TimeOfDay(hour: 16, minute: 30);
+  TimeOfDay _selectedTime = const TimeOfDay(hour: 16, minute: 30);
 
   DateTime _selectedDateR = DateTime.now();
-  TimeOfDay _selectedTimeR = TimeOfDay(hour: 16, minute: 30);
+  TimeOfDay _selectedTimeR = const TimeOfDay(hour: 16, minute: 30);
 
   String _selectedSubject = "Sonstiges";
 
@@ -167,9 +166,9 @@ class _HomeworkImportWidgetState extends State<HomeworkImportWidget> {
             width: 150,
             child: FilledButton.icon(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
+                  backgroundColor: WidgetStateProperty.all<Color>(
                       Theme.of(context).colorScheme.tertiary),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5.0),
                   )),
@@ -190,7 +189,7 @@ class _HomeworkImportWidgetState extends State<HomeworkImportWidget> {
                         _selectedTime.hour, _selectedTime.minute);
                   });
                 },
-                icon: PhosphorIcon(PhosphorIcons.duotone.calendarX)),
+                icon: PhosphorIcon(PhosphorIcons.calendarX(PhosphorIconsStyle.duotone))),
           ),
           const SizedBox(width: 10),
           SizedBox(
@@ -198,9 +197,9 @@ class _HomeworkImportWidgetState extends State<HomeworkImportWidget> {
             width: 150,
             child: FilledButton.icon(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
+                  backgroundColor: WidgetStateProperty.all<Color>(
                       Theme.of(context).colorScheme.tertiary),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5.0),
                   )),
@@ -222,7 +221,7 @@ class _HomeworkImportWidgetState extends State<HomeworkImportWidget> {
                         _selectedTime.minute);
                   });
                 },
-                icon: PhosphorIcon(PhosphorIcons.duotone.clockAfternoon)),
+                icon: PhosphorIcon(PhosphorIcons.clockAfternoon(PhosphorIconsStyle.duotone))),
           ),
         ],
       ),
@@ -243,9 +242,9 @@ class _HomeworkImportWidgetState extends State<HomeworkImportWidget> {
           width: 150,
           child: FilledButton.icon(
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
+                backgroundColor: WidgetStateProperty.all<Color>(
                     Theme.of(context).colorScheme.tertiary),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5.0),
                 )),
@@ -265,7 +264,7 @@ class _HomeworkImportWidgetState extends State<HomeworkImportWidget> {
                       _selectedTimeR.hour, _selectedTimeR.minute);
                 });
               },
-              icon: PhosphorIcon(PhosphorIcons.duotone.bellRinging)),
+              icon: PhosphorIcon(PhosphorIcons.bellRinging(PhosphorIconsStyle.duotone))),
         ),
         const SizedBox(width: 10),
         SizedBox(
@@ -273,9 +272,9 @@ class _HomeworkImportWidgetState extends State<HomeworkImportWidget> {
           width: 150,
           child: FilledButton.icon(
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
+                backgroundColor: WidgetStateProperty.all<Color>(
                     Theme.of(context).colorScheme.tertiary),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5.0),
                 )),
@@ -297,7 +296,7 @@ class _HomeworkImportWidgetState extends State<HomeworkImportWidget> {
                       _selectedTimeR.minute);
                 });
               },
-              icon: PhosphorIcon(PhosphorIcons.duotone.clockAfternoon)),
+              icon: PhosphorIcon(PhosphorIcons.clockAfternoon(PhosphorIconsStyle.duotone))),
         )
       ])
     ];
@@ -312,7 +311,7 @@ class _HomeworkImportWidgetState extends State<HomeworkImportWidget> {
               _selectedDateR = DateTime.now().add(const Duration(minutes: 60));
             });
           },
-          icon: PhosphorIcon(PhosphorIcons.duotone.alarm),
+          icon: PhosphorIcon(PhosphorIcons.alarm(PhosphorIconsStyle.duotone)),
           label: const Text("In einer Stunde")),
       const SizedBox(height: 10),
       FilledButton.tonalIcon(
@@ -326,7 +325,7 @@ class _HomeworkImportWidgetState extends State<HomeworkImportWidget> {
               }
             });
           },
-          icon: PhosphorIcon(PhosphorIcons.duotone.alarm),
+          icon: PhosphorIcon(PhosphorIcons.alarm(PhosphorIconsStyle.duotone)),
           label: const Text("Am Nachmittag"))
     ];
   }
@@ -339,7 +338,7 @@ class _HomeworkImportWidgetState extends State<HomeworkImportWidget> {
             height: 40,
             child: OutlinedButton(
               style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
+                  backgroundColor: WidgetStateProperty.all<Color>(
                       Theme.of(context).colorScheme.surface)),
               onPressed: () {
                 Navigator.of(context).pop();

@@ -6,7 +6,6 @@ import 'package:annette_app_x/screens/exam_screen.dart';
 import 'package:annette_app_x/screens/homework/homework_screen.dart';
 import 'package:annette_app_x/screens/misc_screen.dart';
 import 'package:annette_app_x/screens/onboarding/onboarding_screen.dart';
-import 'package:annette_app_x/screens/substitution_screen.dart';
 import 'package:annette_app_x/utilities/homework_manager.dart';
 import 'package:annette_app_x/on_init_app.dart';
 import 'package:annette_app_x/utilities/homework_sharing_manager.dart';
@@ -168,7 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],*/
       ),
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (value) => setState(() {
           _selectedDestination = getDestination(value);
@@ -204,8 +203,8 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => HomeworkManager.showHomeworkDialog(context, refresh),
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        child: PhosphorIcon(PhosphorIcons.duotone.listPlus,
-            color: Theme.of(context).colorScheme.onBackground),
+        child: PhosphorIcon(PhosphorIcons.listPlus(PhosphorIconsStyle.duotone),
+            color: Theme.of(context).colorScheme.onSurface),
       ),
     );
   }
@@ -249,18 +248,18 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> navigationDestinations(BuildContext context) {
     return [
       NavigationDestination(
-        icon: PhosphorIcon(PhosphorIcons.duotone.calendar,
-            color: Theme.of(context).colorScheme.onBackground),
+        icon: PhosphorIcon(PhosphorIcons.calendar(PhosphorIconsStyle.duotone),
+            color: Theme.of(context).colorScheme.onSurface),
         label: 'Stundenplan',
       ),
       NavigationDestination(
         icon: HomeworkManager.hasHomework()
             ? Badge(
                 label: Text((_homeworkCount).toString()),
-                child: PhosphorIcon(PhosphorIcons.duotone.checkFat,
-                    color: Theme.of(context).colorScheme.onBackground))
-            : PhosphorIcon(PhosphorIcons.duotone.smileyWink,
-                color: Theme.of(context).colorScheme.onBackground),
+                child: PhosphorIcon(PhosphorIcons.checkFat(PhosphorIconsStyle.duotone),
+                    color: Theme.of(context).colorScheme.onSurface))
+            : PhosphorIcon(PhosphorIcons.smileyWink(PhosphorIconsStyle.duotone),
+                color: Theme.of(context).colorScheme.onSurface),
         label: 'HAs',
       ),
 
@@ -268,13 +267,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
       if (UserSettings.isOberstufe)
         NavigationDestination(
-          icon: PhosphorIcon(PhosphorIcons.duotone.exam,
-              color: Theme.of(context).colorScheme.onBackground),
+          icon: PhosphorIcon(PhosphorIcons.exam(PhosphorIconsStyle.duotone),
+              color: Theme.of(context).colorScheme.onSurface),
           label: 'Klausurplan',
         ),
       NavigationDestination(
-        icon: PhosphorIcon(PhosphorIcons.duotone.dotsThreeOutline,
-            color: Theme.of(context).colorScheme.onBackground),
+        icon: PhosphorIcon(PhosphorIcons.dotsThree(PhosphorIconsStyle.duotone),
+            color: Theme.of(context).colorScheme.onSurface),
         label: 'Sonstiges',
       ),
     ];

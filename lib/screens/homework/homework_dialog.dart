@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:annette_app_x/providers/timetable_provider.dart';
 import 'package:annette_app_x/utilities/navigation_service.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -202,9 +201,9 @@ class _dialogSheetState extends State<_dialogSheet> {
   Widget dueDayPickerButton() {
     return FilledButton.icon(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(
+          backgroundColor: WidgetStateProperty.all<Color>(
               Theme.of(context).colorScheme.tertiary),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5.0),
           )),
@@ -224,15 +223,15 @@ class _dialogSheetState extends State<_dialogSheet> {
                 _selectedTime.hour, _selectedTime.minute);
           });
         },
-        icon: PhosphorIcon(PhosphorIcons.duotone.calendarX));
+        icon: PhosphorIcon(PhosphorIcons.calendarX(PhosphorIconsStyle.duotone)));
   }
 
   Widget dueTimePickerButton() {
     return FilledButton.icon(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(
+          backgroundColor: WidgetStateProperty.all<Color>(
               Theme.of(context).colorScheme.tertiary),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5.0),
           )),
@@ -251,7 +250,7 @@ class _dialogSheetState extends State<_dialogSheet> {
                 _selectedDate.day, _selectedTime.hour, _selectedTime.minute);
           });
         },
-        icon: PhosphorIcon(PhosphorIcons.duotone.clockAfternoon));
+        icon: PhosphorIcon(PhosphorIcons.clockAfternoon(PhosphorIconsStyle.duotone)));
   }
 
   Widget saveButton() {

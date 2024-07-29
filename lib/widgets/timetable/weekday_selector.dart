@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class WeekdaySelector extends StatefulWidget {
   WeekdaySelector({super.key, required this.onChange});
@@ -57,7 +56,7 @@ class _WeekdaySelectorState extends State<WeekdaySelector>
                     style: TextStyle(
                       color: isSelected
                           ? Theme.of(context).colorScheme.surface
-                          : Theme.of(context).colorScheme.onBackground,
+                          : Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -66,7 +65,7 @@ class _WeekdaySelectorState extends State<WeekdaySelector>
                     style: TextStyle(
                       color: isSelected
                           ? Theme.of(context).colorScheme.surface
-                          : Theme.of(context).colorScheme.onBackground,
+                          : Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ],

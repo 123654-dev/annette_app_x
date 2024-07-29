@@ -1,5 +1,4 @@
 
-import 'package:annette_app_x/providers/connection_provider.dart';
 import 'package:annette_app_x/widgets/retry_button.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -23,7 +22,7 @@ class NoSignalError extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 PhosphorIcon(
-                  PhosphorIcons.duotone.wifiX,
+                  PhosphorIcons.wifiX(PhosphorIconsStyle.duotone),
                   color: Theme.of(context).colorScheme.error,
                   size: 100,
                 ),
@@ -40,9 +39,7 @@ class NoSignalError extends StatelessWidget {
 }
 
 class _SignalConnectingText extends StatelessWidget {
-  const _SignalConnectingText({
-    super.key,
-  });
+  const _SignalConnectingText();
 
   @override
   Widget build(BuildContext context) {

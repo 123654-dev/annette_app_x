@@ -26,7 +26,7 @@ class MiscScreen extends StatelessWidget {
                   title: const Text("Über die App"),
                   subtitle: const Text("Version 1.0.0"),
                   trailing: PhosphorIcon(
-                    PhosphorIcons.duotone.info,
+                    PhosphorIcons.info(PhosphorIconsStyle.duotone),
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(
@@ -36,7 +36,7 @@ class MiscScreen extends StatelessWidget {
                   title: const Text("Klasse oder Kurse ändern"),
                   subtitle: Text("Aktuell: ${id.toUpperCase()}"),
                   trailing: PhosphorIcon(
-                    PhosphorIcons.duotone.pencil,
+                    PhosphorIcons.pencil(PhosphorIconsStyle.duotone),
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(
@@ -45,7 +45,7 @@ class MiscScreen extends StatelessWidget {
                 ListTile(
                   title: const Text("Appeinstellungen"),
                   trailing: PhosphorIcon(
-                    PhosphorIcons.duotone.gearFine,
+                    PhosphorIcons.gearFine(PhosphorIconsStyle.duotone),
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   onTap: () async => Navigator.of(context).push(
@@ -55,7 +55,7 @@ class MiscScreen extends StatelessWidget {
                 ListTile(
                   title: const Text("Hilfe, Feedback und Kontakt"),
                   trailing: PhosphorIcon(
-                    PhosphorIcons.duotone.envelope,
+                    PhosphorIcons.envelope(PhosphorIconsStyle.duotone),
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   //Mailto-Link
@@ -65,7 +65,7 @@ class MiscScreen extends StatelessWidget {
                 ListTile(
                     title: const Text("Lizenzen"),
                     trailing: PhosphorIcon(
-                      PhosphorIcons.duotone.scales,
+                      PhosphorIcons.scales(PhosphorIconsStyle.duotone),
                       color: Theme.of(context).colorScheme.primary,
                     ),
                     onTap: () => showLicensePage(context: context)),

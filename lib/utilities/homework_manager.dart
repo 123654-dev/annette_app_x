@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:annette_app_x/models/homework_entry.dart';
@@ -40,7 +39,7 @@ class HomeworkManager {
         subject: "Sonstiges",
         notes:
             "Wenn du das in der App siehst, ist etwas schief gelaufen. Bitte melde das!",
-        dueDate: DateTime.now().add(Duration(days: 1)),
+        dueDate: DateTime.now().add(const Duration(days: 1)),
         lastUpdated: DateTime.now());
     await Hive.box('homework').add(entry);
     return entry;
@@ -79,7 +78,7 @@ class HomeworkManager {
     if (newEntry.reminderDateTime!.isAfter(DateTime.now())) {
       NotificationProvider().scheduleNotification(
           id: newEntry.scheduledNotificationId == null
-              ? await NotificationProvider()
+              ? NotificationProvider()
               : newEntry.scheduledNotificationId!,
           date: newEntry.reminderDateTime!,
           title: "Hausaufgaben in ${newEntry.subject}!",

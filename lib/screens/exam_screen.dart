@@ -8,7 +8,6 @@ import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:annette_app_x/providers/api/files_provider.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:cross_file/cross_file.dart';
 
 import 'package:pdfx/pdfx.dart';
 
@@ -76,7 +75,7 @@ class _ExamScreenState extends State<ExamScreen> {
                   thickness: 1,
                   indent: 15,
                   endIndent: 15,
-                  color: Theme.of(context).colorScheme.onBackground,
+                  color: Theme.of(context).colorScheme.onSurface,
                 )),
             //TODO: implementieren
             //mit diesem Button sollen alle Klausurtermine vorgeschlagen werden,
@@ -103,7 +102,7 @@ class _ExamScreenState extends State<ExamScreen> {
                   child: Text("als Bilder teilen"),
                 ),
               ],
-              icon: PhosphorIcon(PhosphorIcons.duotone.shareFat,
+              icon: PhosphorIcon(PhosphorIcons.shareFat(PhosphorIconsStyle.duotone),
                   color: Theme.of(context).colorScheme.primary),
               offset: const Offset(0, 60),
             ),
