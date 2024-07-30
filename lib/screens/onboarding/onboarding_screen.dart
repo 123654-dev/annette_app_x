@@ -57,7 +57,7 @@ class _OnboardingState extends State<Onboarding> {
       OnboardingSegment(
         title: "Berechtigungen",
         description: Text(
-            "Bitte erlaub uns, dir Benachrichtigungen für Hausaufgaben und Vertretungen zu schicken. Du kannst diese Einstellung später in den Appeinstellungen ändern.",
+            "Bitte erlaub uns gleich, dir Benachrichtigungen für Hausaufgaben und Vertretungen zu schicken. Du kannst diese Einstellung später in den Appeinstellungen ändern.",
             style: textStyle),
       ),
       OnboardingSegment(
@@ -65,7 +65,7 @@ class _OnboardingState extends State<Onboarding> {
           description: Text.rich(
             TextSpan(
               text:
-                  "Indem du auf \"Weiter\" drückst, erklärst du dich außerdem mit unserer ",
+                  "Bevor du die App einrichtest, mach dich bitte mit unserer ",
               style: textStyle,
               children: <InlineSpan>[
                 TextSpan(
@@ -79,7 +79,8 @@ class _OnboardingState extends State<Onboarding> {
                     },
                 ),
                 TextSpan(
-                    text: " einverstanden (zum Öffnen antippen).",
+                    text:
+                        " (zum Öffnen antippen) vertraut. Indem du fortfährst, stimmst du unseren Datenschutzbestimmungen zu.",
                     style: textStyle)
               ],
             ),
@@ -91,6 +92,9 @@ class _OnboardingState extends State<Onboarding> {
         _currentPage = _pageController.page!.round();
       });
     });
+
+    var isOnLastPage = _currentPage == segments.length - 1;
+
     return Scaffold(
       body: Center(
         child: SizedBox(
@@ -165,21 +169,23 @@ class _OnboardingState extends State<Onboarding> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            const SizedBox(width: 20),
-            Expanded(
-              child: OutlinedButton(
-                  child: const Text("Überspringen"),
-                  onPressed: () {
-                    requestPermissions()
-                        .then((value) => {showConfigurationScreen(context)});
-                  }),
-            ),
+            if (!isOnLastPage) const SizedBox(width: 20),
+            if (!isOnLastPage)
+              Expanded(
+                child: OutlinedButton(
+                    child: const Text("Überspringen"),
+                    onPressed: () {
+                      setState(() {
+                        _pageController.animateToPage(segments.length - 1, duration: const Duration(milliseconds: 500), curve: Curves.easeOut);
+                      });
+                    }),
+              ),
             const SizedBox(width: 20),
             Expanded(
               child: FilledButton(
-                  child: const Text("Weiter"),
+                  child: Text((isOnLastPage) ? "Verstanden!" : "Weiter"),
                   onPressed: () {
-                    if (_currentPage < segments.length - 1) {
+                    if (!isOnLastPage) {
                       _pageController.animateToPage(_currentPage + 1,
                           duration: const Duration(milliseconds: 500),
                           curve: Curves.easeOut);
@@ -207,13 +213,23 @@ Future<void> showPrivacyPolicy(BuildContext context) async {
         appBar: AppBar(
           title: const Text("Datenschutzerklärung"),
         ),
-        body: Markdown(
-          data: markdown,
-          onTapLink: (text, href, title) {
-            if (href != null) {
-              launchUrlString(href);
-            }
-          },
+        body: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+          child: Column(
+            children: [
+              Expanded(
+                child: Markdown(
+                  data: markdown,
+                  onTapLink: (text, href, title) {
+                    if (href != null) {
+                      launchUrlString(href);
+                    }
+                  },
+                ),
+              ),
+              const SizedBox(height: 20)
+            ],
+          ),
         )),
   );
 }
