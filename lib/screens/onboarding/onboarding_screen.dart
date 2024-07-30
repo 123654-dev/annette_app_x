@@ -1,35 +1,26 @@
 import 'package:annette_app_x/providers/notifications.dart';
 import 'package:annette_app_x/screens/onboarding/app_config.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class OnboardingSegment {
   final String title;
-  final String description;
+  final Widget description;
   final String? imagePath;
+  TextStyle? style;
 
-  const OnboardingSegment(
-      {required this.title, required this.description, this.imagePath});
+  OnboardingSegment(
+      {required this.title,
+      required this.description,
+      this.imagePath,
+      this.style});
 }
-
-const segments = [
-  OnboardingSegment(
-      title: "Annette App X",
-      description: "Herzlich willkommen zur brandneuen Annette App X!"),
-  OnboardingSegment(
-      title: "Neue Features",
-      description:
-          "Die Annette App X enthält einige brandneue Features, die dir bestimmt gefallen werden und besticht mit ihrem neuen Design!"),
-  OnboardingSegment(
-      title: "Wir suchen dich!",
-      description:
-          "Die Annette App wird momentan von der Annette-Softwareentwicklungs-AG gewartet. Wenn du Lust hast, mitzumachen, melde dich bei uns!"),
-  OnboardingSegment(
-    title: "Berechtigungen",
-    description:
-        "Bitte erlaub uns, dir Benachrichtigungen für Hausaufgaben und Vertretungen zu schicken. Du kannst diese Einstellung später in den Appeinstellungen ändern.",
-  ),
-];
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
@@ -49,6 +40,52 @@ class _OnboardingState extends State<Onboarding> {
 
   @override
   Widget build(BuildContext context) {
+    final textStyle =
+        TextStyle(color: Theme.of(context).colorScheme.tertiaryContainer);
+
+    var segments = [
+      OnboardingSegment(
+          title: "Annette App X",
+          description: Text(
+              "Herzlich willkommen zur brandneuen Annette App X! Die Annette App X enthält einige brandneue Features, die dir bestimmt gefallen werden und besticht mit ihrem neuen Design!",
+              style: textStyle)),
+      OnboardingSegment(
+          title: "Wir suchen dich!",
+          description: Text(
+              "Die Annette App wird momentan von der Annette-Softwareentwicklungs-AG gewartet. Wenn du Lust hast, mitzumachen, melde dich bei uns!",
+              style: textStyle)),
+      OnboardingSegment(
+        title: "Berechtigungen",
+        description: Text(
+            "Bitte erlaub uns, dir Benachrichtigungen für Hausaufgaben und Vertretungen zu schicken. Du kannst diese Einstellung später in den Appeinstellungen ändern.",
+            style: textStyle),
+      ),
+      OnboardingSegment(
+          title: "Datenschutz",
+          description: Text.rich(
+            TextSpan(
+              text:
+                  "Indem du auf \"Weiter\" drückst, erklärst du dich außerdem mit unserer ",
+              style: textStyle,
+              children: <InlineSpan>[
+                TextSpan(
+                  text: "Datenschutzerklärung",
+                  style: textStyle.copyWith(
+                      decoration: TextDecoration.underline,
+                      decorationColor: textStyle.color),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () async {
+                      await showPrivacyPolicy(context);
+                    },
+                ),
+                TextSpan(
+                    text: " einverstanden (zum Öffnen antippen).",
+                    style: textStyle)
+              ],
+            ),
+          )),
+    ];
+
     _pageController.addListener(() {
       setState(() {
         _currentPage = _pageController.page!.round();
@@ -75,6 +112,7 @@ class _OnboardingState extends State<Onboarding> {
                               padding: const EdgeInsets.all(30),
                               child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     if (segments[index].imagePath != null)
                                       Image.asset(segments[index].imagePath!),
@@ -88,21 +126,10 @@ class _OnboardingState extends State<Onboarding> {
                                               color: Theme.of(context)
                                                   .colorScheme
                                                   .tertiaryContainer),
-                                      textAlign: TextAlign.center,
+                                      textAlign: TextAlign.left,
                                     ),
                                     const SizedBox(height: 10),
-                                    Text(
-                                      segments[index].description,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge
-                                          ?.copyWith(
-                                              fontWeight: FontWeight.w600,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .tertiaryContainer),
-                                      textAlign: TextAlign.center,
-                                    ),
+                                    segments[index].description,
                                   ]),
                             ),
                           ),
@@ -168,6 +195,27 @@ class _OnboardingState extends State<Onboarding> {
       ),
     );
   }
+}
+
+Future<void> showPrivacyPolicy(BuildContext context) async {
+  //Load from resource file
+
+  var markdown = await rootBundle.loadString('assets/texts/privacy.md');
+  showModalBottomSheet(
+    context: context,
+    builder: (context) => Scaffold(
+        appBar: AppBar(
+          title: const Text("Datenschutzerklärung"),
+        ),
+        body: Markdown(
+          data: markdown,
+          onTapLink: (text, href, title) {
+            if (href != null) {
+              launchUrlString(href);
+            }
+          },
+        )),
+  );
 }
 
 void showConfigurationScreen(BuildContext context) {
