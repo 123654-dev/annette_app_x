@@ -1,12 +1,12 @@
-
 import 'package:annette_app_x/widgets/retry_button.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class BadRequestError extends StatelessWidget {
   final VoidCallback? onPressed;
+  final String? error;
 
-  const BadRequestError({super.key, this.onPressed});
+  const BadRequestError({super.key, this.onPressed, this.error});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class BadRequestError extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: Container(
-          height: 300,
+          height: 400,
           width: 300,
           color: Theme.of(context).colorScheme.errorContainer,
           child: Padding(
@@ -27,7 +27,9 @@ class BadRequestError extends StatelessWidget {
                   color: Theme.of(context).colorScheme.error,
                   size: 100,
                 ),
-                const _NoValidResponseErrorText(),
+                const _NoValidResponseErrorText(
+                    "Unser Server hat keine gültige Antwort gesendet. Probier es später erneut und kontaktiere uns, wenn das Problem weiterhin auftritt."),
+                //if (error != null) _NoValidResponseErrorText("Fehler: $error"),
                 const SizedBox(height: 10),
                 RetryButton(onPressed: onPressed)
               ],
@@ -40,12 +42,13 @@ class BadRequestError extends StatelessWidget {
 }
 
 class _NoValidResponseErrorText extends StatelessWidget {
-  const _NoValidResponseErrorText();
+  final String content;
+  const _NoValidResponseErrorText(this.content, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      "Unser Server hat keine gültige Antwort gesendet. Probier es später erneut und kontaktiere uns, wenn das Problem weiterhin auftritt.",
+      content,
       style: Theme.of(context)
           .textTheme
           .labelMedium

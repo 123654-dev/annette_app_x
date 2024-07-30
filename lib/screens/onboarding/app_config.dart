@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:annette_app_x/models/class_ids.dart';
 import 'package:annette_app_x/providers/api/api_provider.dart';
 import 'package:annette_app_x/providers/api/subjects_provider.dart';
@@ -45,7 +46,6 @@ var widgetWhileLoading = (context, String? toast) =>
 class _AppConfigScreenState extends State<AppConfigScreen> {
   bool _hasClassesResponseYet = false;
   bool _hasOptionsResponseYet = false;
-  bool _hasError = false;
 
   late var _classes = [];
   late var _options;
@@ -95,12 +95,12 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
                         if (snapshot.hasError) {
-                          print(snapshot.error);
                           return Center(
                             child: ConnectionProvider.hasDownloadConnection()
-                                ? BadRequestError(onPressed: () {
+                                ? BadRequestError(
+                                  error: snapshot.error.toString(),
+                                  onPressed: () {
                                     setState(() {
-                                      _hasError = false;
                                       _secondStep
                                           ? loadOptions()
                                           : reloadClasses();
@@ -108,7 +108,6 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                                   })
                                 : NoSignalError(onPressed: () {
                                     setState(() {
-                                      _hasError = false;
                                       _secondStep
                                           ? loadOptions()
                                           : reloadClasses();

@@ -19,7 +19,7 @@ class ApiProvider {
     var success = (result.statusCode == 200);
 
     if (!success) {
-      throw Exception('‼️ http.get error: statusCode= ${result.statusCode}');
+      throw Exception('Code ${result.statusCode}: Server error');
     }
 
     return result.body;

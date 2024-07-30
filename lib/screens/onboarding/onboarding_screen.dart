@@ -32,7 +32,6 @@ class _OnboardingState extends State<Onboarding> {
   final PageController _pageController = PageController();
 
   Future<void> requestPermissions() async {
-    //Notifications initialisieren
     await NotificationProvider().init();
   }
 
@@ -41,6 +40,7 @@ class _OnboardingState extends State<Onboarding> {
     final textStyle =
         TextStyle(color: Theme.of(context).colorScheme.tertiaryContainer);
 
+    //Diese Cards werden im Onboarding angezeigt.
     var segments = [
       OnboardingSegment(
           title: "Annette App X",
@@ -174,7 +174,9 @@ class _OnboardingState extends State<Onboarding> {
                     child: const Text("Überspringen"),
                     onPressed: () {
                       setState(() {
-                        _pageController.animateToPage(segments.length - 1, duration: const Duration(milliseconds: 500), curve: Curves.easeOut);
+                        _pageController.animateToPage(segments.length - 1,
+                            duration: const Duration(milliseconds: 500),
+                            curve: Curves.easeOut);
                       });
                     }),
               ),
@@ -201,9 +203,9 @@ class _OnboardingState extends State<Onboarding> {
   }
 }
 
+///Zeigt die Datenschutzerklärung in einem ModalBottomSheet an.
 Future<void> showPrivacyPolicy(BuildContext context) async {
-  //Load from resource file
-
+  //Datenschutzerklärung wird mitgeliefert, damit die App dafür nicht erst einen Request machen muss, ohne dass die Erlaubnis vorliegt
   var markdown = await rootBundle.loadString('assets/texts/privacy.md');
   showModalBottomSheet(
     context: context,
@@ -232,6 +234,7 @@ Future<void> showPrivacyPolicy(BuildContext context) async {
   );
 }
 
+///Öffnet die Konfiguration.
 void showConfigurationScreen(BuildContext context) {
   Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => const AppConfigScreen(),
