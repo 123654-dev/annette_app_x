@@ -5,7 +5,9 @@
 [![forthebadge](https://forthebadge.com/images/badges/compatibility-emacs.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/powered-by-black-magic.svg)](https://forthebadge.com)
 
-[![Code Check](https://github.com/123654-dev/annette_app_x/actions/workflows/pr-check.yml/badge.svg)](https://github.com/123654-dev/annette_app_x/actions/workflows/pr-check.yml)
+![Timetable Screen Screenshot](https://github.com/123654-dev/annette_app_x/blob/master/624_1x_shots_so.png)
+![Subject choosing screen](https://github.com/123654-dev/annette_app_x/blob/master/374_1x_shots_so.png)
+![Class choosing screen](https://github.com/123654-dev/annette_app_x/blob/master/263_1x_shots_so.png)
 
 Ein brandneues, frisches Rewrite unserer Annette App in Flutter!
 Anders als die alte App wird sie zwar alle alten und beliebten Features beibehalten, allerdings ohne unübersichtlichen
