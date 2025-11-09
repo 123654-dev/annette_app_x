@@ -5,9 +5,9 @@
 [![forthebadge](https://forthebadge.com/images/badges/compatibility-emacs.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/powered-by-black-magic.svg)](https://forthebadge.com)
 
-<img src="https://[i.imgur.com/ZWnhY9T.png](https://github.com/123654-dev/annette_app_x/blob/master/624_1x_shots_so.png)" width="350">
-<img src="https://[i.imgur.com/ZWnhY9T.png](https://github.com/123654-dev/annette_app_x/blob/master/374_1x_shots_so.png)" width="350">
-<img src="https://[i.imgur.com/ZWnhY9T.png](https://github.com/123654-dev/annette_app_x/blob/master/263_1x_shots_so.png)" width="350">
+<img src="https://github.com/123654-dev/annette_app_x/blob/master/624_1x_shots_so.png" width="350">
+<img src="https://github.com/123654-dev/annette_app_x/blob/master/374_1x_shots_so.png" width="350">
+<img src="https://github.com/123654-dev/annette_app_x/blob/master/263_1x_shots_so.png" width="350">
 
 ![Subject choosing screen](https://github.com/123654-dev/annette_app_x/blob/master/374_1x_shots_so.png)
 ![Class choosing screen](https://github.com/123654-dev/annette_app_x/blob/master/263_1x_shots_so.png)
