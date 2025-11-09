@@ -9,9 +9,6 @@
 <img src="https://github.com/123654-dev/annette_app_x/blob/master/374_1x_shots_so.png" width="350">
 <img src="https://github.com/123654-dev/annette_app_x/blob/master/263_1x_shots_so.png" width="350">
 
-![Subject choosing screen](https://github.com/123654-dev/annette_app_x/blob/master/374_1x_shots_so.png)
-![Class choosing screen](https://github.com/123654-dev/annette_app_x/blob/master/263_1x_shots_so.png)
-
 Ein brandneues, frisches Rewrite unserer Annette App in Flutter!
 Anders als die alte App wird sie zwar alle alten und beliebten Features beibehalten, allerdings ohne unübersichtlichen
 Code, verwirrende Dateistruktur und merkwürdige Bugs. Außerdem wird sie mit dem neuesten Stand der Technik (WebUntis-API) und einem
